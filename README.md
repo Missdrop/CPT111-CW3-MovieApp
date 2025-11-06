@@ -16,7 +16,8 @@
 
  - 命名
 
-    - 类名应采用大驼峰命名法（每个单词开头大写，例如FirstSecondThird），方法和变量名采用小驼峰命名法（首单词不大写，例如firstSecondThird）。
+    - 类名应采用大驼峰命名法（每个单词开头大写，例如FirstSecondThird。
+    - 方法和变量名采用小驼峰命名法（首单词不大写，例如firstSecondThird）。
 
  - 格式
 
