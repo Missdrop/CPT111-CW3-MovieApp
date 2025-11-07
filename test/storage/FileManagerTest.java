@@ -11,6 +11,8 @@ public class FileManagerTest {
         FileManager fileReader = new FileManager("resources/movies.csv");
         assertNotNull(fileReader.nextLine());
     }
+
+
     @Test
     public void testFileAppendRow() {
         FileManager fileReader = new FileManager("resources/movies.csv");
