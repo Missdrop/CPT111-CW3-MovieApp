@@ -46,55 +46,12 @@ public class UserManager extends FileManager {
     }
 
 
-    private boolean appendRow(User user) {
-        String[] row = new String[] {
-            user.getUsername(),
-            user.getPassword(),
-            String.join(";", user.getWatchlist()),
-            String.join(";", user.getHistory())
-        };
-        return super.appendRow(row);
-    }
-
-
     public boolean addUser(User user) {
         if (this.users.containsKey(user.getUsername())) {
             return false; // user already exists
         }
-        boolean appendResult = this.appendRow(user);
-        if (appendResult) {
-            this.users.put(user.getUsername(), user);
-        }
-        return appendResult;
-    }
-
-
-    private boolean deleteRow(String username) {
-        if (!this.users.containsKey(username)) {
-            return false; // user does not exist
-        }
-
-        // Find the row index of the user to delete
-        int rowIndex = 0;
-
-        this.flushScanner();
-
-        boolean firstLine = true;
-        while (this.hasNextLine()) {
-            if (firstLine) {
-                firstLine = false;
-                this.nextLine(); // skip header
-                rowIndex++;
-                continue;
-            }
-
-            String[] userData = this.nextLine();
-            if (userData[0].equals(username)) {
-                return super.deleteRow(rowIndex);
-            }
-            rowIndex++;
-        }
-        return false;
+        this.users.put(user.getUsername(), user);
+        return true;
     }
 
 
@@ -102,16 +59,26 @@ public class UserManager extends FileManager {
         if (this.users.get(username) == null) {
             return false; // user does not exist
         }
-        boolean deleteResult = this.deleteRow(username);
-        if (deleteResult) {
-            this.users.remove(username);
-        }
-        return deleteResult;
+        this.users.remove(username);
+        return true;
     }
 
 
     public boolean deleteUser(User user) {
         return deleteUser(user.getUsername());
+    }
+
+
+    public boolean save(){
+        String header = "username,password,watchlist,history";
+
+        String[] rows = new String[this.users.size()];
+        for (int i = 0; i < this.users.size(); i++) {
+            User user = (User) this.users.values().toArray()[i];
+            rows[i] = user.toCSV();
+        }
+
+        return super.save(header, rows);
     }
 
 

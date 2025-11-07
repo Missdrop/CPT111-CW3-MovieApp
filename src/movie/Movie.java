@@ -45,4 +45,15 @@ public class Movie {
     public double getRating() {
         return this.rating;
     }
+
+
+    public String toCSV() {
+        return String.join(",", new String[] {
+            this.id,
+            this.title,
+            Integer.toString(this.year),
+            this.genre,
+            Double.toString(this.rating)
+        });
+    }
 }

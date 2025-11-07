@@ -1,8 +1,8 @@
 package storage;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 
 public class FileManagerTest {
@@ -14,27 +14,19 @@ public class FileManagerTest {
 
 
     @Test
-    public void testFileAppendRow() {
-        FileManager fileReader = new FileManager("resources/movies.csv");
-        String[] newRow = {"9999", "Test Movie", "2024", "Drama", "7.5"};
-        boolean appendResult = fileReader.appendRow(newRow);
-        assert(appendResult);
-
-        // Verify the last line is the newly appended row
-        String[] lastLine = null;
-        int lineIndex = 0;
-        while (fileReader.hasNextLine()) {
-            lineIndex++;
-            lastLine = fileReader.nextLine();
-        }
-        assertNotNull(lastLine);
-        assert(lastLine[0].equals("9999"));
-        assert(lastLine[1].equals("Test Movie"));
-        assert(lastLine[2].equals("2024"));
-        assert(lastLine[3].equals("Drama"));
-        assert(lastLine[4].equals("7.5"));
-        fileReader.deleteRow(lineIndex - 1);
-        fileReader.close();
+    public void testSaveFunction() {
+        FileManager fileManager = new FileManager("resources/test_save.csv");
+        String header = "col1,col2,col3";
+        String[] rows = new String[] {
+            "data1,data2,data3",
+            "data4,data5,data6"
+        };
+        assertTrue(fileManager.save(header, rows));
+        fileManager.flushScanner();
+        assertEquals("col1", fileManager.nextLine()[0]);
+        fileManager.close();
+        java.io.File file = new java.io.File("resources/test_save.csv");
+        file.delete();
 
     }
 }

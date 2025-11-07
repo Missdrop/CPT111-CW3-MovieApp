@@ -48,4 +48,14 @@ public class User {
     public boolean appendWatchlist(String movieId) {
         return this.watchlist.add(movieId);
     }
+
+
+    public String toCSV() {
+        return String.join(",", new String[] {
+            this.username,
+            this.password,
+            String.join(";", this.watchlist),
+            String.join(";", this.history)
+        });
+    }
 }

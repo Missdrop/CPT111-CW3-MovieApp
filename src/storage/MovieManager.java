@@ -44,56 +44,12 @@ public class MovieManager extends FileManager {
     }
 
 
-    public boolean appendRow(Movie movie) {
-        String[] row = new String[] {
-            movie.getId(),
-            movie.getTitle(),
-            Integer.toString(movie.getYear()),
-            movie.getGenre(),
-            Double.toString(movie.getRating())
-        };
-        return super.appendRow(row);
-    }
-
-
     public boolean addMovie(Movie movie) {
         if (this.movies.containsKey(movie.getId())) {
             return false; // movie already exists
         }
-        boolean appendResult = this.appendRow(movie);
-        if (appendResult) {
-            this.movies.put(movie.getId(), movie);
-        }
-        return appendResult;
-    }
-
-
-    private boolean deleteRow(String movieId) {
-        if (!this.movies.containsKey(movieId)) {
-            return false; // movie does not exist
-        }
-
-        // Find the row index of the movie to delete
-        int rowIndex = 0;
-
-        this.flushScanner();
-
-        boolean firstLine = true;
-        while (this.hasNextLine()) {
-            if (firstLine) {
-                firstLine = false;
-                this.nextLine(); // skip header
-                rowIndex++;
-                continue;
-            }
-
-            String[] movieData = this.nextLine();
-            if (movieData[0].equals(movieId)) {
-                return super.deleteRow(rowIndex);
-            }
-            rowIndex++;
-        }
-        return false;
+        this.movies.put(movie.getId(), movie);
+        return true;
     }
 
 
@@ -101,16 +57,27 @@ public class MovieManager extends FileManager {
         if (this.movies.get(movieId) == null) {
             return false; // movie does not exist
         }
-        boolean deleteResult = this.deleteRow(movieId);
-        if (deleteResult) {
-            this.movies.remove(movieId);
-        }
-        return deleteResult;
+
+        this.movies.remove(movieId);
+        return true;
     }
 
 
     public boolean deleteMovie(Movie movie) {
         return deleteMovie(movie.getId());
+    }
+
+
+    public boolean save(){
+        String header = "id,title,year,genre,rating";
+        
+        String[] rows = new String[this.movies.size()];
+        for (int i = 0; i < this.movies.size(); i++) {
+            Movie movie = (Movie) this.movies.values().toArray()[i];
+            rows[i] = movie.toCSV();
+        }
+
+        return super.save(header, rows);
     }
 
 
