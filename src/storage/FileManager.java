@@ -15,7 +15,6 @@ public class FileManager {
     private File file;
     private Scanner scanner;
 
-
     public FileManager(File file) {
         this.file = file;
         this.scanner = getScanner();
@@ -34,7 +33,6 @@ public class FileManager {
         }
     }
 
-
     public boolean flushScanner() {
         if (this.scanner != null) {
             this.scanner.close();
@@ -42,7 +40,6 @@ public class FileManager {
         this.scanner = getScanner();
         return this.scanner != null;
     }
-
 
     public String[] nextLine() {
         if (this.scanner == null) {
@@ -69,18 +66,17 @@ public class FileManager {
         if (this.file == null) {
             return null;
         }
-        try (Scanner s = getScanner()) {
-            if (s == null) return null;
-            int idx = 0;
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                if (idx == rowIndex) {
-                    return line.split(",");
-                }
-                idx++;
-            }
+        if (!flushScanner())
             return null;
+        int idx = 0;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (idx == rowIndex) {
+                return line.split(",");
+            }
+            idx++;
         }
+        return null;
     }
 
     public String[] readColumn(int columnIndex) {
@@ -88,16 +84,15 @@ public class FileManager {
             return null;
         }
         List<String> column = new ArrayList<>();
-        try (Scanner s = getScanner()) {
-            if (s == null) return null;
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                String[] parts = line.split(",");
-                if (columnIndex < parts.length) {
-                    column.add(parts[columnIndex]);
-                } else {
-                    column.add(null);
-                }
+        if (!flushScanner())
+            return null;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            if (columnIndex < parts.length) {
+                column.add(parts[columnIndex]);
+            } else {
+                column.add(null);
             }
         }
         return column.toArray(new String[0]);
@@ -108,7 +103,8 @@ public class FileManager {
      * Returns true on success, false otherwise.
      */
     public boolean appendRow(String[] row) {
-        if (this.file == null || row == null) return false;
+        if (this.file == null || row == null)
+            return false;
         // Ensure parent dirs exist
         File parent = this.file.getParentFile();
         if (parent != null && !parent.exists()) {
@@ -135,18 +131,16 @@ public class FileManager {
         }
 
         List<String> lines = new ArrayList<>();
-        try (Scanner s = getScanner()) {
-            if (s == null) return false;
-            int index = 0;
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                if (index != rowIndex) {
-                    lines.add(line);
-                }
-                index++;
-            }
-        } catch (Exception e) {
+
+        if (!flushScanner())
             return false;
+        int index = 0;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (index != rowIndex) {
+                lines.add(line);
+            }
+            index++;
         }
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
@@ -160,7 +154,6 @@ public class FileManager {
             return false;
         }
     }
-
 
     public void close() {
         if (this.scanner != null) {
