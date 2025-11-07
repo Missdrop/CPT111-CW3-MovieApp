@@ -8,4 +8,12 @@ public class User {
     private String password;
     private List<String> watchlist;
     private List<String> history;
+
+
+    public User(String username, String password, List<String> watchlist, List<String> history) {
+        this.username = username;
+        this.password = password;
+        this.watchlist = watchlist;
+        this.history = history;
+    }
 }
