@@ -30,6 +30,22 @@ public class UserManagerTest {
         UserManager userManager = new UserManager();
         user.User newUser = new User("alice","newpass",new HashSet<String>(),new ArrayList<String>());
         assertFalse(userManager.addUser(newUser));
+    }
 
+
+    @Test
+    public void testSave() {
+        UserManager userManager = new UserManager();
+        user.User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>());
+        userManager.addUser(newUser);
+        assertTrue(userManager.save());
+        userManager.close();
+
+        // Reload to verify
+        UserManager userManager2 = new UserManager();
+        assertEquals(userManager2.getUser("naipu").getPassword(), "123123");
+
+        userManager2.deleteUser("naipu");
+        userManager2.save();
     }
 }

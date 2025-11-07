@@ -51,7 +51,7 @@ class FileManager {
 
         if (this.scanner.hasNextLine()) {
             String line = this.scanner.nextLine();
-            return line.split(",");
+            return line.split(",", -1); // -1 to include trailing empty strings
         } else {
             return null;
         }

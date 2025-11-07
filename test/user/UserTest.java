@@ -13,4 +13,13 @@ public class UserTest {
         assertTrue(user.getWatchlist().contains("movieAdd"));
     }
 
+
+    @Test
+    public void testUserCreationEmptyWatchlist() {
+        String[] userData = {"jane_doe", "securepass", "", "movieA;movieB"};
+        User user = new User(userData);
+        assertEquals(0, user.getWatchlist().size());
+        assertEquals(2, user.getHistory().size());
+    }
+
 }
