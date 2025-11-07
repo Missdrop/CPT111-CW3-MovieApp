@@ -118,21 +118,25 @@ public class FileReader {
         }
     }
 
-
+    /**
+     * Delete a row from the CSV file by its index (0-based).
+     * Returns true on success, false otherwise.
+     */
     public boolean deleteRow(int rowIndex) {
         if (this.file == null) {
             return false;
         }
+
         List<String> lines = new ArrayList<>();
         try (Scanner s = getScanner()) {
             if (s == null) return false;
-            int idx = 0;
+            int index = 0;
             while (s.hasNextLine()) {
                 String line = s.nextLine();
-                if (idx != rowIndex) {
+                if (index != rowIndex) {
                     lines.add(line);
                 }
-                idx++;
+                index++;
             }
         } catch (Exception e) {
             return false;
