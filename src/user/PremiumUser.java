@@ -1,4 +1,4 @@
-package Group76;
+package user;
 
 public class PremiumUser extends User {
     

@@ -1,4 +1,4 @@
-package Group76;
+package movie;
 
 public class Movie {
     
