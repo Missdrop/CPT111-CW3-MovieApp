@@ -2,15 +2,17 @@ package user;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 public class User {
     private String username;
     private String password;
-    private ArrayList<String> watchlist;
+    private HashSet<String> watchlist;
     private ArrayList<String> history;
 
 
-    public User(String username, String password, ArrayList<String> watchlist, ArrayList<String> history) {
+    public User(String username, String password, HashSet<String> watchlist, ArrayList<String> history) {
         this.username = username;
         this.password = password;
         this.watchlist = watchlist;
@@ -19,7 +21,7 @@ public class User {
 
 
     public User(String[] userData) {
-        this(userData[0], userData[1], new ArrayList<String>(List.of(userData[2].split(";"))), new ArrayList<String>(List.of(userData[3].split(";"))));
+        this(userData[0], userData[1], new HashSet<String>(Set.of(userData[2].split(";"))), new ArrayList<String>(List.of(userData[3].split(";"))));
     }
 
 
@@ -33,12 +35,12 @@ public class User {
     }
 
 
-    public List<String> getWatchlist() {
+    public HashSet<String> getWatchlist() {
         return this.watchlist;
     }
 
 
-    public List<String> getHistory() {
+    public ArrayList<String> getHistory() {
         return this.history;
     }
 
