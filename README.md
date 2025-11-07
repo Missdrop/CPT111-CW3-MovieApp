@@ -45,4 +45,10 @@
 
 - 项目源代码存储在`src`中，资源文件储存在`resource`中。测试类在test文件夹中。
 
-   > 若要编写测试，请在`test`中新建文件
+    > 若要编写测试，请在`test`文件夹中新建文件
+
+- 调试时请保证位于项目根目录（CPT111-Group76），否则会导致resource读取异常。
+
+- 因课程要求原因无法使用Gradle进行编译，为确保每个人能够正常运行，请使用：
+   - Visual Studio Code打开本项目根文件夹，并安装`Extension Pack for Java`拓展包。
+   - 安装JDK17及以上，包含JavaFX。
