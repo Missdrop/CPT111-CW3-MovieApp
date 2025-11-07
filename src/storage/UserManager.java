@@ -11,6 +11,9 @@ public class UserManager extends FileManager {
     }
 
 
+    /**
+     * Create a User object from user data array.
+     */
     private User createUser(String[] userData) {
         return new User(userData);
     }
@@ -35,6 +38,80 @@ public class UserManager extends FileManager {
         return userMap;
     }
 
+
+    public User getUser(String username) {
+        return this.users.get(username);
+    }
+
+
+    private boolean appendRow(User user) {
+        String[] row = new String[] {
+            user.getUsername(),
+            user.getPassword(),
+            String.join(";", user.getWatchlist()),
+            String.join(";", user.getHistory())
+        };
+        return super.appendRow(row);
+    }
+
+
+    public boolean addUser(User user) {
+        if (this.users.containsKey(user.getUsername())) {
+            return false; // user already exists
+        }
+        boolean appendResult = this.appendRow(user);
+        if (appendResult) {
+            this.users.put(user.getUsername(), user);
+        }
+        return appendResult;
+    }
+
+
+    private boolean deleteRow(String username) {
+        if (!this.users.containsKey(username)) {
+            return false; // user does not exist
+        }
+
+        // Find the row index of the user to delete
+        int rowIndex = 0;
+
+        this.flushScanner();
+
+        boolean firstLine = true;
+        while (this.hasNextLine()) {
+            if (firstLine) {
+                firstLine = false;
+                this.nextLine(); // skip header
+                rowIndex++;
+                continue;
+            }
+
+            String[] userData = this.nextLine();
+            if (userData[0].equals(username)) {
+                return super.deleteRow(rowIndex);
+            }
+            rowIndex++;
+        }
+        return false;
+    }
+
+
+    public boolean deleteUser(String username) {
+        User user = this.users.get(username);
+        if (user == null) {
+            return false; // user does not exist
+        }
+        boolean deleteResult = this.deleteRow(username);
+        if (deleteResult) {
+            this.users.remove(username);
+        }
+        return deleteResult;
+    }
+
+
+    public boolean deleteUser(User user) {
+        return deleteUser(user.getUsername());
+    }
 
 
     @Override
