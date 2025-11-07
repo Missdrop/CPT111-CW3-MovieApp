@@ -25,7 +25,7 @@
    - 前大括号不换行，例如：
 
       ```java
-      void function(){
+      void function() {
       }
       ```
 
