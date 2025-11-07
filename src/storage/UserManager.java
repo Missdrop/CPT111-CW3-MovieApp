@@ -5,6 +5,8 @@ import user.User;
 
 public class UserManager extends FileManager {
     private Map<String, User> users;
+
+
     public UserManager() {
         super("resources/users.csv");
         this.users = getUsers();
