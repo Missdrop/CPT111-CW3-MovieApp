@@ -15,9 +15,6 @@ public class FileManager {
     private File file;
     private Scanner scanner;
 
-    public FileManager() {
-        throw new UnsupportedOperationException("File must be specified");
-    }
 
     public FileManager(File file) {
         this.file = file;
