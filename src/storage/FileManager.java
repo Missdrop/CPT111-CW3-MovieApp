@@ -15,14 +15,17 @@ public class FileManager {
     private File file;
     private Scanner scanner;
 
+
     public FileManager(File file) {
         this.file = file;
         this.scanner = getScanner();
     }
 
+
     public FileManager(String filePath) {
         this(new File(filePath));
     }
+
 
     private Scanner getScanner() {
         try {
@@ -33,6 +36,7 @@ public class FileManager {
         }
     }
 
+
     public boolean flushScanner() {
         if (this.scanner != null) {
             this.scanner.close();
@@ -40,6 +44,7 @@ public class FileManager {
         this.scanner = getScanner();
         return this.scanner != null;
     }
+
 
     public String[] nextLine() {
         if (this.scanner == null) {
@@ -54,6 +59,7 @@ public class FileManager {
         }
     }
 
+
     public boolean hasNextLine() {
         if (this.scanner == null) {
             return false;
@@ -61,6 +67,7 @@ public class FileManager {
 
         return this.scanner.hasNextLine();
     }
+
 
     public String[] readRow(int rowIndex) {
         if (this.file == null) {
@@ -78,6 +85,7 @@ public class FileManager {
         }
         return null;
     }
+
 
     public String[] readColumn(int columnIndex) {
         if (this.file == null) {
@@ -97,6 +105,7 @@ public class FileManager {
         }
         return column.toArray(new String[0]);
     }
+
 
     /**
      * Append a row to the CSV file. The row is an array of column values.
@@ -120,6 +129,7 @@ public class FileManager {
             return false;
         }
     }
+
 
     /**
      * Delete a row from the CSV file by its index (0-based).
@@ -154,6 +164,7 @@ public class FileManager {
             return false;
         }
     }
+
 
     public void close() {
         if (this.scanner != null) {
