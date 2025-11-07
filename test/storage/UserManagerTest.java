@@ -2,6 +2,8 @@ package storage;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.util.ArrayList;
+
 import user.User;
 
 public class UserManagerTest {
@@ -15,7 +17,7 @@ public class UserManagerTest {
     @Test
     public void testAddUser() {
         UserManager userManager = new UserManager();
-        user.User newUser = new User("naipu","123123",java.util.List.of(),java.util.List.of());
+        user.User newUser = new User("naipu","123123",new ArrayList<String>(),new ArrayList<String>());
         assertTrue(userManager.addUser(newUser));
         assertEquals(userManager.getUser("naipu").getPassword(), "123123");
         userManager.deleteUser("naipu");
@@ -25,7 +27,7 @@ public class UserManagerTest {
     @Test
     public void testAddExistUser() {
         UserManager userManager = new UserManager();
-        user.User newUser = new User("alice","newpass",java.util.List.of(),java.util.List.of());
+        user.User newUser = new User("alice","newpass",new ArrayList<String>(),new ArrayList<String>());
         assertFalse(userManager.addUser(newUser));
 
     }
