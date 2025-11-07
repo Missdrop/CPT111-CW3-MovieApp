@@ -155,20 +155,6 @@ public class FileManager {
     }
 
 
-    /**
-     * Escape a field for CSV output: wrap in quotes if necessary and double any quotes inside.
-     */
-    private String escapeCsvField(String field) {
-        if (field == null) return "";
-        boolean needQuotes = field.contains(",") || field.contains("\"") || field.contains("\n") || field.contains("\r");
-        String escaped = field.replace("\"", "\"\"");
-        if (needQuotes) {
-            return "\"" + escaped + "\"";
-        } else {
-            return escaped;
-        }
-    }
-
     public void close() {
         if (this.scanner != null) {
             this.scanner.close();
