@@ -21,4 +21,24 @@ public class User {
     public User(String[] userData) {
         this(userData[0], userData[1], List.of(userData[2].split(";")), List.of(userData[3].split(";")));
     }
+
+
+    public String getUsername() {
+        return this.username;
+    }
+
+
+    public String getPassword() {
+        return this.password;
+    }
+
+
+    public List<String> getWatchlist() {
+        return this.watchlist;
+    }
+
+
+    public List<String> getHistory() {
+        return this.history;
+    }
 }
