@@ -15,4 +15,9 @@ public class Movie {
         this.year = year;
         this.rating = rating;
     }
+
+
+    public Movie(String[] movieData) {
+        this(movieData[0], movieData[1], movieData[2], Integer.parseInt(movieData[3]), Double.parseDouble(movieData[4]));
+    }
 }

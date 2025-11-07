@@ -16,4 +16,9 @@ public class User {
         this.watchlist = watchlist;
         this.history = history;
     }
+
+
+    public User(String[] userData) {
+        this(userData[0], userData[1], List.of(userData[2].split(";")), List.of(userData[3].split(";")));
+    }
 }
