@@ -1,7 +1,9 @@
 package user;
 
+import java.util.ArrayList;
+
 public class BasicUser extends User {
-    public BasicUser(String username, String password, java.util.List<String> watchlist, java.util.List<String> history) {
+    public BasicUser(String username, String password, ArrayList<String> watchlist, ArrayList<String> history) {
         super(username, password, watchlist, history);
     }
 }
