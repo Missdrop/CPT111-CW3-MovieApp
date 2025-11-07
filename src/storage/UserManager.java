@@ -99,8 +99,7 @@ public class UserManager extends FileManager {
 
 
     public boolean deleteUser(String username) {
-        User user = this.users.get(username);
-        if (user == null) {
+        if (this.users.get(username) == null) {
             return false; // user does not exist
         }
         boolean deleteResult = this.deleteRow(username);
