@@ -11,20 +11,20 @@ import java.util.List;
 /**
  * This class is responsible for reading data from a csv file.
  */
-public class FileReader {
+public class FileManager {
     private File file;
     private Scanner scanner;
 
-    public FileReader() {
+    public FileManager() {
         throw new UnsupportedOperationException("File must be specified");
     }
 
-    public FileReader(File file) {
+    public FileManager(File file) {
         this.file = file;
         this.scanner = getScanner();
     }
 
-    public FileReader(String filePath) {
+    public FileManager(String filePath) {
         this(new File(filePath));
     }
 

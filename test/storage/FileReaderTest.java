@@ -8,12 +8,12 @@ import static org.junit.Assert.assertNotNull;
 public class FileReaderTest {
     @Test
     public void testFileReaderInitialization() {
-        FileReader fileReader = new FileReader("resources/movies.csv");
+        FileManager fileReader = new FileManager("resources/movies.csv");
         assertNotNull(fileReader.nextLine());
     }
     @Test
     public void testFileAppendRow() {
-        FileReader fileReader = new FileReader("resources/movies.csv");
+        FileManager fileReader = new FileManager("resources/movies.csv");
         String[] newRow = {"9999", "Test Movie", "2024", "Drama", "7.5"};
         boolean appendResult = fileReader.appendRow(newRow);
         assert(appendResult);
