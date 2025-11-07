@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * This class is responsible for reading data from a csv file.
  */
-protected class FileManager {
+class FileManager {
     private File file;
     private Scanner scanner;
 
