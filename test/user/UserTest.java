@@ -40,4 +40,13 @@ public class UserTest {
         assertEquals(1, user.getHistory().size());
     }
 
+
+    @Test
+    public void testVerifyPassword() {
+        User user = new User("charlie", "charliepass", false);
+        assertTrue(user.verifyPassword("charliepass"));
+        assertFalse(user.verifyPassword( "wrongpass"));
+        assertFalse(user.verifyPassword( "charliepass1"));
+    }
+
 }

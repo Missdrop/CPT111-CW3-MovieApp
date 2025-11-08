@@ -7,16 +7,15 @@ import java.util.HashSet;
 
 public class User {
     private String username;
-    private String password;
+    private String passwordHash;
     private HashSet<String> watchlist;
     private ArrayList<String> history;
     private boolean isPremium;
 
 
-    public User(String username, String password, HashSet<String> watchlist, ArrayList<String> history, boolean isPremium) {
+    public User(String username, String passwordHash, HashSet<String> watchlist, ArrayList<String> history, boolean isPremium) {
         this.username = username;
-        this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.watchlist = watchlist;
         this.history = history;
         this.isPremium = isPremium;
@@ -24,7 +23,7 @@ public class User {
 
 
     public User(String username, String password, boolean isPremium) {
-        this(username, password, new HashSet<String>(), new ArrayList<String>(), isPremium);
+        this(username, toHash(password), new HashSet<String>(), new ArrayList<String>(), isPremium);
     }
 
 
@@ -36,14 +35,20 @@ public class User {
         );
     }
 
+
+    private static String toHash(String password) {
+        return Integer.toString(password.hashCode(), 16);
+    }
+
+
     //getters
     public String getUsername() {
         return this.username;
     }
 
 
-    public String getPassword() {
-        return this.password;
+    private String getPasswordHash() {
+        return this.passwordHash;
     }
 
 
@@ -95,10 +100,15 @@ public class User {
     }
 
 
+    public boolean verifyPassword(String password) {
+        return getPasswordHash().equals(toHash(password));
+    }
+
+
     public String toCSV() {
         return String.join(",", new String[] {
             this.username,
-            this.password,
+            this.passwordHash,
             String.join(";", this.watchlist),
             String.join(";", this.history),
             String.valueOf(this.isPremium)

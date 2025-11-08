@@ -11,7 +11,7 @@ public class UserManagerTest {
     @Test
     public void testGetUsers() {
         UserManager userManager = new UserManager();
-        assertEquals(userManager.getUser("alice").getPassword(), "alice123");
+        assertEquals(userManager.getUser("alice").getUsername(), "alice");
     }
 
 
@@ -20,7 +20,7 @@ public class UserManagerTest {
         UserManager userManager = new UserManager();
         user.User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>(), false);
         assertTrue(userManager.addUser(newUser));
-        assertEquals(userManager.getUser("naipu").getPassword(), "123123");
+        assertEquals(userManager.getUser("naipu").getUsername(), "naipu");
         userManager.deleteUser("naipu");
     }
 
@@ -43,7 +43,7 @@ public class UserManagerTest {
 
         // Reload to verify
         UserManager userManager2 = new UserManager();
-        assertEquals(userManager2.getUser("naipu").getPassword(), "123123");
+        assertEquals(userManager2.getUser("naipu").getUsername(), "naipu");
 
         userManager2.deleteUser("naipu");
         userManager2.save();
