@@ -96,5 +96,7 @@ class FileManager {
         if (this.scanner != null) {
             this.scanner.close();
         }
+        this.scanner = null;
+        this.file = null;
     }
 }

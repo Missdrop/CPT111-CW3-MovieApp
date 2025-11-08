@@ -83,6 +83,7 @@ public class MovieManager extends FileManager {
 
     @Override
     public void close() {
+        save();
         super.close();
         this.movies.clear();
     }
