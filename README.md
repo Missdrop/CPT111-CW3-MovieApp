@@ -63,7 +63,9 @@
       ```bash
       gradle test
       ```
-   
+
+      当然，也可以选择使用IDE的测试扩展进行测试。
+
    - 清理编译缓存：
       ```bash
       gradle clean
