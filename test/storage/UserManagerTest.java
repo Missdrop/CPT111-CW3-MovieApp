@@ -18,7 +18,7 @@ public class UserManagerTest {
     @Test
     public void testAddUser() {
         UserManager userManager = new UserManager();
-        user.User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>());
+        user.User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>(), false);
         assertTrue(userManager.addUser(newUser));
         assertEquals(userManager.getUser("naipu").getPassword(), "123123");
         userManager.deleteUser("naipu");
@@ -28,7 +28,7 @@ public class UserManagerTest {
     @Test
     public void testAddExistUser() {
         UserManager userManager = new UserManager();
-        user.User newUser = new User("alice","newpass",new HashSet<String>(),new ArrayList<String>());
+        user.User newUser = new User("alice","newpass",new HashSet<String>(),new ArrayList<String>(), false);
         assertFalse(userManager.addUser(newUser));
     }
 
@@ -36,7 +36,7 @@ public class UserManagerTest {
     @Test
     public void testSave() {
         UserManager userManager = new UserManager();
-        user.User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>());
+        user.User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>(), false);
         userManager.addUser(newUser);
         assertTrue(userManager.save());
         userManager.close();

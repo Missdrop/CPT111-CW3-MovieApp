@@ -26,13 +26,20 @@ public class UserManager extends FileManager {
 
         boolean firstLine = true;
         while (this.hasNextLine()) {
+            // skip header
             if (firstLine) {
                 firstLine = false;
-                this.nextLine(); // skip header
+                this.nextLine();
                 continue;
             }
 
-            String[] userData = this.nextLine();
+            // ensure userData has exactly 5 elements
+            String[] userData = new String[5];
+            String[] readData = this.nextLine();
+            for (int i = 0; i < userData.length; i++) {
+                userData[i] = i < readData.length ? readData[i] : "";
+            }
+
             User user = createUser(userData);
             userMap.put(userData[0], user);
         }
@@ -70,7 +77,7 @@ public class UserManager extends FileManager {
 
 
     public boolean save(){
-        String header = "username,password,watchlist,history";
+        String header = "username,password,watchlist,history,premium";
 
         String[] rows = new String[this.users.size()];
         for (int i = 0; i < this.users.size(); i++) {
