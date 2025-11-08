@@ -36,7 +36,7 @@ public class User {
         );
     }
 
-
+    //getters
     public String getUsername() {
         return this.username;
     }
@@ -61,14 +61,37 @@ public class User {
         return this.isPremium;
     }
 
-
+    //setters
     public void setPremium(boolean isPremium) {
         this.isPremium = isPremium;
     }
 
 
-    public boolean appendWatchlist(String movieId) {
+    public boolean addToWatchlist(String movieId) {
         return this.watchlist.add(movieId);
+    }
+
+
+    public boolean removeFromWatchlist(String movieId) {
+        return this.watchlist.remove(movieId);
+    }
+
+
+    public void addToHistory(String movieId) {
+        String date = java.time.LocalDate.now().toString();
+        String historyEntry = movieId + "@" + date;
+        
+        // Remove if already exists to update date
+        removeFromHistory(movieId);
+        history.add(historyEntry);
+        
+        // Remove from watchlist if present
+        removeFromWatchlist(movieId);
+    }
+
+
+    public boolean removeFromHistory(String movieId) {
+        return this.history.removeIf(entry -> entry.startsWith(movieId + "@"));
     }
 
 
