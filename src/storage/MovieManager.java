@@ -20,7 +20,7 @@ public class MovieManager extends FileManager {
 
 
     private Map<String, Movie> getMovies() {
-        Map<String, Movie> movieMap = new java.util.HashMap<>();
+        Map<String, Movie> movieMap = new java.util.HashMap<String, Movie>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {

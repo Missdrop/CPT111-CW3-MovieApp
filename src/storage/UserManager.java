@@ -22,7 +22,7 @@ public class UserManager extends FileManager {
 
 
     private Map<String, User> getUsers() {
-        Map<String, User> userMap = new java.util.HashMap<>();
+        Map<String, User> userMap = new java.util.HashMap<String, User>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {
