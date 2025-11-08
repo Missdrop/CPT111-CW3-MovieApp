@@ -55,7 +55,9 @@
    gradle build
    ```
 
-即可将项目编译为jar，位于`build/libs`目录下。
+   即可将项目编译为jar，位于`build/libs`目录下。
+
+   > 编译时会自动测试所有测试类并给出报告。
 
 - 双击jar文件或者使用
 
