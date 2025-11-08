@@ -8,6 +8,7 @@ app/bin
 ui
 
 .idea
+.vscode
 
 # class files
 *.class
