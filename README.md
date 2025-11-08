@@ -43,12 +43,24 @@
 
 ## 调试&编译
 
-- 项目源代码存储在`src`中，资源文件储存在`resources`中。测试类在`test`文件夹中。
+- 项目使用了Gradle来进行编译。源代码存储在`app/src/main`中，测试类在`app/src/test`文件夹中。
 
-    > 若要编写测试，请在`test`文件夹中新建文件
+   > 若要编写测试，请在测试文件夹中新建文件
 
-- 调试时请保证位于项目根目录（CPT111-Group76），否则会导致`resources`读取异常。
+- 资源文件夹使用相对路径，随执行时的目录而变化。但在Gradle编译期间，其保存在`app/resources`
 
-- 因课程要求原因无法使用Gradle进行编译，为确保每个人能够正常运行，请使用：
-   - Visual Studio Code打开本项目根文件夹，并安装`Extension Pack for Java`拓展包。
-   - JDK25，包含JavaFX。
+- 编译时只需进入项目根目录，使用
+
+   ```bash
+   gradle build
+   ```
+
+即可将项目编译为jar，位于`build/libs`目录下。
+
+- 双击jar文件或者使用
+
+   ```bash
+   java -jar "jar文件路径"
+   ```
+
+   即可运行编译后的jar文件。
