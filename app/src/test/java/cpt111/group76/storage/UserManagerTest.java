@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import cpt111.group76.user.User;
-import cpt111.group76.storage.UserManager;
-
 
 public class UserManagerTest {
     @Test

@@ -3,8 +3,6 @@ package cpt111.group76.movie;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import cpt111.group76.movie.Movie;
-
 public class MovieTest {
     @Test
     public void testMovieCreation() {

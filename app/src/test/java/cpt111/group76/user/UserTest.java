@@ -3,8 +3,6 @@ package cpt111.group76.user;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import cpt111.group76.user.User;
-
 public class UserTest {
     @Test
     public void testUserCreation() {

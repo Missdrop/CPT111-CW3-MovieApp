@@ -3,8 +3,6 @@ package cpt111.group76.storage;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import cpt111.group76.storage.FileManager;
-
 public class FileManagerTest {
     @Test
     public void testFileReaderInitialization() {

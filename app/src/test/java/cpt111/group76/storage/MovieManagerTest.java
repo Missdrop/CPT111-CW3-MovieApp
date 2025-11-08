@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import cpt111.group76.movie.Movie;
-import cpt111.group76.storage.MovieManager;
 
 public class MovieManagerTest {
     @Test
