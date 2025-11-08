@@ -19,6 +19,7 @@ public class User {
         this.password = password;
         this.watchlist = watchlist;
         this.history = history;
+        this.isPremium = isPremium;
     }
 
 
