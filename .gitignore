@@ -9,6 +9,7 @@ ui
 
 .idea
 .vscode
+.DS_Store
 
 # class files
 *.class
