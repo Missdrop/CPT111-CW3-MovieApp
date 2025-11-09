@@ -92,7 +92,6 @@ public class UserManager extends FileManager {
 
     @Override
     public void close() {
-        save();
         super.close();
         this.users.clear();
     }

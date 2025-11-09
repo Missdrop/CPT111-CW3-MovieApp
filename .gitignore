@@ -14,5 +14,4 @@ ui
 # class files
 *.class
 
-# Ignore application resources changes
-app/resources/*
+*.csv

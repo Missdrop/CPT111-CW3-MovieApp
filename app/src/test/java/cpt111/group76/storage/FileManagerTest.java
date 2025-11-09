@@ -4,8 +4,15 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class FileManagerTest {
+    public static void initTestCsvFile() {
+        MovieManagerTest.initTestCsvFile();
+        UserManagerTest.initTestCsvFile();
+    }
+
+
     @Test
     public void testFileReaderInitialization() {
+        initTestCsvFile();
         FileManager fileReader = new FileManager("resources/movies.csv");
         assertNotNull(fileReader.nextLine());
     }
