@@ -83,7 +83,7 @@
 
 ## 用户密码
 
-- 用户密码加密存储，实际密码为：
+- 测试例的用户密码加密存储，实际密码为：
 
    | Username	| Password	|
    | ---------	| ---------	|
@@ -92,3 +92,7 @@
    | alice		| alice123	|
    | diana		| diana123	|
    | charlie	| charlie123|
+
+## 项目文档
+
+项目文档在[这里](document.md)
