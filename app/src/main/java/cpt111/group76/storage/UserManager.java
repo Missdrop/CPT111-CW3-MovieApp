@@ -18,7 +18,11 @@ public class UserManager extends FileManager {
      * Create a User object from user data array.
      */
     private User createUser(String[] userData) {
-        return new User(userData);
+        try {
+            return new User(userData);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 
@@ -41,13 +45,11 @@ public class UserManager extends FileManager {
                 userData[i] = i < readData.length ? readData[i] : "";
             }
 
-            try {
-                User user = createUser(userData);
+            User user = createUser(userData);
+            if (user != null) {
                 userMap.put(userData[0], user);
-            } catch (Exception e) {
-                // skip invalid user data
-                continue;
             }
+
         }
 
         return userMap;

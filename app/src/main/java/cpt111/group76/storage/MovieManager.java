@@ -15,7 +15,11 @@ public class MovieManager extends FileManager {
 
 
     private Movie createMovie(String[] movieData) {
-        return new Movie(movieData);
+        try {
+            return new Movie(movieData);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 
@@ -32,12 +36,9 @@ public class MovieManager extends FileManager {
 
             String[] movieData = this.nextLine();
 
-            try {
-                Movie movie = createMovie(movieData);
+            Movie movie = createMovie(movieData);
+            if (movie != null) {
                 movieMap.put(movie.getId(), movie);
-            } catch (Exception e){
-                // skip invalid movie data
-                continue;
             }
         }
 

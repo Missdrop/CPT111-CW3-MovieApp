@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 public class MovieTest {
     @Test
-    public void testMovieCreation() {
+    public void testMovieCreation() throws Exception {
         String[] movieData = {"movie1", "Inception", "Sci-Fi", "1481", "8.8"};
         Movie movie = new Movie(movieData);
         assertEquals("Inception", movie.getTitle());
@@ -14,7 +14,7 @@ public class MovieTest {
 
 
     @Test
-    public void testMovieCreationEmptyElements() {
+    public void testMovieCreationEmptyElements() throws Exception {
         String[] movieData = {"", "", "", "", ""};
         Movie movie = new Movie(movieData);
         assertEquals("", movie.getTitle());

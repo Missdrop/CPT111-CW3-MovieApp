@@ -27,7 +27,7 @@ public class User {
     }
 
 
-    public User(String[] userData) {
+    public User(String[] userData) throws Exception {
         this(userData[0], userData[1],
         userData[2].length() > 0 ? new HashSet<String>(Set.of(userData[2].split(";"))) : new HashSet<String>(),
         userData[3].length() > 0 ? new ArrayList<String>(List.of(userData[3].split(";"))) : new ArrayList<String>(),

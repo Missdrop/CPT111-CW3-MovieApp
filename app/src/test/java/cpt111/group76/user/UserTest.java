@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class UserTest {
     @Test
-    public void testUserCreation() {
+    public void testUserCreation() throws Exception {
         String[] userData = {"john_doe", "password123", "movie1;movie2;movie3", "", "false"};
         User user = new User(userData);
         user.addToWatchlist("movieAdd");
@@ -14,7 +14,7 @@ public class UserTest {
 
 
     @Test
-    public void testUserCreationEmptyWatchlist() {
+    public void testUserCreationEmptyWatchlist() throws Exception {
         String[] userData = {"jane_doe", "securepass", "", "movieA;movieB", "false"};
         User user = new User(userData);
         assertEquals(0, user.getWatchlist().size());

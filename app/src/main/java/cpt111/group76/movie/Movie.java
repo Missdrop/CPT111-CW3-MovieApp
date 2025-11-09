@@ -17,7 +17,7 @@ public class Movie {
     }
 
 
-    public Movie(String[] movieData) {
+    public Movie(String[] movieData) throws Exception {
         this(movieData[0], movieData[1], movieData[2],
         movieData[3] != null && !movieData[3].isEmpty() ? Integer.parseInt(movieData[3]) : 0,
         movieData[4] != null && !movieData[4].isEmpty() ? Double.parseDouble(movieData[4]) : 0.0);
