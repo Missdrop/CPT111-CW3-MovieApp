@@ -53,8 +53,8 @@ public class Movie {
         return String.join(",", new String[] {
             this.id,
             this.title,
-            Integer.toString(this.year),
             this.genre,
+            Integer.toString(this.year),
             Double.toString(this.rating)
         });
     }

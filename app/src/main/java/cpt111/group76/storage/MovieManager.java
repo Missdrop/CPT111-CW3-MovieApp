@@ -75,7 +75,7 @@ public class MovieManager extends FileManager {
 
 
     public boolean save(){
-        String header = "id,title,year,genre,rating";
+        String header = "id,title,genre,year,rating";
         
         String[] rows = new String[this.movies.size()];
         for (int i = 0; i < this.movies.size(); i++) {

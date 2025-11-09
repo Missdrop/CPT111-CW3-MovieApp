@@ -23,7 +23,13 @@ public class Menu extends Application{
 
 
     @Override
-    public void start(javafx.stage.Stage primaryStage) {
+    public void start(Stage primaryStage) {
+        // when the window is closed, save and close movieManager
+        primaryStage.setOnCloseRequest(e -> {
+            movieManager.save();
+            movieManager.close();
+        });
+
         Button logoutButton = new Button("Logout");
         logoutButton.setOnAction(e -> {
             movieManager.save();
@@ -38,7 +44,7 @@ public class Menu extends Application{
         BorderPane.setAlignment(logoutButton, Pos.TOP_RIGHT);
         BorderPane.setMargin(logoutButton, new Insets(10));
 
-        Scene scene = new Scene(borderPane, 300, 200);
+        Scene scene = new Scene(borderPane, 500, 300);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Menu");
