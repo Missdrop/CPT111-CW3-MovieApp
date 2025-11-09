@@ -31,8 +31,14 @@ public class MovieManager extends FileManager {
             }
 
             String[] movieData = this.nextLine();
-            Movie movie = createMovie(movieData);
-            movieMap.put(movie.getId(), movie);
+
+            try {
+                Movie movie = createMovie(movieData);
+                movieMap.put(movie.getId(), movie);
+            } catch (Exception e){
+                // skip invalid movie data
+                continue;
+            }
         }
 
         return movieMap;

@@ -41,8 +41,13 @@ public class UserManager extends FileManager {
                 userData[i] = i < readData.length ? readData[i] : "";
             }
 
-            User user = createUser(userData);
-            userMap.put(userData[0], user);
+            try {
+                User user = createUser(userData);
+                userMap.put(userData[0], user);
+            } catch (Exception e) {
+                // skip invalid user data
+                continue;
+            }
         }
 
         return userMap;
