@@ -8,6 +8,9 @@ public class App {
         UserManager userManager = new UserManager();
         MovieManager movieManager = new MovieManager();
 
+        
+        userManager.save();
+        movieManager.save();
 
         userManager.close();
         movieManager.close();
