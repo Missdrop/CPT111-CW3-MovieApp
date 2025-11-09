@@ -43,6 +43,8 @@
 
 ## 调试&编译
 
+- 首先，请确保电脑安装了[**带有JavaFX的JDK21**](https://www.azul.com/downloads/?version=java-21-lts&package=jdk-fx#zulu)
+
 - 项目使用了Gradle来进行编译。源代码存储在`app/src/main`中，测试类在`app/src/test`文件夹中。
 
    > 若要编写测试，请在测试文件夹中新建文件。编译时会自动测试所有测试类并给出报告。
@@ -57,14 +59,12 @@
 
    即可将项目编译为jar，位于`build/libs`目录下。
 
-   > 请确保电脑安装了带有JavaFX的JDK21
-
    - 此外，若要单独执行测试，使用
       ```bash
       gradle test
       ```
 
-      当然，也可以选择使用IDE的测试扩展进行测试。
+      > 当然，也可以选择使用IDE的测试扩展进行测试。
 
    - 清理编译缓存：
       ```bash
