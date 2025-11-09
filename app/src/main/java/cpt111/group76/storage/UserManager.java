@@ -54,11 +54,11 @@ public class UserManager extends FileManager {
     }
 
 
-    public boolean addUser(User user) {
-        if (this.users.containsKey(user.getUsername())) {
+    public boolean addUser(String username, String password) {
+        if (this.users.containsKey(username)) {
             return false; // user already exists
         }
-        this.users.put(user.getUsername(), user);
+        this.users.put(username, new User(username, password, false));
         return true;
     }
 

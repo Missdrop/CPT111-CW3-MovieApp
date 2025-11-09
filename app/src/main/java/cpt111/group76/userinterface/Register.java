@@ -10,11 +10,10 @@ import javafx.stage.Stage;
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
 
-public class Login extends Application{
+public class Register extends Application{
     private UserManager userManager;
 
-
-    public Login(UserManager userManager){
+    public Register(UserManager userManager){
         this.userManager = userManager;
     }
 
@@ -27,33 +26,24 @@ public class Login extends Application{
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
 
-        Button loginButton = new Button("Login");
-        loginButton.setOnAction(e -> {
+        Button registerButton = new Button("Register");
+        registerButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            if (authenticate(username, password)){
+            if (userManager.addUser(username, password)){
                 User user = userManager.getUser(username);
                 openMenu(user);
                 primaryStage.close();
-            };
+            }
         });
 
-        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(10, usernameField, passwordField, loginButton);
+        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(10, usernameField, passwordField, registerButton);
         vbox.setPadding(new javafx.geometry.Insets(20));
 
         Scene scene = new Scene(vbox, 300, 200);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Login");
+        primaryStage.setTitle("Register");
         primaryStage.show();
-    }
-
-
-    private boolean authenticate(String username, String password) {
-        User user = userManager.getUser(username);
-        if (user != null && user.verifyPassword(password)) {
-            return true;
-        }
-        return false;
     }
 
 
@@ -61,5 +51,4 @@ public class Login extends Application{
         Menu menu = new Menu(user);
         menu.start(new Stage());
     }
-
 }

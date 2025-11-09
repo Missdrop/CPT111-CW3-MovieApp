@@ -2,10 +2,6 @@ package cpt111.group76.storage;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import cpt111.group76.user.User;
 
 public class UserManagerTest {
     public static void initTestCsvFile() {
@@ -32,8 +28,7 @@ public class UserManagerTest {
     @Test
     public void testAddUser() {
         UserManager userManager = new UserManager();
-        User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>(), false);
-        assertTrue(userManager.addUser(newUser));
+        assertTrue(userManager.addUser("naipu","123123"));
         assertEquals(userManager.getUser("naipu").getUsername(), "naipu");
         userManager.deleteUser("naipu");
     }
@@ -42,16 +37,14 @@ public class UserManagerTest {
     @Test
     public void testAddExistUser() {
         UserManager userManager = new UserManager();
-        User newUser = new User("alice","newpass",new HashSet<String>(),new ArrayList<String>(), false);
-        assertFalse(userManager.addUser(newUser));
+        assertFalse(userManager.addUser("alice","wrongpassword"));
     }
 
 
     @Test
     public void testSave() {
         UserManager userManager = new UserManager();
-        User newUser = new User("naipu","123123",new HashSet<String>(),new ArrayList<String>(), false);
-        userManager.addUser(newUser);
+        userManager.addUser("naipu","123123");
         assertTrue(userManager.save());
         userManager.close();
 
