@@ -54,21 +54,23 @@
 - 编译时只需进入项目根目录，使用
 
    ```bash
-   gradle build
+   .\gradlew build
    ```
+
+   > Windows环境下使用 `.\gradlew.bat`
 
    即可将项目编译为jar，位于`build/libs`目录下。
 
    - 此外，若要单独执行测试，使用
       ```bash
-      gradle test
+      .\gradlew test
       ```
 
       > 当然，也可以选择使用IDE的测试扩展进行测试。
 
    - 清理编译缓存：
       ```bash
-      gradle clean
+      .\gradlew clean
       ```
 
 - 双击jar文件或者使用
