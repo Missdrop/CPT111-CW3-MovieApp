@@ -15,4 +15,4 @@ ui
 *.class
 
 # Ignore application resources changes
-app/resources
+app/resources/*
