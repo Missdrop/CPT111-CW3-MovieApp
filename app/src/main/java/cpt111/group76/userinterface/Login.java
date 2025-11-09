@@ -6,12 +6,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
 
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
 
 public class Login extends Application{
     private UserManager userManager;
+    private boolean openedMenu = false;
 
 
     public Login(UserManager userManager){
@@ -38,8 +41,8 @@ public class Login extends Application{
             };
         });
 
-        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(10, usernameField, passwordField, loginButton);
-        vbox.setPadding(new javafx.geometry.Insets(20));
+        VBox vbox = new VBox(10, usernameField, passwordField, loginButton);
+        vbox.setPadding(new Insets(20));
 
         Scene scene = new Scene(vbox, 300, 200);
         primaryStage.setScene(scene);
@@ -59,7 +62,12 @@ public class Login extends Application{
 
     private void openMenu(User user) {
         Menu menu = new Menu(user);
+        this.openedMenu = true;
         menu.start(new Stage());
     }
 
+
+    public boolean openedMenu() {
+        return this.openedMenu;
+    }
 }

@@ -2,13 +2,11 @@ package cpt111.group76;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Modality;
 
 import cpt111.group76.userinterface.Login;
 import cpt111.group76.userinterface.Register;
@@ -32,18 +30,41 @@ public class App extends Application{
         Button loginButton = new Button("Login");
         Button registerButton = new Button("Register");
 
-        // open the Login UI in a new Stage
+        // open the Login UI in a new Stage (modal). hide primaryStage while login window is open,
+        // and show it again when the login window is closed
         loginButton.setOnAction(e -> {
             Login login = new Login(userManager);
-            login.start(new Stage());
-            primaryStage.close();
+            Stage loginStage = new Stage();
+            loginStage.initOwner(primaryStage);
+            loginStage.initModality(Modality.WINDOW_MODAL);
+            // when login window is closed, show main window again only if login did NOT open Menu
+            loginStage.setOnHidden(ev -> {
+                if (login.openedMenu()) {
+                    // login opened the Menu, close the main stage permanently
+                    primaryStage.close();
+                } else {
+                    primaryStage.show();
+                }
+            });
+            // hide main window and show login
+            primaryStage.hide();
+            login.start(loginStage);
         });
 
-        // open the Register UI in a new Stage
         registerButton.setOnAction(e -> {
             Register register = new Register(userManager);
-            register.start(new Stage());
-            primaryStage.close();
+            Stage registerStage = new Stage();
+            registerStage.initOwner(primaryStage);
+            registerStage.initModality(Modality.WINDOW_MODAL);
+            registerStage.setOnHidden(ev -> {
+                if (register.openedMenu()) {
+                    primaryStage.close();
+                } else {
+                    primaryStage.show();
+                }
+            });
+            primaryStage.hide();
+            register.start(registerStage);
         });
 
         HBox hbox = new HBox(10, loginButton, registerButton);
