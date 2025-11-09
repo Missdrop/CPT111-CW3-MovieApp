@@ -1,11 +1,12 @@
 package cpt111.group76.userinterface;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 import cpt111.group76.App;
 import cpt111.group76.storage.MovieManager;
@@ -31,10 +32,13 @@ public class Menu extends Application{
             primaryStage.close();
         });
 
-        VBox vbox = new VBox(10, logoutButton);
-        vbox.setPadding(new Insets(20));
+        BorderPane borderPane = new BorderPane();
+        //右上角
+        borderPane.setTop(logoutButton);
+        BorderPane.setAlignment(logoutButton, Pos.TOP_RIGHT);
+        BorderPane.setMargin(logoutButton, new Insets(10));
 
-        Scene scene = new Scene(vbox, 300, 200);
+        Scene scene = new Scene(borderPane, 300, 200);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Menu");
