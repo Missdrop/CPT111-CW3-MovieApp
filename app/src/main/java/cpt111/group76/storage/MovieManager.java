@@ -1,11 +1,11 @@
 package cpt111.group76.storage;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import cpt111.group76.movie.Movie;
 
 public class MovieManager extends FileManager {
-    private Map<String, Movie> movies;
+    private HashMap<String, Movie> movies;
 
 
     public MovieManager() {
@@ -23,8 +23,8 @@ public class MovieManager extends FileManager {
     }
 
 
-    private Map<String, Movie> getMovies() {
-        Map<String, Movie> movieMap = new java.util.HashMap<String, Movie>();
+    private HashMap<String, Movie> getMovies() {
+        HashMap<String, Movie> movieMap = new HashMap<String, Movie>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {

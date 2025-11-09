@@ -1,11 +1,11 @@
 package cpt111.group76.storage;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import cpt111.group76.user.User;
 
 public class UserManager extends FileManager {
-    private Map<String, User> users;
+    private HashMap<String, User> users;
 
 
     public UserManager() {
@@ -26,8 +26,8 @@ public class UserManager extends FileManager {
     }
 
 
-    private Map<String, User> getUsers() {
-        Map<String, User> userMap = new java.util.HashMap<String, User>();
+    private HashMap<String, User> getUsers() {
+        HashMap<String, User> userMap = new HashMap<String, User>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {
