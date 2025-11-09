@@ -4,7 +4,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
 
@@ -67,10 +69,14 @@ public class App extends Application{
             register.start(registerStage);
         });
 
-        HBox hbox = new HBox(10, loginButton, registerButton);
-        hbox.setPadding(new Insets(20));
+        HBox hbox = new HBox(20, loginButton, registerButton);
+        hbox.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(hbox, 400, 200);
+        VBox root = new VBox(hbox);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(20));
+
+        Scene scene = new Scene(root, 400, 200);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Movie Recommendation & Tracker");
         primaryStage.show();
