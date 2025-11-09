@@ -15,4 +15,4 @@ ui
 *.class
 
 # resources
-app/resources
+resources
