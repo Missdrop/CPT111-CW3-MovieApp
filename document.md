@@ -62,7 +62,7 @@
 - [ ] 更改用户密码的功能。
 - [ ] 一个支持多种策略（例如，按类型、年份、评分等推荐）且可在运行时切换的推荐引擎。
 - [ ] 一个使用 JavaFX 的图形用户界面（GUI），用于浏览电影、管理观看列表和查看推荐（替代命令行菜单）。
-- [ ] 将 User 子类化为 BasicUser、PremiumUser 等，每个子类具有不同的权限。
+- [x] 将 User 子类化为 BasicUser、PremiumUser 等，每个子类具有不同的权限。
 - [ ] 将 Movie 子类化为 FeatureFilm、ShortFilm、Documentary 等。
 - [x] 在将用户密码保存到 CSV 文件之前进行哈希（加密）的功能。
 - [ ] 其他你可以想到的功能。
