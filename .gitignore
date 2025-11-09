@@ -13,3 +13,6 @@ ui
 
 # class files
 *.class
+
+# resources
+app/resources
