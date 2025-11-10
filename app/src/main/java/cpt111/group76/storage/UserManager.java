@@ -5,12 +5,20 @@ import java.util.HashMap;
 import cpt111.group76.user.User;
 
 public class UserManager extends FileManager {
-    private HashMap<String, User> users;
+    private static HashMap<String, User> users;
 
 
     public UserManager() {
         super("resources/users.csv");
-        this.users = getUsers();
+        users = getUsers();
+    }
+
+
+    public static String checkUsername(String username) {
+        if (users.containsKey(username)) {
+            return "Username already exists.";
+        }
+        return User.checkUsername(username);
     }
 
 
@@ -57,24 +65,24 @@ public class UserManager extends FileManager {
 
 
     public User getUser(String username) {
-        return this.users.get(username);
+        return users.get(username);
     }
 
 
     public boolean addUser(String username, String password) {
-        if (this.users.containsKey(username)) {
+        if (users.containsKey(username)) {
             return false; // user already exists
         }
-        this.users.put(username, new User(username, password, false));
+        users.put(username, new User(username, password, false));
         return true;
     }
 
 
     public boolean deleteUser(String username) {
-        if (this.users.get(username) == null) {
+        if (users.get(username) == null) {
             return false; // user does not exist
         }
-        this.users.remove(username);
+        users.remove(username);
         return true;
     }
 
@@ -87,9 +95,9 @@ public class UserManager extends FileManager {
     public boolean save(){
         String header = "username,password,watchlist,history,premium";
 
-        String[] rows = new String[this.users.size()];
-        for (int i = 0; i < this.users.size(); i++) {
-            User user = (User) this.users.values().toArray()[i];
+        String[] rows = new String[users.size()];
+        for (int i = 0; i < users.size(); i++) {
+            User user = (User) users.values().toArray()[i];
             rows[i] = user.toCSV();
         }
 
@@ -100,6 +108,6 @@ public class UserManager extends FileManager {
     @Override
     public void close() {
         super.close();
-        this.users.clear();
+        users.clear();
     }
 }
