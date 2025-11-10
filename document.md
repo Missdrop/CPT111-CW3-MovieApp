@@ -54,7 +54,7 @@
 
 ### 技术要求
 
-- [ ] 使用面向对象原则。至少应实现以下类：Movie、User、Watchlist、History 和 RecommendationEngine。
+- [x] 使用面向对象原则。至少应实现以下类：Movie、User、Watchlist、History 和 RecommendationEngine。
 - [x] 使用 ArrayList 和/或 HashMap 存储电影和用户数据。
 - [x] 使用文件 I/O 来加载电影数据和加载/保存用户数据。
 - [x] 实现异常处理以防止崩溃。
