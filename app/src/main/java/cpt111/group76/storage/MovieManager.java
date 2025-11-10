@@ -5,13 +5,13 @@ import java.util.HashMap;
 import cpt111.group76.movie.Movie;
 
 public class MovieManager extends FileManager {
-    private HashMap<String, Movie> movies;
+    private static HashMap<String, Movie> movies;
     int maxIndex; // to track the highest movie index
 
 
     public MovieManager() {
         super("resources/movies.csv");
-        this.movies = getMovies();
+        movies = getMovies();
         this.maxIndex = getMaxIndex();
     }
 
@@ -49,15 +49,15 @@ public class MovieManager extends FileManager {
 
 
     public Movie getMovie(String movieId) {
-        return this.movies.get(movieId);
+        return movies.get(movieId);
     }
 
 
     public boolean addMovie(Movie movie) {
-        if (this.movies.containsKey(movie.getId())) {
+        if (movies.containsKey(movie.getId())) {
             return false; // movie already exists
         }
-        this.movies.put(movie.getId(), movie);
+        movies.put(movie.getId(), movie);
         return true;
     }
 
@@ -73,7 +73,7 @@ public class MovieManager extends FileManager {
 
     private int getMaxIndex() {
         int max = 0;
-        for (String movieId : this.movies.keySet()) {
+        for (String movieId : movies.keySet()) {
             int index = idToIndex(movieId);
             if (index > max) {
                 max = index;
@@ -95,11 +95,11 @@ public class MovieManager extends FileManager {
 
 
     public boolean deleteMovie(String movieId) {
-        if (this.movies.get(movieId) == null) {
+        if (movies.get(movieId) == null) {
             return false; // movie does not exist
         }
 
-        this.movies.remove(movieId);
+        movies.remove(movieId);
         return true;
     }
 
@@ -112,9 +112,9 @@ public class MovieManager extends FileManager {
     public boolean save(){
         String header = "id,title,genre,year,rating";
         
-        String[] rows = new String[this.movies.size()];
-        for (int i = 0; i < this.movies.size(); i++) {
-            Movie movie = (Movie) this.movies.values().toArray()[i];
+        String[] rows = new String[movies.size()];
+        for (int i = 0; i < movies.size(); i++) {
+            Movie movie = (Movie) movies.values().toArray()[i];
             rows[i] = movie.toCSV();
         }
 
@@ -125,6 +125,6 @@ public class MovieManager extends FileManager {
     @Override
     public void close() {
         super.close();
-        this.movies.clear();
+        movies.clear();
     }
 }
