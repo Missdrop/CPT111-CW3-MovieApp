@@ -50,11 +50,9 @@ public class UserManager extends FileManager {
         for (char c : password.toCharArray()) {
             if (Character.isDigit(c)){
                 hasDigit = true;
-                break;
             }
             if (Character.isLetter(c)){
                 hasLetter = true;
-                break;
             }
         }
         if (!hasDigit) {
