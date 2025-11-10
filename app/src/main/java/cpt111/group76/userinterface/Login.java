@@ -36,7 +36,7 @@ public class Login extends Application{
         loginButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            if (authenticate(username, password)){
+            if (UserManager.authenticate(username, password)){
                 User user = userManager.getUser(username);
                 if (user.isPremium()) {
                     user = new PremiumUser(user);
@@ -56,15 +56,6 @@ public class Login extends Application{
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login");
         primaryStage.show();
-    }
-
-
-    private boolean authenticate(String username, String password) {
-        User user = userManager.getUser(username);
-        if (user != null && user.verifyPassword(password)) {
-            return true;
-        }
-        return false;
     }
 
 

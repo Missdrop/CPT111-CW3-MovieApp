@@ -31,18 +31,24 @@ public class Register extends Application{
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
 
+        PasswordField repeatPasswordField = new PasswordField();
+        repeatPasswordField.setPromptText("Repeat Password");
+
         Button registerButton = new Button("Register");
         registerButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            if (userManager.addUser(username, password)){
+            String repeatPassword = repeatPasswordField.getText();
+            if (password.equals(repeatPassword)
+                    && userManager.addUser(username, password)
+                    && User.checkPassword(password) == null){
                 User user = new BasicUser(userManager.getUser(username));
                 openMenu(user);
                 primaryStage.close();
             }
         });
 
-        VBox vbox = new VBox(10, usernameField, passwordField, registerButton);
+        VBox vbox = new VBox(10, usernameField, passwordField, repeatPasswordField, registerButton);
         vbox.setPadding(new Insets(20));
 
         Scene scene = new Scene(vbox, 300, 200);

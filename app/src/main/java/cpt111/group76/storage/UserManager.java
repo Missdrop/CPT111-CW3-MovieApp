@@ -14,6 +14,15 @@ public class UserManager extends FileManager {
     }
 
 
+    public static boolean authenticate(String username, String password) {
+        User user = users.get(username);
+        if (user != null && user.verifyPassword(password)) {
+            return true;
+        }
+        return false;
+    }
+
+
     public static String checkUsername(String username) {
         if (users.containsKey(username)) {
             return "Username already exists.";
@@ -78,6 +87,15 @@ public class UserManager extends FileManager {
     }
 
 
+    public boolean addUser(User user) {
+        if (users.get(user.getUsername()) == null) {
+            users.put(user.getUsername(), user);
+            return true;
+        }
+        return false; // user already exists
+    }
+
+
     public boolean deleteUser(String username) {
         if (users.get(username) == null) {
             return false; // user does not exist
@@ -89,6 +107,12 @@ public class UserManager extends FileManager {
 
     public boolean deleteUser(User user) {
         return deleteUser(user.getUsername());
+    }
+
+
+    public void updateUser(User user) {
+        deleteUser(user);
+        addUser(user);
     }
 
 

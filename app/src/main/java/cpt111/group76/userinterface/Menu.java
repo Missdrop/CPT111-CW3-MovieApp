@@ -11,6 +11,7 @@ import javafx.scene.layout.Priority;
 
 import cpt111.group76.App;
 import cpt111.group76.storage.MovieManager;
+import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
 
 public class Menu extends Application{
@@ -29,6 +30,7 @@ public class Menu extends Application{
         primaryStage.setOnCloseRequest(e -> {
             movieManager.save();
             movieManager.close();
+            new UserManager().updateUser(user);
         });
 
         Button logoutButton = new Button("Logout");
@@ -39,12 +41,21 @@ public class Menu extends Application{
             primaryStage.close();
         });
 
+        Button changePasswordButton = new Button("Change Password");
+        changePasswordButton.setOnAction(e -> {
+            movieManager.save();
+            movieManager.close();
+            new ChangePassword(user).start(new Stage());
+            primaryStage.close();
+        });
+
         Text usernameText = new Text("User: " + user.getUsername() + " Type: " + (user.isPremium() ? "[Premium]" : "[Non-Premium]"));
 
         HBox topBar = new HBox();
-        topBar.getChildren().addAll(usernameText, logoutButton);
+        topBar.getChildren().addAll(usernameText, changePasswordButton, logoutButton);
         HBox.setHgrow(usernameText, Priority.ALWAYS);
         HBox.setMargin(usernameText, new Insets(10));
+        HBox.setMargin(changePasswordButton, new Insets(10));
         HBox.setMargin(logoutButton, new Insets(10));
 
         Scene scene = new Scene(topBar, 500, 300);

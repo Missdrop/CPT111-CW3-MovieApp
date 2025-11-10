@@ -103,6 +103,11 @@ public class User {
     }
 
 
+    public void setPassword(String newPassword) {
+        this.passwordHash = toHash(newPassword);
+    }
+
+
     public boolean addToWatchlist(String movieId) {
         return this.watchlist.add(movieId);
     }
