@@ -41,7 +41,7 @@ public class Register extends Application{
             String repeatPassword = repeatPasswordField.getText();
             if (password.equals(repeatPassword)
                     && userManager.addUser(username, password)
-                    && User.checkPassword(password) == null){
+                    && UserManager.checkPassword(password) == null){
                 User user = new BasicUser(userManager.getUser(username));
                 openMenu(user);
                 primaryStage.close();

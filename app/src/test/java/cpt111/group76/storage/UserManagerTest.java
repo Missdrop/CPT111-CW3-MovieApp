@@ -3,6 +3,8 @@ package cpt111.group76.storage;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import cpt111.group76.user.User;
+
 public class UserManagerTest {
     public static void initTestCsvFile() {
         FileManager userFileManager = new FileManager("resources/users.csv");
@@ -69,5 +71,13 @@ public class UserManagerTest {
     @Test
     public void testCheckExistingUsername() {
         assertEquals(UserManager.checkUsername("bob"), "Username already exists.");
+    }
+
+
+    @Test
+    public void testCheckPassword() {
+        assertEquals("Password must be at least 6 characters long.", UserManager.checkPassword("123"));
+        assertEquals("Password must contain at least one digit.", UserManager.checkPassword("abcdef"));
+        assertNull(UserManager.checkPassword("abc123"));
     }
 }

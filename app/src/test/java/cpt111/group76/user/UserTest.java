@@ -63,21 +63,4 @@ public class UserTest {
         user.addToWatchlist("movieA");
         assertTrue(user.getWatchlist().contains("movieA"));
     }
-
-
-    @Test
-    public void testCheckPassword() {
-        assertEquals("Password must be at least 6 characters long.", User.checkPassword("123"));
-        assertEquals("Password must contain at least one digit.", User.checkPassword("abcdef"));
-        assertNull(User.checkPassword("abc123"));
-    }
-
-
-    @Test
-    public void testCheckUsername() {
-        assertEquals(User.checkUsername("ab"), "Username must be between 3 and 20 characters long.");
-        assertEquals(User.checkUsername("a".repeat(21)), "Username must be between 3 and 20 characters long.");
-        assertEquals(User.checkUsername("user!name"), "Username can only contain letters and digits.");
-        assertNull(User.checkUsername("validUser123"));
-    }
 }

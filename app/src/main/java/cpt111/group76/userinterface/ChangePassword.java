@@ -40,7 +40,7 @@ public class ChangePassword extends Application{
             if (UserManager.authenticate(user.getUsername(), password)
                     && !password.equals(newPassword)
                     && newPassword.equals(repeatNewPassword)
-                    && User.checkPassword(newPassword) == null) {
+                    && UserManager.checkPassword(newPassword) == null) {
                 user.setPassword(newPassword);
                 new UserManager().updateUser(user);
                 new App().start(new Stage());

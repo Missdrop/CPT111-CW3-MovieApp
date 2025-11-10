@@ -34,39 +34,6 @@ public class User {
     }
 
 
-    public static String checkPassword(String password) {
-        if (password.length() < 6) {
-            return "Password must be at least 6 characters long.";
-        }
-        // password must contain at least one digit
-        boolean hasDigit = false;
-        for (char c : password.toCharArray()) {
-            if (Character.isDigit(c)){
-                hasDigit = true;
-                break;
-            }
-        }
-        if (!hasDigit) {
-            return "Password must contain at least one digit.";
-        }
-        return null; // valid password
-    }
-
-
-    public static String checkUsername(String username) {
-        if (username.length() < 3 || username.length() > 20) {
-            return "Username must be between 3 and 20 characters long.";
-        }
-        //username can only contain letters, digits
-        for (char c : username.toCharArray()) {
-            if (!Character.isLetterOrDigit(c)) {
-                return "Username can only contain letters and digits.";
-            }
-        }
-        return null; // valid username
-    }
-
-
     private static String toHash(String password) {
         return Integer.toString(password.hashCode(), 16);
     }
