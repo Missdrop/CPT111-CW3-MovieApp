@@ -5,7 +5,7 @@ public class Movie {
     private String title;
     private String genre;
     private int year;
-    private double rating;、
+    private double rating;
     private String director;
     private String company;
     private int time;
