@@ -118,9 +118,9 @@ public class AddNewMovie {
         VBox layout = new VBox(12,
             titleLabel,
             titleField,
-            genreComboBox,
             yearField,
             ratingField,
+            genreComboBox,
             addButton,
             statusLabel
         );
