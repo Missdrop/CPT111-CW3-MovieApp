@@ -17,11 +17,11 @@ import cpt111.group76.movie.Movie;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WatchlistPage {
+public class ViewWatchlist {
     private User user;
     private HashMap<String, Movie> movieDatabase;
 
-    public WatchlistPage(User user, HashMap<String, Movie> movieDatabase) {
+    public ViewWatchlist(User user, HashMap<String, Movie> movieDatabase) {
         this.user = user;
         this.movieDatabase = movieDatabase;
     }

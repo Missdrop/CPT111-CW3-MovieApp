@@ -20,6 +20,11 @@
 │   ├── PremiumUser.java
 │   └── User.java
 ├── userinterface
+│   ├── BrowseMovies.java
+│   ├── GetPremium.java
+│   ├── Recommendation.java
+│   ├── ViewHistory.java
+│   ├── ViewWatchlist.java
 │   ├── ChangePassword.java
 │   ├── Login.java
 │   ├── Menu.java

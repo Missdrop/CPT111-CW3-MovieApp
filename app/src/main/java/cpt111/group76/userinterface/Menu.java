@@ -100,7 +100,7 @@ public class Menu extends Application{
         Button getRecommendationsButton = createMenuButton("Recommendation", "#e67e22");
 
         browseMoviesButton.setOnAction(e -> new BrowseMovies(user, movieDatabase).show());
-        viewWatchlistButton.setOnAction(e -> new WatchlistPage(user, movieDatabase).show());
+        viewWatchlistButton.setOnAction(e -> new ViewWatchlist(user, movieDatabase).show());
         viewHistoryButton.setOnAction(e -> new ViewHistory(user, movieDatabase).show());
         getRecommendationsButton.setOnAction(e -> new Recommendation(user, movieDatabase).show());
 
