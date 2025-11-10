@@ -3,8 +3,6 @@ package cpt111.group76.storage;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import cpt111.group76.user.User;
-
 public class UserManagerTest {
     public static void initTestCsvFile() {
         FileManager userFileManager = new FileManager("resources/users.csv");
