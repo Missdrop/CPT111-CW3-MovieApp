@@ -46,14 +46,20 @@ public class UserManager extends FileManager {
         }
         // password must contain at least one digit
         boolean hasDigit = false;
+        boolean hasLetter = false;
         for (char c : password.toCharArray()) {
             if (Character.isDigit(c)){
                 hasDigit = true;
-                break;
+            }
+            if (Character.isLetter(c)){
+                hasLetter = true;
             }
         }
         if (!hasDigit) {
             return "Password must contain at least one digit.";
+        }
+        if (!hasLetter) {
+            return "Password must contain at least one letter.";
         }
         return null; // valid password
     }

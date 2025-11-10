@@ -4,12 +4,12 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 
 import cpt111.group76.user.User;
-import cpt111.group76.App;
 import cpt111.group76.storage.UserManager;
 
 public class ChangePassword extends Application{
@@ -24,7 +24,7 @@ public class ChangePassword extends Application{
     @Override
     public void start(Stage primaryStage){
         PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Password");
+        passwordField.setPromptText("Current Password");
 
         PasswordField newPasswordField = new PasswordField();
         newPasswordField.setPromptText("New Password");
@@ -33,27 +33,51 @@ public class ChangePassword extends Application{
         repeatNewPasswordField.setPromptText("Repeat New Password");
 
         Button changePasswordButton = new Button("Change Password");
+        Label statusLabel = new Label();
+        statusLabel.setWrapText(true);
+
         changePasswordButton.setOnAction(e -> {
             String password = passwordField.getText();
             String newPassword = newPasswordField.getText();
             String repeatNewPassword = repeatNewPasswordField.getText();
-            if (UserManager.authenticate(user.getUsername(), password)
-                    && !password.equals(newPassword)
-                    && newPassword.equals(repeatNewPassword)
-                    && UserManager.checkPassword(newPassword) == null) {
-                user.setPassword(newPassword);
-                new UserManager().updateUser(user);
-                new App().start(new Stage());
-                primaryStage.close();
+            
+            if (!user.verifyPassword(password)) {
+                statusLabel.setText("Current password is incorrect.");
+                statusLabel.setStyle("-fx-text-fill: red;");
+                return;
             }
+            
+            if (password.equals(newPassword)) {
+                statusLabel.setText("New password must be different from current password.");
+                statusLabel.setStyle("-fx-text-fill: red;");
+                return;
+            }
+            
+            if (!newPassword.equals(repeatNewPassword)) {
+                statusLabel.setText("New passwords do not match.");
+                statusLabel.setStyle("-fx-text-fill: red;");
+                return;
+            }
+            
+            String passwordCheck = UserManager.checkPassword(newPassword);
+            if (passwordCheck != null) {
+                statusLabel.setText(passwordCheck);
+                statusLabel.setStyle("-fx-text-fill: red;");
+                return;
+            }
+            
+            user.setPassword(newPassword);
+            new UserManager().updateUser(user);
+            statusLabel.setText("Password changed successfully!");
+            statusLabel.setStyle("-fx-text-fill: green;");
         });
 
-        VBox vbox = new VBox(10, passwordField, newPasswordField, repeatNewPasswordField, changePasswordButton);
+        VBox vbox = new VBox(10, passwordField, newPasswordField, repeatNewPasswordField, changePasswordButton, statusLabel);
         vbox.setPadding(new Insets(20));
 
-        Scene scene = new Scene(vbox, 300, 200);
+        Scene scene = new Scene(vbox, 300, 250);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Login");
+        primaryStage.setTitle("Change Password");
         primaryStage.show();
     }
 }

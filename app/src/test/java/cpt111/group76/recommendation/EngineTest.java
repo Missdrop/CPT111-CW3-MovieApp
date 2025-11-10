@@ -8,10 +8,12 @@ import java.util.HashMap;
 import cpt111.group76.movie.Movie;
 import cpt111.group76.user.User;
 import cpt111.group76.storage.MovieManager;
+import cpt111.group76.storage.MovieManagerTest;
 
 public class EngineTest {
     @Test
     public void testEngineRecommendation() {
+        MovieManagerTest.initTestCsvFile();
         MovieManager movieManager = new MovieManager();
         HashMap<String, Movie> movieDatabase = movieManager.getMovieDatabase();
 
