@@ -48,4 +48,19 @@ public class UserTest {
         assertFalse(user.verifyPassword( "charliepass1"));
     }
 
+
+    @Test
+    public void testReadHistory() {
+        User user = new User("david", "davidpass", false);
+        user.addToHistory("movie1");
+        assertTrue(user.getHistory().contains("movie1"));
+    }
+
+
+    @Test
+    public void testReadWatchlist() {
+        User user = new User("eve", "evepass", false);
+        user.addToWatchlist("movieA");
+        assertTrue(user.getWatchlist().contains("movieA"));
+    }
 }
