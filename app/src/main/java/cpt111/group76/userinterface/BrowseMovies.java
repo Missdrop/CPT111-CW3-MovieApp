@@ -147,27 +147,27 @@ public class BrowseMovies {
     private void setupTableColumns() {
         // ID column
         TableColumn<Movie, String> idColumn = new TableColumn<>("ID");
-        idColumn.setMinWidth(80);
+        idColumn.setMinWidth(60);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         // Title column
         TableColumn<Movie, String> titleColumn = new TableColumn<>("Title");
-        titleColumn.setMinWidth(200);
+        titleColumn.setMinWidth(300);
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
 
         // Genre column
         TableColumn<Movie, String> genreColumn = new TableColumn<>("Genre");
-        genreColumn.setMinWidth(120);
+        genreColumn.setMinWidth(80);
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
 
         // Year column
         TableColumn<Movie, Integer> yearColumn = new TableColumn<>("Year");
-        yearColumn.setMinWidth(80);
+        yearColumn.setMinWidth(60);
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
 
         // Rating column
         TableColumn<Movie, Double> ratingColumn = new TableColumn<>("Rating");
-        ratingColumn.setMinWidth(80);
+        ratingColumn.setMinWidth(60);
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
         
         // Add all columns to the table
