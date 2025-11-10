@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -47,6 +48,32 @@ public class BrowseMovies {
         setupTableColumns();
         updateMovieData();
 
+        // Set row factory for color highlighting
+        movieTable.setRowFactory(tv -> new TableRow<Movie>() {
+            @Override
+            protected void updateItem(Movie movie, boolean empty) {
+                super.updateItem(movie, empty);
+                
+                if (empty || movie == null) {
+                    setStyle("");
+                } else {
+                    String movieId = movie.getId();
+                    boolean inWatchlist = user.getWatchlist().contains(movieId);
+                    boolean inHistory = user.getHistory().contains(movieId);
+                    
+                    if (inHistory) {
+                        // Blue color for movies in history (same as markWatched button)
+                        setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+                    } else if (inWatchlist) {
+                        // Green color for movies in watchlist (same as addToWatchlist button)
+                        setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
+
         // Action buttons with styling
         Button addToWatchlistButton = new Button("Add to Watchlist");
         addToWatchlistButton.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white;");
@@ -63,7 +90,7 @@ public class BrowseMovies {
             addNewMovieButton = new Button("Add New Movie");
             addNewMovieButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             addNewMovieButton.setOnAction(e -> {
-                new AddNewMovie(movieManager).show(stage);
+                new AddNewMovie(movieManager).show(this);
                 // Refresh the movie table when the add movie window is closed
                 stage.setOnHidden(ev -> updateMovieData());
             });
@@ -83,6 +110,7 @@ public class BrowseMovies {
                     if (success) {
                         statusLabel.setText("Successfully added to watchlist!");
                         new UserManager().updateUser(user);
+                        movieTable.refresh(); // Refresh to update row colors
                     } else {
                         statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
                     }
@@ -102,6 +130,7 @@ public class BrowseMovies {
                     user.addToHistory(movieId);
                     statusLabel.setText("Successfully marked as watched!");
                     new UserManager().updateUser(user);
+                    movieTable.refresh(); // Refresh to update row colors
                 }
             } else {
                 statusLabel.setText("Please select a movie first.");
@@ -119,6 +148,7 @@ public class BrowseMovies {
                     if (success) {
                         statusLabel.setText("Successfully removed from watchlist!");
                         new UserManager().updateUser(user);
+                        movieTable.refresh(); // Refresh to update row colors
                     } else {
                         statusLabel.setText("Failed to remove from watchlist.");
                     }
@@ -171,7 +201,11 @@ public class BrowseMovies {
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
         
         // Add all columns to the table
-        movieTable.getColumns().addAll(idColumn, titleColumn, genreColumn, yearColumn, ratingColumn);
+        movieTable.getColumns().add(idColumn);
+        movieTable.getColumns().add(titleColumn);
+        movieTable.getColumns().add(genreColumn);
+        movieTable.getColumns().add(yearColumn);
+        movieTable.getColumns().add(ratingColumn);
         
         // Make the table take up available space
         movieTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
@@ -181,5 +215,11 @@ public class BrowseMovies {
         movieData.clear();
         movieData.addAll(movieDatabase.values());
         movieTable.setItems(movieData);
+    }
+
+
+    public void refresh() {
+        updateMovieData();
+        movieTable.refresh();
     }
 }

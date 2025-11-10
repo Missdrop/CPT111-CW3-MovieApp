@@ -19,12 +19,11 @@ public class AddNewMovie {
         this.movieManager = movieManager;
     }
 
-    public void show(Stage lastStage) {
+    public void show(BrowseMovies browseMovies) {
         Stage stage = new Stage();
         stage.setTitle("Add New Movie");
         stage.setOnCloseRequest(e -> {
-            lastStage.hide();
-            lastStage.show();
+            browseMovies.refresh();
         });
 
 
