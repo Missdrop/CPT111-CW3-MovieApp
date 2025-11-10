@@ -41,7 +41,7 @@ public class Menu extends Application{
     }
 
 
-   @Override
+    @Override
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e -> {
             movieManager.save();
