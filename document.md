@@ -3,23 +3,27 @@
 ## 项目结构
 
 ```text
-├── movie
+├── movie                   - 电影类
 │   ├── <待实现>
 │   └── Movie.java
-├── recommendation
+│
+├── recommendation          - 推荐引擎
 │   └── Engine.java
-├── storage
-│   ├── FileManager.java
-│   ├── MovieManager.java
-│   └── UserManager.java
-├── user
-│   ├── data
-│   │   ├── History.java
-│   │   └── Watchlist.java
+│
+├── storage                 - 数据存储
+│   ├── FileManager.java    - 数据库与文件的IO
+│   ├── MovieManager.java   - 电影数据库类
+│   └── UserManager.java    - 用户数据库类
+│
+├── user                    - 用户类
 │   ├── BasicUser.java
 │   ├── PremiumUser.java
-│   └── User.java
-├── userinterface
+│   ├── User.java
+│   └── data                - 用户数据的基本类型
+│       ├── History.java
+│       └── Watchlist.java
+│
+├── userinterface           - 存放各个GUI
 │   ├── BrowseMovies.java
 │   ├── GetPremium.java
 │   ├── Recommendation.java
@@ -27,9 +31,10 @@
 │   ├── ViewWatchlist.java
 │   ├── ChangePassword.java
 │   ├── Login.java
-│   ├── Menu.java
+│   ├── Menu.java           - 登陆后的菜单
 │   └── Register.java
-└── App.java
+│
+└── App.java                - 主类，包含主页的GUI
 ```
 
 ## 功能实现（CW3要求）
@@ -74,4 +79,6 @@
 - [x] 将 User 子类化为 BasicUser、PremiumUser 等，每个子类具有不同的权限。
 - [ ] 将 Movie 子类化为 FeatureFilm、ShortFilm、Documentary 等。
 - [x] 在将用户密码保存到 CSV 文件之前进行哈希（加密）的功能。
-- [ ] 其他你可以想到的功能。
+### 其他你可以想到的功能
+
+- [x] 更改用户权限
