@@ -24,6 +24,7 @@
 │       └── Watchlist.java
 │
 ├── userinterface           - 存放各个GUI
+│   ├── AddNewMovie.java
 │   ├── BrowseMovies.java
 │   ├── GetPremium.java
 │   ├── Recommendation.java
@@ -82,3 +83,4 @@
 ### 其他你可以想到的功能
 
 - [x] 更改用户权限
+- [x] Premium用户可以创建新电影

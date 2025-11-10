@@ -12,14 +12,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Priority;
+import java.util.HashMap;
 
 import cpt111.group76.App;
 import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
-
-import java.util.HashMap;
 
 public class Menu extends Application{
     private User user;
@@ -35,7 +34,6 @@ public class Menu extends Application{
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e -> {
             movieManager.save();
-            movieManager.close();
             new UserManager().updateUser(user);
         });
 
@@ -57,7 +55,6 @@ public class Menu extends Application{
         logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
         logoutButton.setOnAction(e -> {
             movieManager.save();
-            movieManager.close();
             new App().start(new Stage());
             primaryStage.close();
         });
@@ -99,7 +96,7 @@ public class Menu extends Application{
         Button viewHistoryButton = createMenuButton("View History", "#9b59b6");
         Button getRecommendationsButton = createMenuButton("Recommendation", "#e67e22");
 
-        browseMoviesButton.setOnAction(e -> new BrowseMovies(user, movieDatabase).show());
+        browseMoviesButton.setOnAction(e -> new BrowseMovies(user, movieDatabase, movieManager).show());
         viewWatchlistButton.setOnAction(e -> new ViewWatchlist(user, movieDatabase).show());
         viewHistoryButton.setOnAction(e -> new ViewHistory(user, movieDatabase).show());
         getRecommendationsButton.setOnAction(e -> new Recommendation(user, movieDatabase).show());
