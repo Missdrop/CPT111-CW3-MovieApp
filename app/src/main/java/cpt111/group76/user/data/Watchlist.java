@@ -47,4 +47,9 @@ public class Watchlist {
     public boolean contains(String movieId) {
         return watchlist.contains(movieId);
     }
+
+
+    public String toCSV() {
+        return String.join(";", watchlist);
+    }
 }

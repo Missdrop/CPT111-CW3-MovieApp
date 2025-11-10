@@ -104,8 +104,8 @@ public class User {
         return String.join(",", new String[] {
             this.username,
             this.passwordHash,
-            String.join(";", this.watchlist.get()),
-            String.join(";", this.history.get()),
+            this.watchlist.toCSV(),
+            this.history.toCSV(),
             String.valueOf(this.isPremium)
         });
     }

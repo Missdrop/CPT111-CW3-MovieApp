@@ -56,4 +56,9 @@ public class History {
         }
         return false;
     }
+
+
+    public String toCSV() {
+        return String.join(";", history);
+    }
 }
