@@ -23,7 +23,7 @@ public class AddNewMovie {
         Stage stage = new Stage();
         stage.setTitle("Add New Movie");
         stage.setOnCloseRequest(e -> {
-            lastStage.close();
+            lastStage.hide();
             lastStage.show();
         });
 
