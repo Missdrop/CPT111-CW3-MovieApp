@@ -28,7 +28,7 @@ public class Engine {
 
 
     /**
-     *  
+     * Recommend movies based on the specified type, then ordered by rating.
      * @param type Type of recommendation: "genre" or "year" or "rating"
      * @param numRecommendations Number of recommendations to return
      * @return A list of ordered recommended movie IDs
