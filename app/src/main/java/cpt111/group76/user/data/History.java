@@ -3,6 +3,7 @@ package cpt111.group76.user.data;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class History {
     private ArrayList<String> history;
@@ -28,6 +29,16 @@ public class History {
 
     public ArrayList<String> get() {
         return history;
+    }
+
+
+    public HashSet<String> getMovies() {
+        HashSet<String> movies = new HashSet<>();
+        for (String entry : history) {
+            String movieId = entry.split("@")[0];
+            movies.add(movieId);
+        }
+        return movies;
     }
 
 

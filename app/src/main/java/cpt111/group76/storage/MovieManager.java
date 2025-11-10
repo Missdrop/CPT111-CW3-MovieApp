@@ -48,6 +48,11 @@ public class MovieManager extends FileManager {
     }
 
 
+    public HashMap<String, Movie> getMovieDatabase() {
+        return movies;
+    }
+
+
     public Movie getMovie(String movieId) {
         return movies.get(movieId);
     }
