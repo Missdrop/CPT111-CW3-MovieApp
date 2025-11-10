@@ -3,6 +3,7 @@ package cpt111.group76;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
@@ -14,10 +15,8 @@ import cpt111.group76.userinterface.Login;
 import cpt111.group76.userinterface.Register;
 import cpt111.group76.storage.UserManager;
 
-
 public class App extends Application{
     private static UserManager userManager = new UserManager();
-
 
     public static void main(String[] args) {
         launch(args);
@@ -25,30 +24,36 @@ public class App extends Application{
         userManager.close();
     }
 
-
     @Override
     public void start(Stage primaryStage) {
-        // main page, which has two buttons: login and register, title is Movie Recommendation & Tracker
+        // Create main title
+        Label titleLabel = new Label("Movie Recommendation & Tracker");
+        titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        
+        // Create subtitle
+        Label subtitleLabel = new Label("Your Personal Movie Companion");
+        subtitleLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;");
+        
+        // Create login and register buttons
         Button loginButton = new Button("Login");
+        loginButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
+        
         Button registerButton = new Button("Register");
+        registerButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
 
-        // open the Login UI in a new Stage (modal). hide primaryStage while login window is open,
-        // and show it again when the login window is closed
+        // Set button actions (same as before)
         loginButton.setOnAction(e -> {
             Login login = new Login(userManager);
             Stage loginStage = new Stage();
             loginStage.initOwner(primaryStage);
             loginStage.initModality(Modality.WINDOW_MODAL);
-            // when login window is closed, show main window again only if login did NOT open Menu
             loginStage.setOnHidden(ev -> {
                 if (login.openedMenu()) {
-                    // login opened the Menu, close the main stage permanently
                     primaryStage.close();
                 } else {
                     primaryStage.show();
                 }
             });
-            // hide main window and show login
             primaryStage.hide();
             login.start(loginStage);
         });
@@ -69,16 +74,24 @@ public class App extends Application{
             register.start(registerStage);
         });
 
-        HBox hbox = new HBox(20, loginButton, registerButton);
-        hbox.setAlignment(Pos.CENTER);
+        // Create button container
+        HBox buttonBox = new HBox(20, loginButton, registerButton);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(hbox);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(20));
+        // Create main container with title, subtitle and buttons
+        VBox mainContainer = new VBox(20);
+        mainContainer.setAlignment(Pos.CENTER);
+        mainContainer.setPadding(new Insets(40, 20, 40, 20));
+        mainContainer.setStyle("-fx-background-color: #f8f9fa;");
+        
+        // Add all elements to main container
+        mainContainer.getChildren().addAll(titleLabel, subtitleLabel, buttonBox);
 
-        Scene scene = new Scene(root, 400, 300);
+        Scene scene = new Scene(mainContainer, 500, 300);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Movie Recommendation & Tracker");
+        primaryStage.setMinWidth(700);
+        primaryStage.setMinHeight(450);
         primaryStage.show();
     }
 }

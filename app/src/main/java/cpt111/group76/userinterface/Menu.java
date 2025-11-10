@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Priority;
 import javafx.collections.FXCollections;
@@ -40,7 +41,7 @@ public class Menu extends Application{
     }
 
 
-    @Override
+   @Override
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e -> {
             movieManager.save();
@@ -48,8 +49,22 @@ public class Menu extends Application{
             new UserManager().updateUser(user);
         });
 
-        // Top bar with user info and buttons
+        // Create main title
+        Label titleLabel = new Label("Movie Recommendation & Tracker");
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        // User info
+        Text usernameText = new Text("Welcome, " + user.getUsername() + "! (" + 
+            (user.isPremium() ? "Premium User" : "Basic User") + ")");
+        usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
+
+        // Top bar with title and user info
+        VBox titleBox = new VBox(5, titleLabel, usernameText);
+        titleBox.setAlignment(Pos.CENTER_LEFT);
+
+        // Action buttons
         Button logoutButton = new Button("Logout");
+        logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
         logoutButton.setOnAction(e -> {
             movieManager.save();
             movieManager.close();
@@ -58,53 +73,83 @@ public class Menu extends Application{
         });
 
         Button changePasswordButton = new Button("Change Password");
+        changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
         changePasswordButton.setOnAction(e -> {
             new ChangePassword(user).start(new Stage());
         });
 
-        Text usernameText = new Text("User: " + user.getUsername() + " Type: " + (user.isPremium() ? "[Premium]" : "[Non-Premium]"));
+        HBox buttonBox = new HBox(10, changePasswordButton, logoutButton);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
+        // Top bar container
         HBox topBar = new HBox();
-        topBar.getChildren().addAll(usernameText, changePasswordButton, logoutButton);
-        HBox.setHgrow(usernameText, Priority.ALWAYS);
-        HBox.setMargin(usernameText, new Insets(10));
-        HBox.setMargin(changePasswordButton, new Insets(10));
-        HBox.setMargin(logoutButton, new Insets(10));
+        topBar.getChildren().addAll(titleBox, buttonBox);
+        HBox.setHgrow(titleBox, Priority.ALWAYS);
+        topBar.setPadding(new Insets(15));
+        topBar.setStyle("-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;");
 
-        // Main menu buttons
-        Button browseMoviesButton = new Button("Browse Movies");
-        Button viewWatchlistButton = new Button("View Watchlist");
-        Button viewHistoryButton = new Button("View History");
-        Button getRecommendationsButton = new Button("Get Recommendations");
+        // Main menu buttons with better styling
+        Button browseMoviesButton = createMenuButton("Browse Movies", "#2ecc71");
+        Button viewWatchlistButton = createMenuButton("View Watchlist", "#3498db");
+        Button viewHistoryButton = createMenuButton("View History", "#9b59b6");
+        Button getRecommendationsButton = createMenuButton("Recommendation", "#e67e22");
 
         browseMoviesButton.setOnAction(e -> openBrowseMovies());
         viewWatchlistButton.setOnAction(e -> openViewWatchlist());
         viewHistoryButton.setOnAction(e -> openViewHistory());
         getRecommendationsButton.setOnAction(e -> openGetRecommendations());
 
-        VBox menuButtons = new VBox(10,
-            browseMoviesButton,
-            viewWatchlistButton,
-            viewHistoryButton,
-            getRecommendationsButton
-        );
-        menuButtons.setPadding(new Insets(20));
-        menuButtons.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        // Create a grid layout for buttons
+        HBox firstButtonRow = new HBox(20, browseMoviesButton, viewWatchlistButton);
+        HBox secondButtonRow = new HBox(20, viewHistoryButton, getRecommendationsButton);
+        firstButtonRow.setAlignment(Pos.CENTER);
+        secondButtonRow.setAlignment(Pos.CENTER);
+
+        VBox menuButtons = new VBox(20, firstButtonRow, secondButtonRow);
+        menuButtons.setPadding(new Insets(40));
+        menuButtons.setAlignment(Pos.CENTER);
+
+        // Stats panel
+        Label statsLabel = new Label("Your Stats: " +
+            user.getWatchlist().length() + " movies in watchlist • " +
+            user.getHistory().length() + " movies watched");
+        statsLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d;");
+        
+        VBox statsBox = new VBox(statsLabel);
+        statsBox.setPadding(new Insets(10));
+        statsBox.setAlignment(Pos.CENTER);
 
         BorderPane root = new BorderPane();
         root.setTop(topBar);
         root.setCenter(menuButtons);
+        root.setBottom(statsBox);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 700, 500);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Movie Recommendation & Tracker - Main Menu");
         primaryStage.show();
+    }
+
+    // Helper method to create styled menu buttons
+    private Button createMenuButton(String text, String color) {
+        Button button = new Button(text);
+        button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; " +
+                    "-fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(" + color + ", 20%); -fx-text-fill: white; " +
+                    "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; " +
+                    "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
+        return button;
     }
 
 
     private void openBrowseMovies() {
         Stage stage = new Stage();
         stage.setTitle("Browse Movies - Select movies to add to watchlist or mark as watched");
+
+        // Add title
+        Label titleLabel = new Label("Browse All Movies");
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         ListView<String> movieList = new ListView<>();
         ArrayList<String> movieItems = new ArrayList<>();
@@ -115,11 +160,18 @@ public class Menu extends Application{
 
         movieList.setItems(FXCollections.observableArrayList(movieItems));
 
-        // Action buttons
-        Button addToWatchlistButton = new Button("Add Selected to Watchlist");
-        Button markWatchedButton = new Button("Mark Selected as Watched");
-        Button removeFromWatchlistButton = new Button("Remove Selected from Watchlist");
+        // Action buttons with styling
+        Button addToWatchlistButton = new Button("Add to Watchlist");
+        addToWatchlistButton.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white;");
+        
+        Button markWatchedButton = new Button("Mark as Watched");
+        markWatchedButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+        
+        Button removeFromWatchlistButton = new Button("Remove from Watchlist");
+        removeFromWatchlistButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        
         Label statusLabel = new Label();
+        statusLabel.setStyle("-fx-font-weight: bold;");
 
         addToWatchlistButton.setOnAction(e -> {
             String selected = movieList.getSelectionModel().getSelectedItem();
@@ -184,8 +236,9 @@ public class Menu extends Application{
         });
 
         HBox buttonBox = new HBox(10, addToWatchlistButton, markWatchedButton, removeFromWatchlistButton);
-        VBox layout = new VBox(10, new Label("All Movies (select a movie to perform actions):"), 
-                                movieList, buttonBox, statusLabel);
+        VBox layout = new VBox(10, titleLabel,
+                            new Label("Select a movie to perform actions:"),
+                            movieList, buttonBox, statusLabel);
         layout.setPadding(new Insets(20));
 
         Scene scene = new Scene(layout, 700, 500);
