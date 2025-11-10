@@ -6,11 +6,13 @@ import cpt111.group76.movie.Movie;
 
 public class MovieManager extends FileManager {
     private HashMap<String, Movie> movies;
+    int maxIndex; // to track the highest movie index
 
 
     public MovieManager() {
         super("resources/movies.csv");
         this.movies = getMovies();
+        this.maxIndex = getMaxIndex();
     }
 
 
@@ -57,6 +59,38 @@ public class MovieManager extends FileManager {
         }
         this.movies.put(movie.getId(), movie);
         return true;
+    }
+
+
+    private int idToIndex(String movieId) {
+        try {
+            return Integer.parseInt(movieId.substring(1));
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+
+    private int getMaxIndex() {
+        int max = 0;
+        for (String movieId : this.movies.keySet()) {
+            int index = idToIndex(movieId);
+            if (index > max) {
+                max = index;
+            }
+        }
+        return max;
+    }
+
+
+    public boolean addMovie(String title, String genre, int year, double rating) {
+        String movieId = String.format("M%03d", maxIndex + 1);
+        Movie movie = new Movie(movieId, title, genre, year, rating);
+        boolean added = addMovie(movie);
+        if (added) {
+            maxIndex++;
+        }
+        return added;
     }
 
 

@@ -137,4 +137,14 @@ public class MovieManagerTest {
         Movie newMovie = new Movie("M001", "The Shawshank Redemption", "Drama", 1994, 9.3);
         assertFalse(movieManager.addMovie(newMovie));
     }
+
+
+    @Test
+    public void testAddMovieByDetails() {
+        MovieManager movieManager = new MovieManager();
+        assertTrue(movieManager.addMovie("Inglourious Basterds", "War", 2009, 8.3));
+        Movie addedMovie = movieManager.getMovie("M101");
+        assertNotNull(addedMovie);
+        assertEquals(addedMovie.getTitle(), "Inglourious Basterds");
+    }
 }
