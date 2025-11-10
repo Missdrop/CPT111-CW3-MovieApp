@@ -7,8 +7,13 @@ public class PremiumUser extends User {
     private static final int maxWatchlistSize = 100;
 
 
-    public PremiumUser(String username, String password, Watchlist watchlist, History history) {
-        super(username, password, watchlist, history, true);
+    public PremiumUser(String username, String passwordHash, Watchlist watchlist, History history) {
+        super(username, passwordHash, watchlist, history, true);
+    }
+
+
+    public PremiumUser(User user) {
+        super(user.getUsername(), user.getPasswordHash(), user.getWatchlist(), user.getHistory(), true);
     }
 
 

@@ -7,8 +7,13 @@ public class BasicUser extends User {
     private static final int maxWatchlistSize = 20;
 
 
-    public BasicUser(String username, String password, Watchlist watchlist, History history) {
-        super(username, password, watchlist, history, false);
+    public BasicUser(String username, String passwordHash, Watchlist watchlist, History history) {
+        super(username, passwordHash, watchlist, history, false);
+    }
+
+
+    public BasicUser(User user) {
+        super(user.getUsername(), user.getPasswordHash(), user.getWatchlist(), user.getHistory(), false);
     }
 
 

@@ -78,7 +78,7 @@ public class User {
     }
 
 
-    private String getPasswordHash() {
+    public String getPasswordHash() {
         return this.passwordHash;
     }
 

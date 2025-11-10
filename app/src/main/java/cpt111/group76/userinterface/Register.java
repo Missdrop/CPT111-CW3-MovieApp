@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 
 import cpt111.group76.user.User;
+import cpt111.group76.user.BasicUser;
 import cpt111.group76.storage.UserManager;
 
 public class Register extends Application{
@@ -35,7 +36,7 @@ public class Register extends Application{
             String username = usernameField.getText();
             String password = passwordField.getText();
             if (userManager.addUser(username, password)){
-                User user = userManager.getUser(username);
+                User user = new BasicUser(userManager.getUser(username));
                 openMenu(user);
                 primaryStage.close();
             }
