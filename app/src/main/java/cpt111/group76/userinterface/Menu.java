@@ -33,14 +33,15 @@ public class Menu extends Application{
     private static MovieManager movieManager = new MovieManager();
     private HashMap<String, Movie> movieDatabase;
 
+
     public Menu(User user){
         this.user = user;
         this.movieDatabase = movieManager.getMovieDatabase();
     }
 
+
     @Override
     public void start(Stage primaryStage) {
-        // when the window is closed, save and close movieManager
         primaryStage.setOnCloseRequest(e -> {
             movieManager.save();
             movieManager.close();
@@ -72,29 +73,18 @@ public class Menu extends Application{
 
         // Main menu buttons
         Button browseMoviesButton = new Button("Browse Movies");
-        Button addToWatchlistButton = new Button("Add to Watchlist");
-        Button removeFromWatchlistButton = new Button("Remove from Watchlist");
         Button viewWatchlistButton = new Button("View Watchlist");
-        Button markWatchedButton = new Button("Mark as Watched");
         Button viewHistoryButton = new Button("View History");
         Button getRecommendationsButton = new Button("Get Recommendations");
 
-        // Set button actions
         browseMoviesButton.setOnAction(e -> openBrowseMovies());
-        addToWatchlistButton.setOnAction(e -> openAddToWatchlist());
-        removeFromWatchlistButton.setOnAction(e -> openRemoveFromWatchlist());
         viewWatchlistButton.setOnAction(e -> openViewWatchlist());
-        markWatchedButton.setOnAction(e -> openMarkWatched());
         viewHistoryButton.setOnAction(e -> openViewHistory());
         getRecommendationsButton.setOnAction(e -> openGetRecommendations());
 
-        // Layout for main menu
         VBox menuButtons = new VBox(10,
             browseMoviesButton,
-            addToWatchlistButton,
-            removeFromWatchlistButton,
             viewWatchlistButton,
-            markWatchedButton,
             viewHistoryButton,
             getRecommendationsButton
         );
@@ -111,221 +101,195 @@ public class Menu extends Application{
         primaryStage.show();
     }
 
+
     private void openBrowseMovies() {
         Stage stage = new Stage();
-        stage.setTitle("Browse Movies");
+        stage.setTitle("Browse Movies - Select movies to add to watchlist or mark as watched");
 
         ListView<String> movieList = new ListView<>();
         ArrayList<String> movieItems = new ArrayList<>();
 
         for (Movie movie : movieDatabase.values()) {
-            String movieInfo = String.format("%s - %s (%d) | Genre: %s | Rating: %.1f", 
-                movie.getId(), movie.getTitle(), movie.getYear(), movie.getGenre(), movie.getRating());
-            movieItems.add(movieInfo);
+            movieItems.add(movie.toString());
         }
 
         movieList.setItems(FXCollections.observableArrayList(movieItems));
 
-        VBox layout = new VBox(10, new Label("All Movies:"), movieList);
-        layout.setPadding(new Insets(20));
+        // Action buttons
+        Button addToWatchlistButton = new Button("Add Selected to Watchlist");
+        Button markWatchedButton = new Button("Mark Selected as Watched");
+        Button removeFromWatchlistButton = new Button("Remove Selected from Watchlist");
+        Label statusLabel = new Label();
 
-        Scene scene = new Scene(layout, 500, 400);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    private void openAddToWatchlist() {
-        Stage stage = new Stage();
-        stage.setTitle("Add Movie to Watchlist");
-
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-
-        Label instruction = new Label("Enter Movie ID to add to watchlist:");
-        TextField movieIdField = new TextField();
-        movieIdField.setPromptText("e.g., M001");
-
-        Button addButton = new Button("Add to Watchlist");
-        Label resultLabel = new Label();
-
-        addButton.setOnAction(e -> {
-            String movieId = movieIdField.getText().trim();
-            if (movieId.isEmpty()) {
-                resultLabel.setText("Please enter a movie ID.");
-                return;
-            }
-
-            if (!movieDatabase.containsKey(movieId)) {
-                resultLabel.setText("Movie ID not found.");
-                return;
-            }
-
-            if (user.getWatchlist().contains(movieId)) {
-                resultLabel.setText("Movie is already in your watchlist.");
-                return;
-            }
-
-            boolean success = user.addToWatchlist(movieId);
-            if (success) {
-                resultLabel.setText("Successfully added to watchlist!");
-                new UserManager().updateUser(user);
+        addToWatchlistButton.setOnAction(e -> {
+            String selected = movieList.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                String movieId = extractMovieId(selected);
+                if (movieId != null) {
+                    if (user.getWatchlist().contains(movieId)) {
+                        statusLabel.setText("Movie is already in your watchlist.");
+                    } else {
+                        boolean success = user.addToWatchlist(movieId);
+                        if (success) {
+                            statusLabel.setText("Successfully added to watchlist!");
+                            new UserManager().updateUser(user);
+                        } else {
+                            statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                        }
+                    }
+                }
             } else {
-                resultLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                statusLabel.setText("Please select a movie first.");
             }
         });
 
-        layout.getChildren().addAll(instruction, movieIdField, addButton, resultLabel);
-        Scene scene = new Scene(layout, 400, 200);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    private void openRemoveFromWatchlist() {
-        Stage stage = new Stage();
-        stage.setTitle("Remove Movie from Watchlist");
-
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-
-        Label instruction = new Label("Enter Movie ID to remove from watchlist:");
-        TextField movieIdField = new TextField();
-        movieIdField.setPromptText("e.g., M001");
-
-        Button removeButton = new Button("Remove from Watchlist");
-        Label resultLabel = new Label();
-
-        removeButton.setOnAction(e -> {
-            String movieId = movieIdField.getText().trim();
-            if (movieId.isEmpty()) {
-                resultLabel.setText("Please enter a movie ID.");
-                return;
-            }
-
-            if (!user.getWatchlist().contains(movieId)) {
-                resultLabel.setText("Movie is not in your watchlist.");
-                return;
-            }
-
-            boolean success = user.removeFromWatchlist(movieId);
-            if (success) {
-                resultLabel.setText("Successfully removed from watchlist!");
-                new UserManager().updateUser(user);
+        markWatchedButton.setOnAction(e -> {
+            String selected = movieList.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                String movieId = extractMovieId(selected);
+                if (movieId != null) {
+                    if (user.getHistory().contains(movieId)) {
+                        statusLabel.setText("Movie is already in your watch history.");
+                    } else {
+                        user.addToHistory(movieId);
+                        statusLabel.setText("Successfully marked as watched!");
+                        new UserManager().updateUser(user);
+                    }
+                }
             } else {
-                resultLabel.setText("Failed to remove from watchlist.");
+                statusLabel.setText("Please select a movie first.");
             }
         });
 
-        layout.getChildren().addAll(instruction, movieIdField, removeButton, resultLabel);
-        Scene scene = new Scene(layout, 400, 200);
+        removeFromWatchlistButton.setOnAction(e -> {
+            String selected = movieList.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                String movieId = extractMovieId(selected);
+                if (movieId != null) {
+                    if (!user.getWatchlist().contains(movieId)) {
+                        statusLabel.setText("Movie is not in your watchlist.");
+                    } else {
+                        boolean success = user.removeFromWatchlist(movieId);
+                        if (success) {
+                            statusLabel.setText("Successfully removed from watchlist!");
+                            new UserManager().updateUser(user);
+                        } else {
+                            statusLabel.setText("Failed to remove from watchlist.");
+                        }
+                    }
+                }
+            } else {
+                statusLabel.setText("Please select a movie first.");
+            }
+        });
+
+        HBox buttonBox = new HBox(10, addToWatchlistButton, markWatchedButton, removeFromWatchlistButton);
+        VBox layout = new VBox(10, new Label("All Movies (select a movie to perform actions):"), 
+                                movieList, buttonBox, statusLabel);
+        layout.setPadding(new Insets(20));
+
+        Scene scene = new Scene(layout, 700, 500);
         stage.setScene(scene);
         stage.show();
     }
+
 
     private void openViewWatchlist() {
         Stage stage = new Stage();
         stage.setTitle("My Watchlist");
 
         ListView<String> watchlistView = new ListView<>();
-        ArrayList<String> watchlistItems = new ArrayList<>();
+        updateWatchlistView(watchlistView);
 
-        for (String movieId : user.getWatchlist().get()) {
-            Movie movie = movieDatabase.get(movieId);
-            if (movie != null) {
-                String movieInfo = String.format("%s - %s (%d) | Genre: %s | Rating: %.1f", 
-                    movie.getId(), movie.getTitle(), movie.getYear(), movie.getGenre(), movie.getRating());
-                watchlistItems.add(movieInfo);
+        // Action buttons
+        Button removeButton = new Button("Remove Selected from Watchlist");
+        Button markWatchedButton = new Button("Mark Selected as Watched");
+        Label statusLabel = new Label();
+
+        removeButton.setOnAction(e -> {
+            String selected = watchlistView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                String movieId = extractMovieId(selected);
+                if (movieId != null) {
+                    boolean success = user.removeFromWatchlist(movieId);
+                    if (success) {
+                        statusLabel.setText("Successfully removed from watchlist!");
+                        new UserManager().updateUser(user);
+                        updateWatchlistView(watchlistView);
+                    } else {
+                        statusLabel.setText("Failed to remove from watchlist.");
+                    }
+                }
+            } else {
+                statusLabel.setText("Please select a movie first.");
             }
-        }
-
-        if (watchlistItems.isEmpty()) {
-            watchlistItems.add("Your watchlist is empty.");
-        }
-
-        watchlistView.setItems(FXCollections.observableArrayList(watchlistItems));
-
-        VBox layout = new VBox(10, new Label("My Watchlist:"), watchlistView);
-        layout.setPadding(new Insets(20));
-
-        Scene scene = new Scene(layout, 500, 400);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    private void openMarkWatched() {
-        Stage stage = new Stage();
-        stage.setTitle("Mark Movie as Watched");
-
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-
-        Label instruction = new Label("Enter Movie ID to mark as watched:");
-        TextField movieIdField = new TextField();
-        movieIdField.setPromptText("e.g., M001");
-
-        Button markButton = new Button("Mark as Watched");
-        Label resultLabel = new Label();
-
-        markButton.setOnAction(e -> {
-            String movieId = movieIdField.getText().trim();
-            if (movieId.isEmpty()) {
-                resultLabel.setText("Please enter a movie ID.");
-                return;
-            }
-
-            if (!movieDatabase.containsKey(movieId)) {
-                resultLabel.setText("Movie ID not found.");
-                return;
-            }
-
-            if (user.getHistory().contains(movieId)) {
-                resultLabel.setText("Movie is already in your watch history.");
-                return;
-            }
-
-            user.addToHistory(movieId);
-            resultLabel.setText("Successfully marked as watched!");
-            new UserManager().updateUser(user);
         });
 
-        layout.getChildren().addAll(instruction, movieIdField, markButton, resultLabel);
-        Scene scene = new Scene(layout, 400, 200);
+        markWatchedButton.setOnAction(e -> {
+            String selected = watchlistView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                String movieId = extractMovieId(selected);
+                if (movieId != null) {
+                    user.addToHistory(movieId);
+                    statusLabel.setText("Successfully marked as watched and removed from watchlist!");
+                    new UserManager().updateUser(user);
+                    updateWatchlistView(watchlistView);
+                }
+            } else {
+                statusLabel.setText("Please select a movie first.");
+            }
+        });
+
+        HBox buttonBox = new HBox(10, removeButton, markWatchedButton);
+        VBox layout = new VBox(10, new Label("My Watchlist:"), watchlistView, buttonBox, statusLabel);
+        layout.setPadding(new Insets(20));
+
+        Scene scene = new Scene(layout, 600, 400);
         stage.setScene(scene);
         stage.show();
     }
+
 
     private void openViewHistory() {
         Stage stage = new Stage();
         stage.setTitle("My Watch History");
 
         ListView<String> historyView = new ListView<>();
-        ArrayList<String> historyItems = new ArrayList<>();
+        updateHistoryView(historyView);
 
-        for (String historyEntry : user.getHistory().get()) {
-            String[] parts = historyEntry.split("@");
-            String movieId = parts[0];
-            String date = parts.length > 1 ? parts[1] : "Unknown date";
-            
-            Movie movie = movieDatabase.get(movieId);
-            if (movie != null) {
-                String movieInfo = String.format("%s - %s | Watched on: %s", 
-                    movie.getId(), movie.getTitle(), date);
-                historyItems.add(movieInfo);
+        // Action button
+        Button removeButton = new Button("Remove Selected from History");
+        Label statusLabel = new Label();
+
+        removeButton.setOnAction(e -> {
+            String selected = historyView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                // Extract movie ID from history entry (format: "M001 - Movie Title @ 2023-10-01")
+                String[] parts = selected.split(" @ ")[0].split(" - ");
+                if (parts.length > 0) {
+                    String movieId = parts[0];
+                    boolean success = user.removeFromHistory(movieId);
+                    if (success) {
+                        statusLabel.setText("Successfully removed from history!");
+                        new UserManager().updateUser(user);
+                        updateHistoryView(historyView);
+                    } else {
+                        statusLabel.setText("Failed to remove from history.");
+                    }
+                }
+            } else {
+                statusLabel.setText("Please select a movie first.");
             }
-        }
+        });
 
-        if (historyItems.isEmpty()) {
-            historyItems.add("Your watch history is empty.");
-        }
-
-        historyView.setItems(FXCollections.observableArrayList(historyItems));
-
-        VBox layout = new VBox(10, new Label("My Watch History:"), historyView);
+        VBox layout = new VBox(10, new Label("My Watch History:"), historyView, removeButton, statusLabel);
         layout.setPadding(new Insets(20));
 
-        Scene scene = new Scene(layout, 500, 400);
+        Scene scene = new Scene(layout, 600, 400);
         stage.setScene(scene);
         stage.show();
     }
+
 
     private void openGetRecommendations() {
         Stage stage = new Stage();
@@ -346,6 +310,10 @@ public class Menu extends Application{
         Button recommendButton = new Button("Get Recommendations");
         ListView<String> recommendationsView = new ListView<>();
 
+        // Add to watchlist button for recommendations
+        Button addToWatchlistButton = new Button("Add Selected to Watchlist");
+        Label statusLabel = new Label();
+
         recommendButton.setOnAction(e -> {
             try {
                 String type = typeComboBox.getValue();
@@ -358,13 +326,12 @@ public class Menu extends Application{
                 for (String movieId : recommendations) {
                     Movie movie = movieDatabase.get(movieId);
                     if (movie != null) {
-                        String movieInfo = String.format("%s - %s (%d) | Genre: %s | Rating: %.1f", 
-                            movie.getId(), movie.getTitle(), movie.getYear(), movie.getGenre(), movie.getRating());
-                        recommendationItems.add(movieInfo);
+                        recommendationItems.add(movie.toString());
                     }
                 }
                 
                 recommendationsView.setItems(FXCollections.observableArrayList(recommendationItems));
+                statusLabel.setText("Found " + recommendationItems.size() + " recommendations.");
                 
             } catch (NumberFormatException ex) {
                 Alert alert = new Alert(AlertType.ERROR);
@@ -375,16 +342,92 @@ public class Menu extends Application{
             }
         });
 
+        addToWatchlistButton.setOnAction(e -> {
+            String selected = recommendationsView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                String movieId = extractMovieId(selected);
+                if (movieId != null) {
+                    if (user.getWatchlist().contains(movieId)) {
+                        statusLabel.setText("Movie is already in your watchlist.");
+                    } else {
+                        boolean success = user.addToWatchlist(movieId);
+                        if (success) {
+                            statusLabel.setText("Successfully added to watchlist!");
+                            new UserManager().updateUser(user);
+                        } else {
+                            statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                        }
+                    }
+                }
+            } else {
+                statusLabel.setText("Please select a recommendation first.");
+            }
+        });
+
+        HBox recommendationButtons = new HBox(10, recommendButton, addToWatchlistButton);
+
         layout.getChildren().addAll(
-            typeLabel, typeComboBox, 
-            countLabel, countField, 
-            recommendButton, 
-            new Label("Recommendations:"), 
-            recommendationsView
+            typeLabel, typeComboBox,
+            countLabel, countField,
+            recommendationButtons,
+            new Label("Recommendations:"),
+            recommendationsView,
+            statusLabel
         );
 
-        Scene scene = new Scene(layout, 500, 400);
+        Scene scene = new Scene(layout, 600, 500);
         stage.setScene(scene);
         stage.show();
+    }
+
+
+    // Helper method to extract movie ID from the displayed string
+    private String extractMovieId(String movieString) {
+        if (movieString != null && movieString.length() >= 4) {
+            return movieString.substring(0, 4); // Assuming format like "M001 - ..."
+        }
+        return null;
+    }
+
+
+    // Helper method to update watchlist view
+    private void updateWatchlistView(ListView<String> watchlistView) {
+        ArrayList<String> watchlistItems = new ArrayList<>();
+        for (String movieId : user.getWatchlist().get()) {
+            Movie movie = movieDatabase.get(movieId);
+            if (movie != null) {
+                watchlistItems.add(movie.toString());
+            }
+        }
+
+        if (watchlistItems.isEmpty()) {
+            watchlistItems.add("Your watchlist is empty.");
+        }
+
+        watchlistView.setItems(FXCollections.observableArrayList(watchlistItems));
+    }
+
+
+    // Helper method to update history view
+    private void updateHistoryView(ListView<String> historyView) {
+        ArrayList<String> historyItems = new ArrayList<>();
+        for (String historyEntry : user.getHistory().get()) {
+            String[] parts = historyEntry.split("@");
+            String movieId = parts[0];
+            String date = parts.length > 1 ? parts[1] : "Unknown date";
+            
+            Movie movie = movieDatabase.get(movieId);
+            if (movie != null) {
+                String movieInfo = String.format("%s - %s @ %s",
+                    movie.getId(), movie.getTitle(), date);
+                historyItems.add(movieInfo);
+            }
+        }
+
+        if (historyItems.isEmpty()) {
+            historyItems.add("Your watch history is empty.");
+        }
+
+        historyView.setItems(FXCollections.observableArrayList(historyItems));
     }
 }

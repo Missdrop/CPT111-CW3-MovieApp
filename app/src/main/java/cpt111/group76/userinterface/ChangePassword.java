@@ -15,9 +15,11 @@ import cpt111.group76.storage.UserManager;
 public class ChangePassword extends Application{
     private User user;
 
+
     public ChangePassword(User user){
         this.user = user;
     }
+
 
     @Override
     public void start(Stage primaryStage){
@@ -31,7 +33,8 @@ public class ChangePassword extends Application{
         repeatNewPasswordField.setPromptText("Repeat New Password");
 
         Button changePasswordButton = new Button("Change Password");
-        Label resultLabel = new Label();
+        Label statusLabel = new Label();
+        statusLabel.setWrapText(true);
 
         changePasswordButton.setOnAction(e -> {
             String password = passwordField.getText();
@@ -39,32 +42,37 @@ public class ChangePassword extends Application{
             String repeatNewPassword = repeatNewPasswordField.getText();
             
             if (!user.verifyPassword(password)) {
-                resultLabel.setText("Current password is incorrect.");
+                statusLabel.setText("Current password is incorrect.");
+                statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
             
             if (password.equals(newPassword)) {
-                resultLabel.setText("New password must be different from current password.");
+                statusLabel.setText("New password must be different from current password.");
+                statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
             
             if (!newPassword.equals(repeatNewPassword)) {
-                resultLabel.setText("New passwords do not match.");
+                statusLabel.setText("New passwords do not match.");
+                statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
             
             String passwordCheck = UserManager.checkPassword(newPassword);
             if (passwordCheck != null) {
-                resultLabel.setText(passwordCheck);
+                statusLabel.setText(passwordCheck);
+                statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
             
             user.setPassword(newPassword);
             new UserManager().updateUser(user);
-            resultLabel.setText("Password changed successfully!");
+            statusLabel.setText("Password changed successfully!");
+            statusLabel.setStyle("-fx-text-fill: green;");
         });
 
-        VBox vbox = new VBox(10, passwordField, newPasswordField, repeatNewPasswordField, changePasswordButton, resultLabel);
+        VBox vbox = new VBox(10, passwordField, newPasswordField, repeatNewPasswordField, changePasswordButton, statusLabel);
         vbox.setPadding(new Insets(20));
 
         Scene scene = new Scene(vbox, 300, 250);

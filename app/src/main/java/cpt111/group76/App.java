@@ -76,7 +76,7 @@ public class App extends Application{
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Movie Recommendation & Tracker");
         primaryStage.show();

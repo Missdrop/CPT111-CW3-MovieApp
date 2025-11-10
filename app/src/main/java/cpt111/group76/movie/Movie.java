@@ -49,6 +49,13 @@ public class Movie {
     }
 
 
+    @Override
+    public String toString() {
+        return String.format("%s - %s (%d) | Genre: %s | Rating: %.1f",
+            id, title, year, genre, rating);
+    }
+
+
     public String toCSV() {
         return String.join(",", new String[] {
             this.id,

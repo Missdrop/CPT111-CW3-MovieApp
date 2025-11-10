@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
@@ -35,23 +36,65 @@ public class Register extends Application{
         repeatPasswordField.setPromptText("Repeat Password");
 
         Button registerButton = new Button("Register");
+        Label statusLabel = new Label();
+        statusLabel.setStyle("-fx-text-fill: red;");
+        statusLabel.setWrapText(true);
+
         registerButton.setOnAction(e -> {
-            String username = usernameField.getText();
+            String username = usernameField.getText().trim();
             String password = passwordField.getText();
             String repeatPassword = repeatPasswordField.getText();
-            if (password.equals(repeatPassword)
-                    && userManager.addUser(username, password)
-                    && UserManager.checkPassword(password) == null){
+            
+            // Clear previous status
+            statusLabel.setText("");
+            
+            // Validate inputs
+            if (username.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
+                statusLabel.setText("Please fill in all fields.");
+                return;
+            }
+            
+            // Check username requirements
+            String usernameCheck = UserManager.checkUsername(username);
+            if (usernameCheck != null) {
+                statusLabel.setText(usernameCheck);
+                return;
+            }
+            
+            // Check password requirements
+            String passwordCheck = UserManager.checkPassword(password);
+            if (passwordCheck != null) {
+                statusLabel.setText(passwordCheck);
+                return;
+            }
+            
+            // Check if passwords match
+            if (!password.equals(repeatPassword)) {
+                statusLabel.setText("Passwords do not match.");
+                return;
+            }
+            
+            // Try to add user
+            if (userManager.addUser(username, password)) {
                 User user = new BasicUser(userManager.getUser(username));
+
                 openMenu(user);
                 primaryStage.close();
+
+            } else {
+                statusLabel.setText("Username already exists.");
             }
         });
 
-        VBox vbox = new VBox(10, usernameField, passwordField, repeatPasswordField, registerButton);
+        // Add Enter key support
+        usernameField.setOnAction(e -> registerButton.fire());
+        passwordField.setOnAction(e -> registerButton.fire());
+        repeatPasswordField.setOnAction(e -> registerButton.fire());
+
+        VBox vbox = new VBox(10, usernameField, passwordField, repeatPasswordField, registerButton, statusLabel);
         vbox.setPadding(new Insets(20));
 
-        Scene scene = new Scene(vbox, 300, 200);
+        Scene scene = new Scene(vbox, 300, 250);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Register");
         primaryStage.show();
