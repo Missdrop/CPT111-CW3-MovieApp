@@ -54,7 +54,7 @@ public class Menu extends Application{
         titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         // User info
-        Text usernameText = new Text("Welcome, " + user.getUsername() + "! (" + 
+        Text usernameText = new Text("Welcome, " + user.getUsername() + "! (" +
             (user.isPremium() ? "Premium User" : "Basic User") + ")");
         usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
 
@@ -78,7 +78,22 @@ public class Menu extends Application{
             new ChangePassword(user).start(new Stage());
         });
 
-        HBox buttonBox = new HBox(10, changePasswordButton, logoutButton);
+        // Get Premium button - only show for Basic Users
+        Button getPremiumButton = null;
+        if (!user.isPremium()) {
+            getPremiumButton = new Button("Get Premium");
+            getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            getPremiumButton.setOnAction(e -> {
+                openGetPremium(primaryStage);
+            });
+        }
+
+        HBox buttonBox;
+        if (!user.isPremium()) {
+            buttonBox = new HBox(10, changePasswordButton, getPremiumButton, logoutButton);
+        } else {
+            buttonBox = new HBox(10, changePasswordButton, logoutButton);
+        }
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
         // Top bar container
@@ -129,6 +144,7 @@ public class Menu extends Application{
         primaryStage.setTitle("Movie Recommendation & Tracker - Main Menu");
         primaryStage.show();
     }
+
 
     // Helper method to create styled menu buttons
     private Button createMenuButton(String text, String color) {
@@ -431,6 +447,70 @@ public class Menu extends Application{
         Scene scene = new Scene(layout, 600, 500);
         stage.setScene(scene);
         stage.show();
+    }
+
+
+    private void openGetPremium(Stage primaryStage) {
+        Stage stage = new Stage();
+        stage.setTitle("Get Premium");
+
+        // Create the premium upgrade page
+        Label titleLabel = new Label("Get Premium!");
+        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f39c12;");
+        
+        Label descriptionLabel = new Label("Premium Users is much better than Basic Users! Upgrade now to unlock exclusive features and enhance your movie experience.");
+        descriptionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-wrap-text: true;");
+        descriptionLabel.setMaxWidth(400);
+        
+        // Add more premium benefits
+        Label benefitsLabel = new Label("Premium Benefits:");
+        benefitsLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        
+        VBox benefitsList = new VBox(5);
+        benefitsList.getChildren().addAll(
+            createBenefitItem("✓ Watchlist capacity: 100 movies (vs 20 for Basic)"),
+            createBenefitItem("✓ Add Movies to Movie Database"),
+            createBenefitItem("✓ Enhanced recommendation algorithms")
+        );
+        
+        Button upgradeButton = new Button("Get Premium");
+        upgradeButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 16px; " +
+                            "-fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 40px;");
+        
+        Label statusLabel = new Label();
+        statusLabel.setStyle("-fx-font-weight: bold;");
+        
+        upgradeButton.setOnAction(e -> {
+            // Convert user to Premium
+            user.setPremium(true);
+            
+            // Update user in UserManager
+            UserManager userManager = new UserManager();
+            userManager.updateUser(user);
+            userManager.close();
+
+            stage.close();
+
+            start(new Stage());
+
+            primaryStage.close();
+        });
+        
+        VBox layout = new VBox(20, titleLabel, descriptionLabel, benefitsLabel, benefitsList, upgradeButton, statusLabel);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: #f8f9fa;");
+        
+        Scene scene = new Scene(layout, 500, 400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // Helper method to create benefit items
+    private Label createBenefitItem(String text) {
+        Label benefit = new Label(text);
+        benefit.setStyle("-fx-font-size: 14px; -fx-text-fill: #2c3e50;");
+        return benefit;
     }
 
 
