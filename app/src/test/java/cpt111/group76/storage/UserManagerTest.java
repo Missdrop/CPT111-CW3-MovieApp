@@ -55,4 +55,19 @@ public class UserManagerTest {
         userManager2.deleteUser("naipu");
         userManager2.save();
     }
+
+
+    @Test
+    public void testCheckUsername() {
+        assertEquals(UserManager.checkUsername("ab"), "Username must be between 3 and 20 characters long.");
+        assertEquals(UserManager.checkUsername("a".repeat(21)), "Username must be between 3 and 20 characters long.");
+        assertEquals(UserManager.checkUsername("user!name"), "Username can only contain letters and digits.");
+        assertNull(UserManager.checkUsername("validUser123"));
+    }
+
+
+    @Test
+    public void testCheckExistingUsername() {
+        assertEquals(UserManager.checkUsername("bob"), "Username already exists.");
+    }
 }
