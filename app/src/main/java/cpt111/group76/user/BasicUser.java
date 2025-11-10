@@ -1,13 +1,13 @@
 package cpt111.group76.user;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import cpt111.group76.user.data.History;
+import cpt111.group76.user.data.Watchlist;
 
 public class BasicUser extends User {
     private static final int maxWatchlistSize = 20;
 
 
-    public BasicUser(String username, String password, HashSet<String> watchlist, ArrayList<String> history) {
+    public BasicUser(String username, String password, Watchlist watchlist, History history) {
         super(username, password, watchlist, history, false);
     }
 
@@ -24,7 +24,7 @@ public class BasicUser extends User {
 
     @Override
     public boolean addToWatchlist(String movieId) {
-        if (this.getWatchlist().size() >= maxWatchlistSize) {
+        if (this.getWatchlist().length() >= maxWatchlistSize) {
             return false; // watchlist full
         }
         return super.addToWatchlist(movieId);

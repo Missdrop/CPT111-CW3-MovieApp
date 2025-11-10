@@ -13,6 +13,9 @@
 │   ├── MovieManager.java
 │   └── UserManager.java
 ├── user
+│   ├── data
+│   │   ├── History.java
+│   │   └── Watchlist.java
 │   ├── BasicUser.java
 │   ├── PremiumUser.java
 │   └── User.java

@@ -3,10 +3,11 @@ package cpt111.group76.userinterface;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.text.Text;
+import javafx.scene.layout.Priority;
 
 import cpt111.group76.App;
 import cpt111.group76.storage.MovieManager;
@@ -38,13 +39,15 @@ public class Menu extends Application{
             primaryStage.close();
         });
 
-        BorderPane borderPane = new BorderPane();
-        //右上角
-        borderPane.setTop(logoutButton);
-        BorderPane.setAlignment(logoutButton, Pos.TOP_RIGHT);
-        BorderPane.setMargin(logoutButton, new Insets(10));
+        Text usernameText = new Text("User: " + user.getUsername() + " Type: " + (user.isPremium() ? "[Premium]" : "[Non-Premium]"));
 
-        Scene scene = new Scene(borderPane, 500, 300);
+        HBox topBar = new HBox();
+        topBar.getChildren().addAll(usernameText, logoutButton);
+        HBox.setHgrow(usernameText, Priority.ALWAYS);
+        HBox.setMargin(usernameText, new Insets(10));
+        HBox.setMargin(logoutButton, new Insets(10));
+
+        Scene scene = new Scene(topBar, 500, 300);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Menu");

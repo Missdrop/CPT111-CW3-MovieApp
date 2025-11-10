@@ -1,19 +1,17 @@
 package cpt111.group76.user;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import cpt111.group76.user.data.History;
+import cpt111.group76.user.data.Watchlist;
 
 public class User {
     private String username;
     private String passwordHash;
-    private HashSet<String> watchlist;
-    private ArrayList<String> history;
+    private Watchlist watchlist;
+    private History history;
     private boolean isPremium;
 
 
-    public User(String username, String passwordHash, HashSet<String> watchlist, ArrayList<String> history, boolean isPremium) {
+    public User(String username, String passwordHash, Watchlist watchlist, History history, boolean isPremium) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.watchlist = watchlist;
@@ -23,14 +21,14 @@ public class User {
 
 
     public User(String username, String password, boolean isPremium) {
-        this(username, toHash(password), new HashSet<String>(), new ArrayList<String>(), isPremium);
+        this(username, toHash(password), new Watchlist(), new History(), isPremium);
     }
 
 
     public User(String[] userData) throws Exception {
         this(userData[0], userData[1],
-        userData[2].length() > 0 ? new HashSet<String>(Set.of(userData[2].split(";"))) : new HashSet<String>(),
-        userData[3].length() > 0 ? new ArrayList<String>(List.of(userData[3].split(";"))) : new ArrayList<String>(),
+        userData[2].length() > 0 ? new Watchlist(userData[2].split(";", -1)) : new Watchlist(),
+        userData[3].length() > 0 ? new History(userData[3].split(";", -1)) : new History(),
         userData[4].length() > 0 ? Boolean.parseBoolean(userData[4]) : false
         );
     }
@@ -52,12 +50,12 @@ public class User {
     }
 
 
-    public HashSet<String> getWatchlist() {
+    public Watchlist getWatchlist() {
         return this.watchlist;
     }
 
 
-    public ArrayList<String> getHistory() {
+    public History getHistory() {
         return this.history;
     }
 
@@ -83,20 +81,17 @@ public class User {
 
 
     public void addToHistory(String movieId) {
-        String date = java.time.LocalDate.now().toString();
-        String historyEntry = movieId + "@" + date;
-        
-        // Remove if already exists to update date
+        // Ensure no duplicates in history
         removeFromHistory(movieId);
-        history.add(historyEntry);
-        
+        history.add(movieId);
+
         // Remove from watchlist if present
         removeFromWatchlist(movieId);
     }
 
 
     public boolean removeFromHistory(String movieId) {
-        return this.history.removeIf(entry -> entry.startsWith(movieId + "@"));
+        return history.remove(movieId);
     }
 
 
@@ -109,8 +104,8 @@ public class User {
         return String.join(",", new String[] {
             this.username,
             this.passwordHash,
-            String.join(";", this.watchlist),
-            String.join(";", this.history),
+            String.join(";", this.watchlist.get()),
+            String.join(";", this.history.get()),
             String.valueOf(this.isPremium)
         });
     }

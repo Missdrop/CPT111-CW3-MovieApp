@@ -17,8 +17,8 @@ public class UserTest {
     public void testUserCreationEmptyWatchlist() throws Exception {
         String[] userData = {"jane_doe", "securepass", "", "movieA;movieB", "false"};
         User user = new User(userData);
-        assertEquals(0, user.getWatchlist().size());
-        assertEquals(2, user.getHistory().size());
+        assertEquals(0, user.getWatchlist().length());
+        assertEquals(2, user.getHistory().length());
     }
 
 
@@ -36,7 +36,7 @@ public class UserTest {
         user.addToHistory("movieY");
         user.addToHistory("movieZ");
         assertTrue(user.removeFromHistory("movieY"));
-        assertEquals(1, user.getHistory().size());
+        assertEquals(1, user.getHistory().length());
     }
 
 
