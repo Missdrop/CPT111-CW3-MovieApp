@@ -6,20 +6,14 @@ public class Movie {
     private String genre;
     private int year;
     private double rating;
-    private String director;
-    private String company;
-    private int time;
 
 
-    public Movie(String id, String title, String genre, int year, double rating, String director, String company, int time) {
+    public Movie(String id, String title, String genre, int year, double rating) {
         this.id = id;
         this.title = title;
         this.genre = genre;
         this.year = year;
         this.rating = rating;
-        this.director = director;
-        this.company = company;
-        this.time = time;
     }
 
 
@@ -27,9 +21,6 @@ public class Movie {
         this(movieData[0], movieData[1], movieData[2],
         movieData[3] != null && !movieData[3].isEmpty() ? Integer.parseInt(movieData[3]) : 0,
         movieData[4] != null && !movieData[4].isEmpty() ? Double.parseDouble(movieData[4]) : 0.0);
-        movieData[5],
-        movieData[6],
-        movieData[7] != null && !movieData[7].isEmpty() ? Integer.parseInt(movieData[7]) : 0);
     }
 
 
@@ -55,21 +46,6 @@ public class Movie {
 
     public double getRating() {
         return this.rating;
-    }
-    
-
-    public String getDirector() {
-        return this.director;
-    }
-
-
-    public String getCompany() {
-        return this.company;
-    }
-
-
-    public int getTime() {
-        return this.time;
     }
 
 
