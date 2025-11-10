@@ -20,6 +20,7 @@
 │   ├── PremiumUser.java
 │   └── User.java
 ├── userinterface
+│   ├── ChangePassword.java
 │   ├── Login.java
 │   ├── Menu.java
 │   └── Register.java
@@ -56,13 +57,13 @@
 - [ ] 使用面向对象原则。至少应实现以下类：Movie、User、Watchlist、History 和 RecommendationEngine。
 - [x] 使用 ArrayList 和/或 HashMap 存储电影和用户数据。
 - [x] 使用文件 I/O 来加载电影数据和加载/保存用户数据。
-- [ ] 实现异常处理以防止崩溃。
-- [ ] 约束：你必须只使用本课程中涵盖的 Java 库。
+- [x] 实现异常处理以防止崩溃。
+- [x] 约束：你必须只使用本课程中涵盖的 Java 库。
 
 ### 高级功能
 
 - [x] 创建新用户账户的功能。
-- [ ] 更改用户密码的功能。
+- [x] 更改用户密码的功能。
 - [ ] 一个支持多种策略（例如，按类型、年份、评分等推荐）且可在运行时切换的推荐引擎。
 - [ ] 一个使用 JavaFX 的图形用户界面（GUI），用于浏览电影、管理观看列表和查看推荐（替代命令行菜单）。
 - [x] 将 User 子类化为 BasicUser、PremiumUser 等，每个子类具有不同的权限。
