@@ -1,5 +1,9 @@
 # 小组作业Tips
 
+## 项目文档
+
+项目文档在[这里](document.md)
+
 ## 代码提交
 
 - 首先，我们应该从原仓库分叉（fork）一份到自己的仓库。然后将fork的仓库clone到本地进行修改。
@@ -92,7 +96,3 @@
    | alice		| alice123	|
    | diana		| diana123	|
    | charlie	| charlie123|
-
-## 项目文档
-
-项目文档在[这里](document.md)
