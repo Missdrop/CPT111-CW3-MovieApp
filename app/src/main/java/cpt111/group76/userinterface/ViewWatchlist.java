@@ -3,35 +3,44 @@ package cpt111.group76.userinterface;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.HashMap;
 
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 public class ViewWatchlist {
     private User user;
     private HashMap<String, Movie> movieDatabase;
+    private TableView<Movie> watchlistTable;
+    private ObservableList<Movie> watchlistData;
 
     public ViewWatchlist(User user, HashMap<String, Movie> movieDatabase) {
         this.user = user;
         this.movieDatabase = movieDatabase;
+        this.watchlistData = FXCollections.observableArrayList();
     }
 
     public void show() {
         Stage stage = new Stage();
         stage.setTitle("My Watchlist");
 
-        ListView<String> watchlistView = new ListView<>();
-        updateWatchlistView(watchlistView);
+        // Create TableView
+        watchlistTable = new TableView<>();
+        setupTableColumns();
+        updateWatchlistData();
 
         // Action buttons
         Button removeButton = new Button("Remove Selected from Watchlist");
@@ -39,18 +48,16 @@ public class ViewWatchlist {
         Label statusLabel = new Label();
 
         removeButton.setOnAction(e -> {
-            String selected = watchlistView.getSelectionModel().getSelectedItem();
+            Movie selected = watchlistTable.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                String movieId = extractMovieId(selected);
-                if (movieId != null) {
-                    boolean success = user.removeFromWatchlist(movieId);
-                    if (success) {
-                        statusLabel.setText("Successfully removed from watchlist!");
-                        new UserManager().updateUser(user);
-                        updateWatchlistView(watchlistView);
-                    } else {
-                        statusLabel.setText("Failed to remove from watchlist.");
-                    }
+                String movieId = selected.getId();
+                boolean success = user.removeFromWatchlist(movieId);
+                if (success) {
+                    statusLabel.setText("Successfully removed from watchlist!");
+                    new UserManager().updateUser(user);
+                    updateWatchlistData();
+                } else {
+                    statusLabel.setText("Failed to remove from watchlist.");
                 }
             } else {
                 statusLabel.setText("Please select a movie first.");
@@ -58,49 +65,74 @@ public class ViewWatchlist {
         });
 
         markWatchedButton.setOnAction(e -> {
-            String selected = watchlistView.getSelectionModel().getSelectedItem();
+            Movie selected = watchlistTable.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                String movieId = extractMovieId(selected);
-                if (movieId != null) {
-                    user.addToHistory(movieId);
-                    statusLabel.setText("Successfully marked as watched and removed from watchlist!");
-                    new UserManager().updateUser(user);
-                    updateWatchlistView(watchlistView);
-                }
+                String movieId = selected.getId();
+                user.addToHistory(movieId);
+                statusLabel.setText("Successfully marked as watched and removed from watchlist!");
+                new UserManager().updateUser(user);
+                updateWatchlistData();
             } else {
                 statusLabel.setText("Please select a movie first.");
             }
         });
 
         HBox buttonBox = new HBox(10, removeButton, markWatchedButton);
-        VBox layout = new VBox(10, new Label("My Watchlist:"), watchlistView, buttonBox, statusLabel);
+        VBox layout = new VBox(10, new Label("My Watchlist:"), watchlistTable, buttonBox, statusLabel);
         layout.setPadding(new Insets(20));
 
-        Scene scene = new Scene(layout, 600, 400);
+        Scene scene = new Scene(layout, 800, 500);
         stage.setScene(scene);
         stage.show();
     }
 
-    private void updateWatchlistView(ListView<String> watchlistView) {
-        ArrayList<String> watchlistItems = new ArrayList<>();
+    private void setupTableColumns() {
+        // ID column
+        TableColumn<Movie, String> idColumn = new TableColumn<>("ID");
+        idColumn.setMinWidth(60);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        // Title column
+        TableColumn<Movie, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.setMinWidth(200);
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+        // Genre column
+        TableColumn<Movie, String> genreColumn = new TableColumn<>("Genre");
+        genreColumn.setMinWidth(100);
+        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
+
+        // Year column
+        TableColumn<Movie, Integer> yearColumn = new TableColumn<>("Year");
+        yearColumn.setMinWidth(60);
+        yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+
+        // Rating column
+        TableColumn<Movie, Double> ratingColumn = new TableColumn<>("Rating");
+        ratingColumn.setMinWidth(60);
+        ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
+
+        // Add columns individually to avoid type safety warning
+        watchlistTable.getColumns().add(idColumn);
+        watchlistTable.getColumns().add(titleColumn);
+        watchlistTable.getColumns().add(genreColumn);
+        watchlistTable.getColumns().add(yearColumn);
+        watchlistTable.getColumns().add(ratingColumn);
+
+        // Make the table take up available space
+        watchlistTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+    }
+
+    private void updateWatchlistData() {
+        watchlistData.clear();
+        
         for (String movieId : user.getWatchlist().get()) {
             Movie movie = movieDatabase.get(movieId);
             if (movie != null) {
-                watchlistItems.add(movie.toString());
+                watchlistData.add(movie);
             }
         }
 
-        if (watchlistItems.isEmpty()) {
-            watchlistItems.add("Your watchlist is empty.");
-        }
-
-        watchlistView.setItems(FXCollections.observableArrayList(watchlistItems));
-    }
-
-    private String extractMovieId(String movieString) {
-        if (movieString != null && movieString.length() >= 4) {
-            return movieString.substring(0, 4);
-        }
-        return null;
+        watchlistTable.setItems(watchlistData);
     }
 }
