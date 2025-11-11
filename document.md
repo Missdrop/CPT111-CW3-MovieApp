@@ -6,12 +6,23 @@
   - [具体说明](#具体说明)
     - [总览](#总览)
     - [电影包](#电影包)
+      - [Movie](#movie)
     - [用户数据包](#用户数据包)
+      - [Watchlist](#watchlist)
+      - [History](#history)
     - [用户包](#用户包)
+      - [User](#user)
+      - [PremiumUser](#premiumuser)
+      - [BasicUser](#basicuser)
     - [数据存储包](#数据存储包)
+      - [FileManager](#filemanager)
+      - [MovieManager](#moviemanager)
+      - [Usermanager](#usermanager)
     - [推荐引擎包](#推荐引擎包)
+      - [Engine](#engine)
     - [主类](#主类)
     - [GUI包](#gui包)
+      - [GUI逻辑示意图](#gui逻辑示意图)
   - [功能实现（CW3要求）](#功能实现cw3要求)
     - [未登录时](#未登录时)
     - [登录后](#登录后)
@@ -60,7 +71,7 @@
 
 ## 具体说明
 
-这个项目大致上由七部分组成，如上图所示。
+这个项目大致上由七部分组成，如上图所示。每一个包我会从类字段，构造器方法和类方法三方面来讲解。
 
 ### 总览
 
@@ -89,12 +100,15 @@
 ### 电影包
 
 这个包目前只有电影类，但是CW3的高级功能中存在一项“将 Movie 子类化为不同的类”，有主意的同学可以帮忙想想。
-  - Movie类有这些私有字段：`String id`, `String title`, `String genre`, `int year`, `double rating`
-  - Movie类比较简单，仅有:
-    - 两个构造方法
-      - 一个是基于五个变量的构造器
-      - 另一个接受`String[] movieData`，把它们分别变成五个变量之后调用第一个构造器。
-        > 请注意这个构造器可能会抛出异常，虽然我们已经做了空对象判断，但是Integer.parseInt和Double.parseDouble方法可能接收到不合法的字符，比如Integer.parseInt("notNumber")。因此将这个方法设为throws Exception。
+
+#### Movie
+
+  - 私有字段：Movie类有这些私有字段：`String id`, `String title`, `String genre`, `int year`, `double rating`
+  - 构造器方法：Movie类比较简单，仅有两个构造方法
+    - 一个是基于五个变量的构造器
+    - 另一个接受`String[] movieData`，把它们分别变成五个变量之后调用第一个构造器。
+      > 请注意这个构造器可能会抛出异常，虽然我们已经做了空对象判断，但是Integer.parseInt和Double.parseDouble方法可能接收到不合法的字符，比如Integer.parseInt("notNumber")。因此将这个方法设为throws Exception。
+  - 类方法：
     - 五个私有字段的`getter`
     - 一个`toCSV`方法，把每个私有字段转化为用逗号分开的String，用于数据存储
       > 这里的两个.toString()方法并不需要异常处理，因为year和rating是基本类型int和double，永远不会为null。
@@ -107,16 +121,20 @@
 
 这个包实现了两个类，`History`类和`Watchlist`类，它们都将作为用户类的私有字段使用。
 
+#### Watchlist
+
 首先从比较简单的Watchlist类开始，它实际上是对一个`HashSet<String>`的包装，私有字段也仅有这一项。因为Watchlist不应该存在重复元素，所以使用HashSet，HashSet可以自动阻止加入重复元素，也可以获得更快的IO和查询性能。
 
 - 私有字段：`HashSet<String> watchlist`
-- Watchlist类有三种构造器：
+- 构造器方法：Watchlist类有三种构造器：
   - 一个不接受参数的构造器，生成一个空的Watchlist
   - 一个接受`HashSet`对象的构造器
   - 一个接受`String[]`型的构造器，会将数组的每一项加入到Watchlist中。
     > 很显然，这个方法会在读取csv文件的时候被使用。
-- 一些基本的操作方法，包括：获取私有字段，往列表加入电影（当电影存在时不会重复加入，会返回false），移除电影，获取列表长度，查询电影是否存在于列表。
-- 一个toCSV方法，和之前不同的是用分号隔开。
+- 类方法：一些基本的操作方法，包括：获取私有字段，往列表加入电影（当电影存在时不会重复加入，会返回false），移除电影，获取列表长度，查询电影是否存在于列表。
+  - 一个`toCSV`方法，和之前不同的是用分号隔开。
+
+#### History
 
 然后是History类。这个类我使用HashMap实现，以MovieID作为键，时间作为值，因为电影名和观看时间的键值对应用Map这种数据结构再适合不过了。虽然HashMap会导致观看历史乱序的问题，但是我们用表格显示，可以按字符串排序，所以并不影响用户体验。
 
@@ -125,23 +143,63 @@
 - 私有字段：`HashMap<String, String> history`
 - 构造器方法：同Watchlist形式。
   - 接受`String[]`的构造器会把每一项（形如"M001@2025-01-01"）拆分成movieID和date两个字符串，分别作为表的键和值存储。其中包含一些异常处理，比如当拆分出的字符串数组长度小于2时（缺少元素），抛弃这个异常数据不存储。
-- 一些基本方法和toCSV方法，同Watchlist。另外的，`add()`方法会使用`java.time.LocalDate`包的`now()`方法获取时间，并且转换成字符串储存为值。
+- 类方法：一些基本方法和`toCSV`方法，同Watchlist。另外的，`add()`方法会使用`java.time.LocalDate`包的`now()`方法获取时间，并且转换成字符串储存为值。
 
 ---
 
 ### 用户包
 
+这个包包含三个类，User，PremiumUser和BasicUser。
 
+实现了一个用户应有的各种操作，并记录了用户的数据。
+
+它们的关系是：后两个都继承自User类，但是两种User的最大Watchlist长度不同，PremiumUser为100，BasicUser为20。
+
+#### User
+
+User类看似内容很多但其实并不复杂。实现了用户的密码加密，数据IO，验证密码。
+
+- 私有字段：`String username`, `String passwordHash`, `Watchlist watchlist`, `History history`, `boolean isPremium`。代码的可读性很高，想必不需要解释就可以理解字段的意思。唯一需要解释的就是passwordHash字段，它采用加密的哈希值存储密码。下面会详细解释。
+- 构造器方法：三个
+  - 比起Movie类，它多了一种构造器，只需要输入三个参数：`username, password, isPremium`。少了watchlist和history，显而易见的，这是建立一个新用户用的方法。
+  - 第三种构造器被设为`throws Exception`，原因与Movie类相同，这里不再赘述。
+- 类方法：除去一些基本的getter和setter，需要解释的还有以下几个方法：
+  - `toHash`方法：会将密码字符串先调用`String.hashCode()`方法，再将其转化为十六进制数字，返回为字符串格式。
+    > 此方法设为private static，是因为它仅仅被本类调用，而且与用户对象本身无关，是用户类的一个辅助方法。
+  - `setPassword`方法：会调用toHash方法将明文密码字符串转化为加密密码字符串后再储存密码。
+  - `verifyPassword`方法：检查传入的密码是否和用户密码匹配。
+  - `addToHistory`方法：这个方法会在电影加入history时将其从watchlist中移除。这是课程要求。
+    > 但是课程要求中并没有对已经在history里的电影被加入watchlist的行为有限制。事实上根据现实情况，我认为想看两遍电影很正常，所以允许上述操作。
+
+#### PremiumUser
+
+User的子类，重写了addToWatchlist方法。使得用户观看列表长度得到了限制。
+
+- 私有字段：添加了`maxWatchlistSize`常量，值为100，设为`private static final int`是因为它应是个不可改变且所有用户统一的常量，作为最大观看列表长度使用。
+- 构造器方法：不同的是多了一个从现有用户创建高级用户的构造器，另外两个构造器和User类的区别仅仅是将isPremium设为了true。
+- 类方法：一个getter，并且重写了`addToWatchlist`方法，使观看列表达到最大长度后不再加入电影，同时返回false，否则true。
+
+#### BasicUser
+
+与PremiumUser的唯一区别是`maxWatchlistSize`为20，其他完全相同。
 
 ---
 
 ### 数据存储包
 
-这个类实现了一个数据库，从底层的文件IO到上层用户和电影的数据库。
+这个包实现了一个数据管理系统，从底层的文件IO到上层用户和电影的数据库。
+
+#### FileManager
+
+#### MovieManager
+
+#### Usermanager
 
 ---
 
 ### 推荐引擎包
+
+#### Engine
 
 ---
 
@@ -150,6 +208,33 @@
 ---
 
 ### GUI包
+
+#### GUI逻辑示意图
+```text
+┌─────────────────┐
+│    主页 (App)    │
+└─────────┬───────┘
+    ┌─────┴─────┐
+┌───▼───┐   ┌───▼───┐
+│ 登录   │   │ 注册   │
+│Login  │   │Register│
+└───┬───┘   └───┬───┘
+    └─────┬─────┘
+    ┌─────▼─────┐
+    │  主菜单    │
+    │   Menu    │
+    └─────┬─────┘
+    ┌─────┼───────┬──────┬──────┬──────┐
+┌───▼─┐ ┌─▼───┐ ┌─▼──┐ ┌─▼──┐ ┌─▼──┐ ┌─▼───────┐
+│浏览 │ │ 观看 │ │历史 │ │推荐│ │更改 │ │ 升级账户  │
+│电影 │ │ 列表 │ │记录 │ │系统│ │密码 │ │（高级用户）│
+└─────┘ └───┬─┘ └────┘ └────┘ └────┘ └──────────┘
+      ┌─────▼─────┐
+      │ 添加新电影  │
+      │（高级用户） │
+      └───────────┘
+
+```
 
 ---
 
