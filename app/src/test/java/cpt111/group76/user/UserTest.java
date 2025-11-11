@@ -15,7 +15,7 @@ public class UserTest {
 
     @Test
     public void testUserCreationEmptyWatchlist() throws Exception {
-        String[] userData = {"jane_doe", "securepass", "", "movieA;movieB", "false"};
+        String[] userData = {"jane_doe", "securepass", "", "M063@2025-05-14;M064@2025-09-03", "false"};
         User user = new User(userData);
         assertEquals(0, user.getWatchlist().length());
         assertEquals(2, user.getHistory().length());

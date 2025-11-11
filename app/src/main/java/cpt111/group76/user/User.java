@@ -86,8 +86,6 @@ public class User {
 
 
     public void addToHistory(String movieId) {
-        // Ensure no duplicates in history
-        removeFromHistory(movieId);
         history.add(movieId);
 
         // Remove from watchlist if present

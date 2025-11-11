@@ -24,13 +24,13 @@ public class ViewHistory {
     private HashMap<String, Movie> movieDatabase;
     private TableView<Movie> historyTable;
     private ObservableList<Movie> historyData;
-    private HashMap<String, String> movieDateMap; // Store movieId -> date mapping
+    private HashMap<String, String> movieDateMap;
 
     public ViewHistory(User user, HashMap<String, Movie> movieDatabase) {
         this.user = user;
         this.movieDatabase = movieDatabase;
         this.historyData = FXCollections.observableArrayList();
-        this.movieDateMap = new HashMap<>();
+        this.movieDateMap = user.getHistory().getHistoryMap();
     }
 
     public void show() {
@@ -120,17 +120,12 @@ public class ViewHistory {
 
     private void updateHistoryData() {
         historyData.clear();
-        movieDateMap.clear();
+        movieDateMap = user.getHistory().getHistoryMap();
         
-        for (String historyEntry : user.getHistory().get()) {
-            String[] parts = historyEntry.split("@");
-            String movieId = parts[0];
-            String date = parts.length > 1 ? parts[1] : "Unknown date";
-            
+        for (String movieId : movieDateMap.keySet()) {
             Movie movie = movieDatabase.get(movieId);
             if (movie != null) {
                 historyData.add(movie);
-                movieDateMap.put(movieId, date);
             }
         }
 
