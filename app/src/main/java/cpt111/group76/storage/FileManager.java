@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * This class is responsible for IO a csv file.
+ * This class is responsible for IO operations on a csv file.
  */
 class FileManager {
     private File file;
