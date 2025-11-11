@@ -30,11 +30,13 @@ public class Recommendation {
     private TableView<Movie> recommendationsTable;
     private ObservableList<Movie> recommendationsData;
 
+
     public Recommendation(User user, HashMap<String, Movie> movieDatabase) {
         this.user = user;
         this.movieDatabase = movieDatabase;
         this.recommendationsData = FXCollections.observableArrayList();
     }
+
 
     public void show() {
         Stage stage = new Stage();
@@ -53,7 +55,7 @@ public class Recommendation {
         countField.setText("5");
 
         Button recommendButton = new Button("Get Recommendations");
-        
+
         // Create TableView for recommendations
         recommendationsTable = new TableView<>();
         setupTableColumns();
@@ -66,10 +68,10 @@ public class Recommendation {
             try {
                 String type = typeComboBox.getValue();
                 int count = Integer.parseInt(countField.getText());
-                
+
                 Engine engine = new Engine(movieDatabase, user);
                 String[] recommendations = engine.recommendation(type, count);
-                
+
                 recommendationsData.clear();
                 for (String movieId : recommendations) {
                     Movie movie = movieDatabase.get(movieId);
@@ -77,10 +79,10 @@ public class Recommendation {
                         recommendationsData.add(movie);
                     }
                 }
-                
+
                 recommendationsTable.setItems(recommendationsData);
                 statusLabel.setText("Found " + recommendationsData.size() + " recommendations.");
-                
+
             } catch (NumberFormatException ex) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
@@ -112,19 +114,14 @@ public class Recommendation {
 
         HBox recommendationButtons = new HBox(10, recommendButton, addToWatchlistButton);
 
-        layout.getChildren().addAll(
-            typeLabel, typeComboBox,
-            countLabel, countField,
-            recommendationButtons,
-            new Label("Recommendations:"),
-            recommendationsTable,
-            statusLabel
-        );
+        layout.getChildren().addAll(typeLabel, typeComboBox, countLabel, countField, recommendationButtons,
+                new Label("Recommendations:"), recommendationsTable, statusLabel);
 
         Scene scene = new Scene(layout, 800, 500);
         stage.setScene(scene);
         stage.show();
     }
+
 
     private void setupTableColumns() {
         // ID column

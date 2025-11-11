@@ -15,10 +15,12 @@ public class GetPremium {
     private User user;
     private Stage primaryStage;
 
+
     public GetPremium(User user, Stage primaryStage) {
         this.user = user;
         this.primaryStage = primaryStage;
     }
+
 
     public void show() {
         Stage stage = new Stage();
@@ -27,33 +29,32 @@ public class GetPremium {
         // Create the premium upgrade page
         Label titleLabel = new Label("Get Premium!");
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f39c12;");
-        
-        Label descriptionLabel = new Label("Premium Users is much better than Basic Users! Upgrade now to unlock exclusive features and enhance your movie experience.");
+
+        Label descriptionLabel = new Label(
+                "Premium Users is much better than Basic Users! Upgrade now to unlock exclusive features and enhance your movie experience.");
         descriptionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-wrap-text: true;");
         descriptionLabel.setMaxWidth(400);
-        
+
         // Add more premium benefits
         Label benefitsLabel = new Label("Premium Benefits:");
         benefitsLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-        
+
         VBox benefitsList = new VBox(5);
-        benefitsList.getChildren().addAll(
-            createBenefitItem("✓ Watchlist capacity: 100 movies (vs 20 for Basic)"),
-            createBenefitItem("✓ Add Movies to Movie Database"),
-            createBenefitItem("✓ Enhanced recommendation algorithms")
-        );
-        
+        benefitsList.getChildren().addAll(createBenefitItem("✓ Watchlist capacity: 100 movies (vs 20 for Basic)"),
+                createBenefitItem("✓ Add Movies to Movie Database"),
+                createBenefitItem("✓ Enhanced recommendation algorithms"));
+
         Button upgradeButton = new Button("Get Premium");
-        upgradeButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 16px; " +
-                            "-fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 40px;");
-        
+        upgradeButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 16px; "
+                + "-fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 40px;");
+
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-weight: bold;");
-        
+
         upgradeButton.setOnAction(e -> {
             // Convert user to Premium
             user.setPremium(true);
-            
+
             // Update user in UserManager
             UserManager userManager = new UserManager();
             userManager.updateUser(user);
@@ -61,21 +62,23 @@ public class GetPremium {
 
             stage.close();
             primaryStage.close();
-            
+
             // Create new menu with updated user
             Menu newMenu = new Menu(user);
             newMenu.start(new Stage());
         });
-        
-        VBox layout = new VBox(20, titleLabel, descriptionLabel, benefitsLabel, benefitsList, upgradeButton, statusLabel);
+
+        VBox layout = new VBox(20, titleLabel, descriptionLabel, benefitsLabel, benefitsList, upgradeButton,
+                statusLabel);
         layout.setPadding(new Insets(30));
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #f8f9fa;");
-        
+
         Scene scene = new Scene(layout, 500, 400);
         stage.setScene(scene);
         stage.show();
     }
+
 
     private Label createBenefitItem(String text) {
         Label benefit = new Label(text);

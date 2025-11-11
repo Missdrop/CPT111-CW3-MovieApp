@@ -19,19 +19,19 @@ import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
 
-
-
 public class ViewWatchlist {
     private User user;
     private HashMap<String, Movie> movieDatabase;
     private TableView<Movie> watchlistTable;
     private ObservableList<Movie> watchlistData;
 
+
     public ViewWatchlist(User user, HashMap<String, Movie> movieDatabase) {
         this.user = user;
         this.movieDatabase = movieDatabase;
         this.watchlistData = FXCollections.observableArrayList();
     }
+
 
     public void show() {
         Stage stage = new Stage();
@@ -86,6 +86,7 @@ public class ViewWatchlist {
         stage.show();
     }
 
+
     private void setupTableColumns() {
         // ID column
         TableColumn<Movie, String> idColumn = new TableColumn<>("ID");
@@ -123,9 +124,10 @@ public class ViewWatchlist {
         watchlistTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     }
 
+
     private void updateWatchlistData() {
         watchlistData.clear();
-        
+
         for (String movieId : user.getWatchlist().get()) {
             Movie movie = movieDatabase.get(movieId);
             if (movie != null) {

@@ -26,12 +26,14 @@ public class ViewHistory {
     private ObservableList<Movie> historyData;
     private HashMap<String, String> movieDateMap;
 
+
     public ViewHistory(User user, HashMap<String, Movie> movieDatabase) {
         this.user = user;
         this.movieDatabase = movieDatabase;
         this.historyData = FXCollections.observableArrayList();
-        this.movieDateMap = user.getHistory().getHistoryMap();
+        this.movieDateMap = user.getHistory().get();
     }
+
 
     public void show() {
         Stage stage = new Stage();
@@ -70,6 +72,7 @@ public class ViewHistory {
         stage.setScene(scene);
         stage.show();
     }
+
 
     private void setupTableColumns() {
         // ID column
@@ -118,10 +121,11 @@ public class ViewHistory {
         historyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     }
 
+
     private void updateHistoryData() {
         historyData.clear();
-        movieDateMap = user.getHistory().getHistoryMap();
-        
+        movieDateMap = user.getHistory().get();
+
         for (String movieId : movieDateMap.keySet()) {
             Movie movie = movieDatabase.get(movieId);
             if (movie != null) {

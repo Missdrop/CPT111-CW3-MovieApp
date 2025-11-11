@@ -20,15 +20,17 @@ import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
 
-public class Menu extends Application{
+public class Menu extends Application {
     private User user;
     private static MovieManager movieManager = new MovieManager();
     private HashMap<String, Movie> movieDatabase;
 
-    public Menu(User user){
+
+    public Menu(User user) {
         this.user = user;
         this.movieDatabase = movieManager.getMovieDatabase();
     }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -42,8 +44,8 @@ public class Menu extends Application{
         titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         // User info
-        Text usernameText = new Text("Welcome, " + user.getUsername() + "! (" +
-            (user.isPremium() ? "Premium User" : "Basic User") + ")");
+        Text usernameText = new Text(
+                "Welcome, " + user.getUsername() + "! (" + (user.isPremium() ? "Premium User" : "Basic User") + ")");
         usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
 
         // Top bar with title and user info
@@ -112,11 +114,10 @@ public class Menu extends Application{
         menuButtons.setAlignment(Pos.CENTER);
 
         // Stats panel
-        Label statsLabel = new Label("Your Stats: " +
-            user.getWatchlist().length() + " movies in watchlist • " +
-            user.getHistory().length() + " movies watched");
+        Label statsLabel = new Label("Your Stats: " + user.getWatchlist().length() + " movies in watchlist • "
+                + user.getHistory().length() + " movies watched");
         statsLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d;");
-        
+
         VBox statsBox = new VBox(statsLabel);
         statsBox.setPadding(new Insets(10));
         statsBox.setAlignment(Pos.CENTER);
@@ -132,15 +133,18 @@ public class Menu extends Application{
         primaryStage.show();
     }
 
+
     // Helper method to create styled menu buttons
     private Button createMenuButton(String text, String color) {
         Button button = new Button(text);
-        button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; " +
-                    "-fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(" + color + ", 20%); -fx-text-fill: white; " +
-                    "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; " +
-                    "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
+        button.setStyle("-fx-background-color: " + color
+                + "; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; "
+                + "-fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(" + color
+                + ", 20%); -fx-text-fill: white; "
+                + "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; "
+                + "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
         return button;
     }
 }

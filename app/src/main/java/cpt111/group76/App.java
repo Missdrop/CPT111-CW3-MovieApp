@@ -16,8 +16,9 @@ import cpt111.group76.userinterface.Register;
 import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.UserManager;
 
-public class App extends Application{
+public class App extends Application {
     private static UserManager userManager = new UserManager();
+
 
     public static void main(String[] args) {
         launch(args);
@@ -30,20 +31,21 @@ public class App extends Application{
         movieManager.close();
     }
 
+
     @Override
     public void start(Stage primaryStage) {
         // Create main title
         Label titleLabel = new Label("Movie Recommendation & Tracker");
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-        
+
         // Create subtitle
         Label subtitleLabel = new Label("Your Personal Movie Companion");
         subtitleLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;");
-        
+
         // Create login and register buttons
         Button loginButton = new Button("Login");
         loginButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
-        
+
         Button registerButton = new Button("Register");
         registerButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
 
@@ -89,7 +91,7 @@ public class App extends Application{
         mainContainer.setAlignment(Pos.CENTER);
         mainContainer.setPadding(new Insets(40, 20, 40, 20));
         mainContainer.setStyle("-fx-background-color: #f8f9fa;");
-        
+
         // Add all elements to main container
         mainContainer.getChildren().addAll(titleLabel, subtitleLabel, buttonBox);
 

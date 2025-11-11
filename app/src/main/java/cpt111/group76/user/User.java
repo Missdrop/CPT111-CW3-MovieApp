@@ -10,7 +10,6 @@ public class User {
     private History history;
     private boolean isPremium;
 
-
     public User(String username, String passwordHash, Watchlist watchlist, History history, boolean isPremium) {
         this.username = username;
         this.passwordHash = passwordHash;
@@ -27,10 +26,9 @@ public class User {
 
     public User(String[] userData) throws Exception {
         this(userData[0], userData[1],
-        userData[2].length() > 0 ? new Watchlist(userData[2].split(";", -1)) : new Watchlist(),
-        userData[3].length() > 0 ? new History(userData[3].split(";", -1)) : new History(),
-        userData[4].length() > 0 ? Boolean.parseBoolean(userData[4]) : false
-        );
+                userData[2].length() > 0 ? new Watchlist(userData[2].split(";", -1)) : new Watchlist(),
+                userData[3].length() > 0 ? new History(userData[3].split(";", -1)) : new History(),
+                userData[4].length() > 0 ? Boolean.parseBoolean(userData[4]) : false);
     }
 
 
@@ -39,7 +37,7 @@ public class User {
     }
 
 
-    //getters
+    // getters
     public String getUsername() {
         return this.username;
     }
@@ -64,7 +62,8 @@ public class User {
         return this.isPremium;
     }
 
-    //setters
+
+    // setters
     public void setPremium(boolean isPremium) {
         this.isPremium = isPremium;
     }
@@ -104,12 +103,7 @@ public class User {
 
 
     public String toCSV() {
-        return String.join(",", new String[] {
-            this.username,
-            this.passwordHash,
-            this.watchlist.toCSV(),
-            this.history.toCSV(),
-            String.valueOf(this.isPremium)
-        });
+        return String.join(",", new String[] { this.username, this.passwordHash, this.watchlist.toCSV(),
+                this.history.toCSV(), String.valueOf(this.isPremium) });
     }
 }
