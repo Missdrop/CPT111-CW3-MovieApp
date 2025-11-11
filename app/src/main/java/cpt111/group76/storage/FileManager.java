@@ -35,15 +35,6 @@ class FileManager {
     }
 
 
-    public boolean flushScanner() {
-        if (this.scanner != null) {
-            this.scanner.close();
-        }
-        this.scanner = getScanner();
-        return this.scanner != null;
-    }
-
-
     public String[] nextLine() {
         if (this.scanner == null) {
             return null;
