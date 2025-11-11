@@ -17,7 +17,7 @@
     - [数据存储包](#数据存储包)
       - [FileManager](#filemanager)
       - [MovieManager](#moviemanager)
-      - [Usermanager](#usermanager)
+      - [UserManager](#usermanager)
     - [推荐引擎包](#推荐引擎包)
       - [Engine](#engine)
     - [主类](#主类)
@@ -206,20 +206,49 @@ MovieManager和UserManager继承自FileManager类，针对Movie和User的csv文�
 - 私有字段：一个File对象，和一个Scanner对象用于读取数据。
 - 构造器方法：可以通过File对象或者一个包含文件目录的String值构造FileManager。
 - 类方法：
-  - Scanner getScanner()：由当前文件获取一个新的Scanner对象。
-  - String[] nextLine()：这个方法会获取csv文件的一行，然后按逗号把字符串分割为数组，最后返回这个数组。
-  - boolean hasNextLine()：是否存在下一行。
-  - boolean save(String header, String[] rows)：这个方法比较关键，具体逻辑和异常处理可以自行查看源代码，它会替换性的写入整个csv文件，以header为csv文件的第一行，字符串数组rows为csv文件的数据行。也就是先写入header行，然后遍历所有rows，写入进文件里。
+  - `Scanner getScanner()`：由当前文件获取一个新的Scanner对象。
+  - `String[] nextLine()`：这个方法会获取csv文件的一行，然后按逗号把字符串分割为数组，最后返回这个数组。
+  - `boolean hasNextLine()`：是否存在下一行。
+  - `boolean save(String header, String[] rows)`：这个方法比较关键，具体逻辑和异常处理可以自行查看源代码，它会替换性的写入整个csv文件，以header为csv文件的第一行，字符串数组rows为csv文件的数据行。也就是先写入header行，然后遍历所有rows，写入进文件里。
     > 当文件不存在时这个方法会试图创建新文件和文件夹。
-  - close()：清空FileManager的字段。
+  - `close()`：清空FileManager的字段。
 
 
 #### MovieManager
 
+MovieManager继承自FileManager，在实例化的时候从csv读取电影数据，然后变成一个用于管理电影的数据库系统，提供了一些查找，增添电影的方法。
+
+- 私有字段：
+  - `HashMap<String, Movie> movies`：一个哈希表，用于存储所有电影，键为电影ID，值为一个Movie对象。
+    > 哈希表的好处无需多言，但总觉得这样的设计会不会有些多余，因为电影ID既被存储在键中，又被存储在Movie对象中。但是再去改Movie对象的数据结构太麻烦了，牵一发而动全身，UserManager类也一样。
+  - `int maxIndex`：记录当前最大的电影索引，用于生成新的电影ID
+- 构造器方法：直接使用相对地址`resources/movies.csv`调用父类构造器，然后调用两个私有方法初始化私有字段。
+- 类方法；除去一些基本getters，先说一些私有方法：
+  - createMovie：还记得Movie的这个构造方法被打上throw exception了吗，所以这里要try。
+  - getMovies()：无需多言，调用父类的方法来读取csv文件，用获取到的String数组创建movie对象，然后把电影ID和movie对象保存在HashMap里。
+  - idToIndex：把电影id（形如M023，M+至少三位数字，可以被写成"M%03d"的形式）转换为int，也就是读取M后面的数字。
+  - getMaxIndex()：遍历所有ID（Map的键），用上面的idToIndex方法获取数字id，然后找出最大的数。
+- 然后是一些公有方法：
+  - getMovie：从ID获取对应Movie对象
+  - addMovie（多态）：用Movie对象或者Movie的数据增加电影同时自动生成MovieID。但要注意，在用movie对象加入时，虽然是HashMap，但是直接加入重复项依然是不可取的。虽然MovieID不会变，但是Movie对象可能会变，所有要检查是否有冲突防止修改现有的电影。
+  - deleteMovie（多态）：用movieID或者movie对象删除Map中的电影。
+  - save()：调用父类save方法，设置header为"id,title,genre,year,rating"，遍历所有movie，使用.toCSV()转化为String，再储存为一个数组作为父类save方法第二个参数。
 
 
 
-#### Usermanager
+#### UserManager
+
+UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
+
+- 私有字段：一个存储用户的哈希表
+- 构造器方法：相对地址为`resources/users.csv`构造父类对象，初始化哈希表
+- 类方法：与MovieManager相同的不再赘述，不一样的是：
+  - updateUser：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
+  - save()方法header为"username,password,watchlist,history,premium"，其他一样。
+- 值得重点一提的是三个public static方法：
+  - authenticate：输入用户名和密码，判断能否登录，返回一个布尔值
+  - checkUsername：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
+  - checkPassword：检查密码是否符合要求，返回值同上
 
 ---
 
@@ -236,6 +265,8 @@ MovieManager和UserManager继承自FileManager类，针对Movie和User的csv文�
 ---
 
 ### GUI包
+
+这个包的内容过于复杂，因此不对代码详细解释，只描述每个GUI的行为。
 
 #### GUI逻辑示意图
 ```text
