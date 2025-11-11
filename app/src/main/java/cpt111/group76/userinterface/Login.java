@@ -15,16 +15,18 @@ import cpt111.group76.user.BasicUser;
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
 
-public class Login extends Application{
+public class Login extends Application {
     private UserManager userManager;
     private boolean openedMenu = false;
 
-    public Login(UserManager userManager){
+
+    public Login(UserManager userManager) {
         this.userManager = userManager;
     }
 
+
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
 
@@ -39,13 +41,13 @@ public class Login extends Application{
         loginButton.setOnAction(e -> {
             String username = usernameField.getText().trim();
             String password = passwordField.getText();
-            
+
             if (username.isEmpty() || password.isEmpty()) {
                 statusLabel.setText("Please enter both username and password.");
                 return;
             }
-            
-            if (UserManager.authenticate(username, password)){
+
+            if (UserManager.authenticate(username, password)) {
                 User user = userManager.getUser(username);
                 if (user.isPremium()) {
                     user = new PremiumUser(user);
@@ -75,11 +77,13 @@ public class Login extends Application{
         primaryStage.show();
     }
 
+
     private void openMenu(User user) {
         Menu menu = new Menu(user);
         this.openedMenu = true;
         menu.start(new Stage());
     }
+
 
     public boolean openedMenu() {
         return this.openedMenu;

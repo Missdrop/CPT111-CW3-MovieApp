@@ -27,7 +27,7 @@ public class FileManagerTest {
             "data4,data5,data6"
         };
         assertTrue(fileManager.save(header, rows));
-        fileManager.flushScanner();
+        fileManager = new FileManager("resources/test_save.csv");
         assertEquals("col1", fileManager.nextLine()[0]);
         fileManager.close();
         java.io.File file = new java.io.File("resources/test_save.csv");

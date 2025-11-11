@@ -1,29 +1,62 @@
 # 项目文档
+## 目录
+- [项目文档](#项目文档)
+  - [目录](#目录)
+  - [项目结构](#项目结构)
+  - [具体说明](#具体说明)
+    - [总览](#总览)
+    - [电影包](#电影包)
+      - [Movie](#movie)
+    - [用户数据包](#用户数据包)
+      - [Watchlist](#watchlist)
+      - [History](#history)
+    - [用户包](#用户包)
+      - [User](#user)
+      - [PremiumUser](#premiumuser)
+      - [BasicUser](#basicuser)
+    - [数据存储包](#数据存储包)
+      - [FileManager](#filemanager)
+      - [MovieManager](#moviemanager)
+      - [UserManager](#usermanager)
+    - [推荐引擎包](#推荐引擎包)
+      - [Engine](#engine)
+    - [主类](#主类)
+    - [GUI包](#gui包)
+      - [GUI逻辑示意图](#gui逻辑示意图)
+  - [功能实现（CW3要求）](#功能实现cw3要求)
+    - [未登录时](#未登录时)
+    - [登录后](#登录后)
+    - [其他](#其他)
+    - [技术要求](#技术要求)
+    - [高级功能](#高级功能)
+    - [其他你可以想到的功能](#其他你可以想到的功能)
+
+---
 
 ## 项目结构
 
 ```text
-├── movie                   - 电影类
+├── movie                   - ① 电影类
 │   ├── <待实现>
 │   └── Movie.java
 │
-├── recommendation          - 推荐引擎
+├── recommendation          - ⑤ 推荐引擎
 │   └── Engine.java
 │
-├── storage                 - 数据存储
+├── storage                 - ④ 数据存储
 │   ├── FileManager.java    - 数据库与文件的IO
 │   ├── MovieManager.java   - 电影数据库类
 │   └── UserManager.java    - 用户数据库类
 │
-├── user                    - 用户类
+├── user                    - ③ 用户类
 │   ├── BasicUser.java
 │   ├── PremiumUser.java
 │   ├── User.java
-│   └── data                - 用户数据的基本类型
+│   └── data                - ② 用户数据的基本类型
 │       ├── History.java
 │       └── Watchlist.java
 │
-├── userinterface           - 存放各个GUI
+├── userinterface           - ⑦ 存放各个GUI
 │   ├── AddNewMovie.java
 │   ├── BrowseMovies.java
 │   ├── GetPremium.java
@@ -35,8 +68,234 @@
 │   ├── Menu.java           - 登陆后的菜单
 │   └── Register.java
 │
-└── App.java                - 主类，包含主页的GUI
+└── App.java                - ⑥ 主类，包含主页的GUI
 ```
+
+---
+
+## 具体说明
+
+这个项目大致上由七部分组成，如上图所示。每一个包我会从类字段，构造器方法和类方法三方面来讲解。
+
+---
+
+### 总览
+
+在运行这个项目的时候，我预期的行为应该是：
+
+- 弹出一个主页，可以登录或者注册。
+- 登录之后，打开菜单，其中用户可以浏览电影（高级用户可以往数据库添加新电影），然后把它们添加到观看列表（高级用户可以存储最大一百条，普通用户二十条）或者历史记录。
+- 浏览观看列表和历史记录；获取推荐（普通用户只可以按评分推荐，高级用户可以选择年份，流派，评分三种推荐方式）。
+- 更改密码和退出登录；把账户转变为高级账户。
+- 在每次操作之后，数据库应该更新。
+- 假如csv文件是空的，应该新建csv文件。
+- 假如csv中数据存在问题，软件应该自动抛弃这些有问题的数据。
+
+经我测试，这些功能应该已经全部实现。但还需要进行更多测试。
+
+---
+
+在这个项目里定义了两种数据类，分别为电影和用户类。
+
+因为课程要求我们把它们的数据存储在两个csv文件里，所以这两个类都实现了一个`toCSV`方法，返回一个可以直接写入到csv文件里的`String`，以便在存储的时候调用这个方法。
+
+关于数据读取，我们从csv文件中读取的通常是`String`型，要把它们转化为对应的电影或者用户对象对这两个类的构造器方法有要求。所以两个类都实现了用一个`String[]`变量的构造方法，以下我们会细讲。
+
+---
+
+### 电影包
+
+这个包目前只有电影类，但是CW3的高级功能中存在一项“将 Movie 子类化为不同的类”，有主意的同学可以帮忙想想。
+
+#### Movie
+
+  - 私有字段：Movie类有这些私有字段：`String id`, `String title`, `String genre`, `int year`, `double rating`
+  - 构造器方法：Movie类比较简单，仅有两个构造方法
+    - 一个是基于五个变量的构造器
+    - 另一个接受`String[] movieData`，把它们分别变成五个变量之后调用第一个构造器。
+      > 请注意这个构造器可能会抛出异常，虽然我们已经做了空对象判断，但是Integer.parseInt和Double.parseDouble方法可能接收到不合法的字符，比如Integer.parseInt("notNumber")。因此将这个方法设为throws Exception。
+  - 类方法：
+    - 五个私有字段的`getter`
+    - 一个`toCSV`方法，把每个私有字段转化为用逗号分开的String，用于数据存储
+      > 这里的两个.toString()方法并不需要异常处理，因为year和rating是基本类型int和double，永远不会为null。
+
+---
+
+### 用户数据包
+
+> 实际上在最初我并没有编写这个包，因为没有它程序也可以写的很清楚。但是课程要求实现这个包的内容。
+
+这个包实现了两个类，`History`类和`Watchlist`类，它们都将作为用户类的私有字段使用。
+
+#### Watchlist
+
+首先从比较简单的Watchlist类开始，它实际上是对一个`HashSet<String>`的包装，私有字段也仅有这一项。因为Watchlist不应该存在重复元素，所以使用HashSet，HashSet可以自动阻止加入重复元素，也可以获得更快的IO和查询性能。
+
+- 私有字段：`HashSet<String> watchlist`
+- 构造器方法：Watchlist类有三种构造器：
+  - 一个不接受参数的构造器，生成一个空的Watchlist
+  - 一个接受`HashSet`对象的构造器
+  - 一个接受`String[]`型的构造器，会将数组的每一项加入到Watchlist中。
+    > 很显然，这个方法会在读取csv文件的时候被使用。
+- 类方法：一些基本的操作方法，包括：获取私有字段，往列表加入电影（当电影存在时不会重复加入，会返回false），移除电影，获取列表长度，查询电影是否存在于列表。
+  - 一个`toCSV`方法，和之前不同的是用分号隔开。
+
+#### History
+
+然后是History类。这个类我使用HashMap实现，以MovieID作为键，时间作为值，因为电影名和观看时间的键值对应用Map这种数据结构再适合不过了。虽然HashMap会导致观看历史乱序的问题，但是我们用表格显示，可以按字符串排序，所以并不影响用户体验。
+
+同时，HashMap可以避免重复电影加入，当相同电影不同时间的历史记录被加入时，HashMap会自动更新键而不改变值。
+
+- 私有字段：`HashMap<String, String> history`
+- 构造器方法：同Watchlist形式。
+  - 接受`String[]`的构造器会把每一项（形如"M001@2025-01-01"）拆分成movieID和date两个字符串，分别作为表的键和值存储。其中包含一些异常处理，比如当拆分出的字符串数组长度小于2时（缺少元素），抛弃这个异常数据不存储。
+- 类方法：一些基本方法和`toCSV`方法，同Watchlist。另外的，`add()`方法会使用`java.time.LocalDate`包的`now()`方法获取时间，并且转换成字符串储存为值。
+
+---
+
+### 用户包
+
+这个包包含三个类，User，PremiumUser和BasicUser。
+
+实现了一个用户应有的各种操作，并记录了用户的数据。
+
+它们的关系是：后两个都继承自User类，但是两种User的最大Watchlist长度不同，PremiumUser为100，BasicUser为20。
+
+#### User
+
+User类看似内容很多但其实并不复杂。实现了用户的密码加密，数据IO，验证密码。
+
+- 私有字段：`String username`, `String passwordHash`, `Watchlist watchlist`, `History history`, `boolean isPremium`。代码的可读性很高，想必不需要解释就可以理解字段的意思。唯一需要解释的就是passwordHash字段，它采用加密的哈希值存储密码。下面会详细解释。
+- 构造器方法：三个
+  - 比起Movie类，它多了一种构造器，只需要输入三个参数：`username, password, isPremium`。少了watchlist和history，显而易见的，这是建立一个新用户用的方法。
+  - 第三种构造器被设为`throws Exception`，原因与Movie类相同，这里不再赘述。
+- 类方法：除去一些基本的getter和setter，需要解释的还有以下几个方法：
+  - `toHash`方法：会将密码字符串先调用`String.hashCode()`方法，再将其转化为十六进制数字，返回为字符串格式。
+    > 此方法设为private static，是因为它仅仅被本类调用，而且与用户对象本身无关，是用户类的一个辅助方法。
+  - `setPassword`方法：会调用toHash方法将明文密码字符串转化为加密密码字符串后再储存密码。
+  - `verifyPassword`方法：检查传入的密码是否和用户密码匹配。
+  - `addToHistory`方法：这个方法会在电影加入history时将其从watchlist中移除。这是课程要求。
+    > 但是课程要求中并没有对已经在history里的电影被加入watchlist的行为有限制。事实上根据现实情况，我认为想看两遍电影很正常，所以允许上述操作。
+
+#### PremiumUser
+
+User的子类，重写了addToWatchlist方法。使得用户观看列表长度得到了限制。
+
+- 私有字段：添加了`maxWatchlistSize`常量，值为100，设为`private static final int`是因为它应是个不可改变且所有用户统一的常量，作为最大观看列表长度使用。
+- 构造器方法：不同的是多了一个从现有用户创建高级用户的构造器，另外两个构造器和User类的区别仅仅是将isPremium设为了true。
+- 类方法：一个getter，并且重写了`addToWatchlist`方法，使观看列表达到最大长度后不再加入电影，同时返回false，否则true。
+
+#### BasicUser
+
+与PremiumUser的唯一区别是`maxWatchlistSize`为20，其他完全相同。
+
+---
+
+### 数据存储包
+
+这个包实现了一个数据管理系统，从底层的文件IO到上层用户和电影的数据库。
+
+FileManager仅提供与csv文件交互的基本方法。
+
+MovieManager和UserManager继承自FileManager类，针对Movie和User的csv文件，并且添加了一个HashMap字段，用于保存所有的用户或电影数据。
+
+#### FileManager
+
+这个类提供了csv文件的IO方法。文件IO通常包含大量异常捕获，因此处理这个类需要格外小心。同时，在往不存在的文件写入时应尝试创建新的文件。
+
+- 私有字段：一个File对象，和一个Scanner对象用于读取数据。
+- 构造器方法：可以通过File对象或者一个包含文件目录的String值构造FileManager。
+- 类方法：
+  - `Scanner getScanner()`：由当前文件获取一个新的Scanner对象。
+  - `String[] nextLine()`：这个方法会获取csv文件的一行，然后按逗号把字符串分割为数组，最后返回这个数组。
+  - `boolean hasNextLine()`：是否存在下一行。
+  - `boolean save(String header, String[] rows)`：这个方法比较关键，具体逻辑和异常处理可以自行查看源代码，它会替换性的写入整个csv文件，以header为csv文件的第一行，字符串数组rows为csv文件的数据行。也就是先写入header行，然后遍历所有rows，写入进文件里。
+    > 当文件不存在时这个方法会试图创建新文件和文件夹。
+  - `close()`：清空FileManager的字段。
+
+
+#### MovieManager
+
+MovieManager继承自FileManager，在实例化的时候从csv读取电影数据，然后变成一个用于管理电影的数据库系统，提供了一些查找，增添电影的方法。
+
+- 私有字段：
+  - `HashMap<String, Movie> movies`：一个哈希表，用于存储所有电影，键为电影ID，值为一个Movie对象。
+    > 哈希表的好处无需多言，但总觉得这样的设计会不会有些多余，因为电影ID既被存储在键中，又被存储在Movie对象中。但是再去改Movie对象的数据结构太麻烦了，牵一发而动全身，UserManager类也一样。
+  - `int maxIndex`：记录当前最大的电影索引，用于生成新的电影ID
+- 构造器方法：直接使用相对地址`resources/movies.csv`调用父类构造器，然后调用两个私有方法初始化私有字段。
+- 类方法；除去一些基本getters，先说一些私有方法：
+  - createMovie：还记得Movie的这个构造方法被打上throw exception了吗，所以这里要try。
+  - getMovies()：无需多言，调用父类的方法来读取csv文件，用获取到的String数组创建movie对象，然后把电影ID和movie对象保存在HashMap里。
+  - idToIndex：把电影id（形如M023，M+至少三位数字，可以被写成"M%03d"的形式）转换为int，也就是读取M后面的数字。
+  - getMaxIndex()：遍历所有ID（Map的键），用上面的idToIndex方法获取数字id，然后找出最大的数。
+- 然后是一些公有方法：
+  - getMovie：从ID获取对应Movie对象
+  - addMovie（多态）：用Movie对象或者Movie的数据增加电影同时自动生成MovieID。但要注意，在用movie对象加入时，虽然是HashMap，但是直接加入重复项依然是不可取的。虽然MovieID不会变，但是Movie对象可能会变，所有要检查是否有冲突防止修改现有的电影。
+  - deleteMovie（多态）：用movieID或者movie对象删除Map中的电影。
+  - save()：调用父类save方法，设置header为"id,title,genre,year,rating"，遍历所有movie，使用.toCSV()转化为String，再储存为一个数组作为父类save方法第二个参数。
+
+
+
+#### UserManager
+
+UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
+
+- 私有字段：一个存储用户的哈希表
+- 构造器方法：相对地址为`resources/users.csv`构造父类对象，初始化哈希表
+- 类方法：与MovieManager相同的不再赘述，不一样的是：
+  - updateUser：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
+  - save()方法header为"username,password,watchlist,history,premium"，其他一样。
+- 值得重点一提的是三个public static方法：
+  - authenticate：输入用户名和密码，判断能否登录，返回一个布尔值
+  - checkUsername：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
+  - checkPassword：检查密码是否符合要求，返回值同上
+
+---
+
+### 推荐引擎包
+
+仅有一个类Engine，实现了一个根据用户数据，按多种方式的推荐器。
+
+#### Engine
+
+---
+
+### 主类
+
+---
+
+### GUI包
+
+这个包的内容过于复杂，因此不对代码详细解释，只描述每个GUI的行为。
+
+#### GUI逻辑示意图
+```text
+┌─────────────────┐
+│    主页 (App)    │
+└─────────┬───────┘
+    ┌─────┴─────┐
+┌───▼───┐   ┌───▼───┐
+│ 登录   │   │ 注册   │
+│Login  │   │Register│
+└───┬───┘   └───┬───┘
+    └─────┬─────┘
+    ┌─────▼─────┐
+    │  主菜单    │
+    │   Menu    │
+    └─────┬─────┘
+    ┌─────┼───────┬──────┬──────┬──────┐
+┌───▼─┐ ┌─▼───┐ ┌─▼──┐ ┌─▼──┐ ┌─▼──┐ ┌─▼───────┐
+│浏览 │ │ 观看 │ │历史 │ │推荐│ │更改 │ │ 升级账户  │
+│电影 │ │ 列表 │ │记录 │ │系统│ │密码 │ │（高级用户）│
+└─────┘ └───┬─┘ └────┘ └────┘ └────┘ └──────────┘
+      ┌─────▼─────┐
+      │ 添加新电影  │
+      │（高级用户） │
+      └───────────┘
+
+```
+
+---
 
 ## 功能实现（CW3要求）
 

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * This class is responsible for reading data from a csv file.
+ * This class is responsible for IO operations on a csv file.
  */
 class FileManager {
     private File file;
@@ -32,15 +32,6 @@ class FileManager {
             // return null to indicate the file couldn't be opened
             return null;
         }
-    }
-
-
-    public boolean flushScanner() {
-        if (this.scanner != null) {
-            this.scanner.close();
-        }
-        this.scanner = getScanner();
-        return this.scanner != null;
     }
 
 
@@ -73,7 +64,11 @@ class FileManager {
         // Ensure parent dirs exist
         File parent = this.file.getParentFile();
         if (parent != null && !parent.exists()) {
-            parent.mkdirs();
+            try {
+                parent.mkdirs();
+            } catch (SecurityException e) {
+                return false;
+            }
         }
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
