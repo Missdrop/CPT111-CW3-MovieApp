@@ -195,9 +195,29 @@ User的子类，重写了addToWatchlist方法。使得用户观看列表长度�
 
 这个包实现了一个数据管理系统，从底层的文件IO到上层用户和电影的数据库。
 
+FileManager仅提供与csv文件交互的基本方法。
+
+MovieManager和UserManager继承自FileManager类，针对Movie和User的csv文件，并且添加了一个HashMap字段，用于保存所有的用户或电影数据。
+
 #### FileManager
 
+这个类提供了csv文件的IO方法。文件IO通常包含大量异常捕获，因此处理这个类需要格外小心。同时，在往不存在的文件写入时应尝试创建新的文件。
+
+- 私有字段：一个File对象，和一个Scanner对象用于读取数据。
+- 构造器方法：可以通过File对象或者一个包含文件目录的String值构造FileManager。
+- 类方法：
+  - Scanner getScanner()：由当前文件获取一个新的Scanner对象。
+  - String[] nextLine()：这个方法会获取csv文件的一行，然后按逗号把字符串分割为数组，最后返回这个数组。
+  - boolean hasNextLine()：是否存在下一行。
+  - boolean save(String header, String[] rows)：这个方法比较关键，具体逻辑和异常处理可以自行查看源代码，它会替换性的写入整个csv文件，以header为csv文件的第一行，字符串数组rows为csv文件的数据行。也就是先写入header行，然后遍历所有rows，写入进文件里。
+    > 当文件不存在时这个方法会试图创建新文件和文件夹。
+  - close()：清空FileManager的字段。
+
+
 #### MovieManager
+
+
+
 
 #### Usermanager
 
