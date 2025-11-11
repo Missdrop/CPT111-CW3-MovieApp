@@ -113,7 +113,7 @@
   - 构造器方法：Movie类比较简单，仅有两个构造方法
     - 一个是基于五个变量的构造器
     - 另一个接受`String[] movieData`，把它们分别变成五个变量之后调用第一个构造器。
-      > 请注意这个构造器可能会抛出异常，虽然我们已经做了空对象判断，但是Integer.parseInt和Double.parseDouble方法可能接收到不合法的字符，比如Integer.parseInt("notNumber")。因此将这个方法设为throws Exception。
+      > 请注意这个构造器可能会抛出异常，虽然我们已经做了空对象判断，但是`Integer.parseInt`和`Double.parseDouble`方法可能接收到不合法的字符，比如`Integer.parseInt("notNumber")`。因此将这个方法设为`throws Exception`。
   - 类方法：
     - 五个私有字段的`getter`
     - 一个`toCSV`方法，把每个私有字段转化为用逗号分开的String，用于数据存储
@@ -224,15 +224,15 @@ MovieManager继承自FileManager，在实例化的时候从csv读取电影数据
   - `int maxIndex`：记录当前最大的电影索引，用于生成新的电影ID
 - 构造器方法：直接使用相对地址`resources/movies.csv`调用父类构造器，然后调用两个私有方法初始化私有字段。
 - 类方法；除去一些基本getters，先说一些私有方法：
-  - createMovie：还记得Movie的这个构造方法被打上throw exception了吗，所以这里要try。
-  - getMovies()：无需多言，调用父类的方法来读取csv文件，用获取到的String数组创建movie对象，然后把电影ID和movie对象保存在HashMap里。
-  - idToIndex：把电影id（形如M023，M+至少三位数字，可以被写成"M%03d"的形式）转换为int，也就是读取M后面的数字。
-  - getMaxIndex()：遍历所有ID（Map的键），用上面的idToIndex方法获取数字id，然后找出最大的数。
+  - `createMovie`：还记得Movie的这个构造方法被打上`throw exception`了吗，所以这里要try。
+  - `getMovies()`：无需多言，调用父类的方法来读取csv文件，用获取到的String数组创建movie对象，然后把电影ID和movie对象保存在HashMap里。
+  - `idToIndex`：把电影id（形如M023，M+至少三位数字，可以被写成"M%03d"的形式）转换为int，也就是读取M后面的数字。
+  - `getMaxIndex()`：遍历所有ID（Map的键），用上面的`idToIndex`方法获取数字id，然后找出最大的数。
 - 然后是一些公有方法：
-  - getMovie：从ID获取对应Movie对象
-  - addMovie（多态）：用Movie对象或者Movie的数据增加电影同时自动生成MovieID。但要注意，在用movie对象加入时，虽然是HashMap，但是直接加入重复项依然是不可取的。虽然MovieID不会变，但是Movie对象可能会变，所有要检查是否有冲突防止修改现有的电影。
-  - deleteMovie（多态）：用movieID或者movie对象删除Map中的电影。
-  - save()：调用父类save方法，设置header为"id,title,genre,year,rating"，遍历所有movie，使用.toCSV()转化为String，再储存为一个数组作为父类save方法第二个参数。
+  - `getMovie`：从ID获取对应Movie对象
+  - `addMovie`（多态）：用Movie对象或者Movie的数据增加电影同时自动生成MovieID。但要注意，在用movie对象加入时，虽然是HashMap，但是直接加入重复项依然是不可取的。虽然MovieID不会变，但是Movie对象可能会变，所有要检查是否有冲突防止修改现有的电影。
+  - `deleteMovie`（多态）：用movieID或者movie对象删除Map中的电影。
+  - `save()`：调用父类save方法，设置header为`"id,title,genre,year,rating"`，遍历所有movie，使用`.toCSV()`转化为String，再储存为一个数组作为父类save方法第二个参数。
 
 
 
@@ -243,12 +243,12 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 - 私有字段：一个存储用户的哈希表
 - 构造器方法：相对地址为`resources/users.csv`构造父类对象，初始化哈希表
 - 类方法：与MovieManager相同的不再赘述，不一样的是：
-  - updateUser：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
-  - save()方法header为"username,password,watchlist,history,premium"，其他一样。
+  - `updateUser`：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
+  - `save()`方法header为`"username,password,watchlist,history,premium"`，其他一样。
 - 值得重点一提的是三个public static方法：
-  - authenticate：输入用户名和密码，判断能否登录，返回一个布尔值
-  - checkUsername：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
-  - checkPassword：检查密码是否符合要求，返回值同上
+  - `authenticate`：输入用户名和密码，判断能否登录，返回一个布尔值
+  - `checkUsername`：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
+  - `checkPassword`：检查密码是否符合要求，返回值同上
 
 ---
 
