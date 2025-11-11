@@ -40,8 +40,14 @@ public class Recommendation {
 
         Label typeLabel = new Label("Recommendation Type:");
         ComboBox<String> typeComboBox = new ComboBox<>();
-        typeComboBox.getItems().addAll("genre", "year", "rating");
-        typeComboBox.setValue("genre");
+        // Premium users have access to more recommendation types
+        if (user.isPremium()){
+            typeComboBox.getItems().addAll("rating", "genre", "year");
+        }
+        else{
+            typeComboBox.getItems().addAll("rating");
+        }
+        typeComboBox.setValue("rating");
 
         Label countLabel = new Label("Number of Recommendations:");
         TextField countField = new TextField();
