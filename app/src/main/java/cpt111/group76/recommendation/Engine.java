@@ -2,6 +2,7 @@ package cpt111.group76.recommendation;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import cpt111.group76.movie.Movie;
 import cpt111.group76.user.User;
@@ -118,7 +119,7 @@ public class Engine {
     private int getFavouriteYear() {
         int sum = 0;
 
-        ArrayList<String> likedMovies = getLikedMovies();
+        HashSet<String> likedMovies = getLikedMovies();
         if (likedMovies == null) {
             return 0;
         }
@@ -137,7 +138,7 @@ public class Engine {
     private HashMap<String, Integer> getFavouriteGenreMap() {
         HashMap<String, Integer> scoreMap = new HashMap<>();
 
-        ArrayList<String> likedMovies = getLikedMovies();
+        HashSet<String> likedMovies = getLikedMovies();
         if (likedMovies == null) {
             return scoreMap;
         }
@@ -154,12 +155,12 @@ public class Engine {
     /**
      * Returns a list of movie IDs that the user has liked (watched or in watchlist)
      */
-    private ArrayList<String> getLikedMovies() {
+    private HashSet<String> getLikedMovies() {
         if (user.getHistory().length() + user.getWatchlist().length() == 0) {
             return null;
         }
 
-        ArrayList<String> likedMovies = new ArrayList<>();
+        HashSet<String> likedMovies = new HashSet<>();
         for (String movieID : user.getHistory().getMovies()) {
             likedMovies.add(movieID);
         }
