@@ -5,7 +5,7 @@ import java.util.HashMap;
 import cpt111.group76.movie.Movie;
 
 public class MovieManager extends FileManager {
-    private static HashMap<String, Movie> movies;
+    private HashMap<String, Movie> movies;
     int maxIndex; // to track the highest movie index
 
 

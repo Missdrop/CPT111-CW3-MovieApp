@@ -5,7 +5,7 @@ import java.util.HashMap;
 import cpt111.group76.user.User;
 
 public class UserManager extends FileManager {
-    private static HashMap<String, User> users;
+    private HashMap<String, User> users;
 
 
     public UserManager() {
@@ -14,7 +14,7 @@ public class UserManager extends FileManager {
     }
 
 
-    public static boolean authenticate(String username, String password) {
+    public boolean authenticate(String username, String password) {
         User user = users.get(username);
         if (user != null && user.verifyPassword(password)) {
             return true;
@@ -23,7 +23,7 @@ public class UserManager extends FileManager {
     }
 
 
-    public static String checkUsername(String username) {
+    public String checkUsername(String username) {
         if (users.containsKey(username)) {
             return "Username already exists.";
         }
@@ -40,7 +40,7 @@ public class UserManager extends FileManager {
     }
 
 
-    public static String checkPassword(String password) {
+    public String checkPassword(String password) {
         if (password.length() < 6) {
             return "Password must be at least 6 characters long.";
         }

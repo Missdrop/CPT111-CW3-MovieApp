@@ -55,14 +55,14 @@ public class Register extends Application{
             }
             
             // Check username requirements
-            String usernameCheck = UserManager.checkUsername(username);
+            String usernameCheck = userManager.checkUsername(username);
             if (usernameCheck != null) {
                 statusLabel.setText(usernameCheck);
                 return;
             }
             
             // Check password requirements
-            String passwordCheck = UserManager.checkPassword(password);
+            String passwordCheck = userManager.checkPassword(password);
             if (passwordCheck != null) {
                 statusLabel.setText(passwordCheck);
                 return;
@@ -78,7 +78,7 @@ public class Register extends Application{
             if (userManager.addUser(username, password)) {
                 User user = new BasicUser(userManager.getUser(username));
 
-                openMenu(user);
+                openMenu(user, userManager);
                 primaryStage.close();
 
             } else {
@@ -101,8 +101,8 @@ public class Register extends Application{
     }
 
 
-    private void openMenu(User user) {
-        Menu menu = new Menu(user);
+    private void openMenu(User user, UserManager userManager) {
+        Menu menu = new Menu(user, userManager);
         this.openedMenu = true;
         menu.start(new Stage());
     }

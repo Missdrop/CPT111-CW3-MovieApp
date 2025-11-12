@@ -64,7 +64,7 @@ public class GetPremium {
             primaryStage.close();
 
             // Create new menu with updated user
-            Menu newMenu = new Menu(user);
+            Menu newMenu = new Menu(user, userManager);
             newMenu.start(new Stage());
         });
 

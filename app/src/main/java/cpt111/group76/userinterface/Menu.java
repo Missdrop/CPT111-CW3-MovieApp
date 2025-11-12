@@ -21,13 +21,14 @@ import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
 
 public class Menu extends Application {
+    private UserManager userManager;
     private User user;
     private static MovieManager movieManager = new MovieManager();
     private HashMap<String, Movie> movieDatabase;
 
-
-    public Menu(User user) {
+    public Menu(User user, UserManager userManager) {
         this.user = user;
+        this.userManager = userManager;
         this.movieDatabase = movieManager.getMovieDatabase();
     }
 
@@ -36,7 +37,7 @@ public class Menu extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e -> {
             movieManager.save();
-            new UserManager().updateUser(user);
+            userManager.updateUser(user);
         });
 
         // Create main title
@@ -64,7 +65,7 @@ public class Menu extends Application {
         Button changePasswordButton = new Button("Change Password");
         changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
         changePasswordButton.setOnAction(e -> {
-            new ChangePassword(user).start(new Stage());
+            new ChangePassword(user, userManager).start(new Stage());
         });
 
         // Get Premium button - only show for Basic Users

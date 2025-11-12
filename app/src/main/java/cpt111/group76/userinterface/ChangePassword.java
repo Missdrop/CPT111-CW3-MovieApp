@@ -13,11 +13,13 @@ import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
 
 public class ChangePassword extends Application{
+    private UserManager userManager;
     private User user;
 
 
-    public ChangePassword(User user){
+    public ChangePassword(User user, UserManager userManager){
         this.user = user;
+        this.userManager = userManager;
     }
 
 
@@ -59,7 +61,7 @@ public class ChangePassword extends Application{
                 return;
             }
             
-            String passwordCheck = UserManager.checkPassword(newPassword);
+            String passwordCheck = userManager.checkPassword(newPassword);
             if (passwordCheck != null) {
                 statusLabel.setText(passwordCheck);
                 statusLabel.setStyle("-fx-text-fill: red;");
@@ -67,7 +69,7 @@ public class ChangePassword extends Application{
             }
             
             user.setPassword(newPassword);
-            new UserManager().updateUser(user);
+            userManager.updateUser(user);
             statusLabel.setText("Password changed successfully!");
             statusLabel.setStyle("-fx-text-fill: green;");
         });

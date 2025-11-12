@@ -47,7 +47,7 @@ public class Login extends Application {
                 return;
             }
 
-            if (UserManager.authenticate(username, password)) {
+            if (userManager.authenticate(username, password)) {
                 User user = userManager.getUser(username);
                 if (user.isPremium()) {
                     user = new PremiumUser(user);
@@ -55,7 +55,7 @@ public class Login extends Application {
                     user = new BasicUser(user);
                 }
 
-                openMenu(user);
+                openMenu(user, userManager);
                 primaryStage.close();
 
             } else {
@@ -78,8 +78,8 @@ public class Login extends Application {
     }
 
 
-    private void openMenu(User user) {
-        Menu menu = new Menu(user);
+    private void openMenu(User user, UserManager userManager) {
+        Menu menu = new Menu(user, userManager);
         this.openedMenu = true;
         menu.start(new Stage());
     }

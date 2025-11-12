@@ -59,23 +59,26 @@ public class UserManagerTest {
 
     @Test
     public void testCheckUsername() {
-        assertEquals(UserManager.checkUsername("ab"), "Username must be between 3 and 20 characters long.");
-        assertEquals(UserManager.checkUsername("a".repeat(21)), "Username must be between 3 and 20 characters long.");
-        assertEquals(UserManager.checkUsername("user!name"), "Username can only contain letters and digits.");
-        assertNull(UserManager.checkUsername("validUser123"));
+        UserManager userManager = new UserManager();
+        assertEquals(userManager.checkUsername("ab"), "Username must be between 3 and 20 characters long.");
+        assertEquals(userManager.checkUsername("a".repeat(21)), "Username must be between 3 and 20 characters long.");
+        assertEquals(userManager.checkUsername("user!name"), "Username can only contain letters and digits.");
+        assertNull(userManager.checkUsername("validUser123"));
     }
 
 
     @Test
     public void testCheckExistingUsername() {
-        assertEquals(UserManager.checkUsername("bob"), "Username already exists.");
+        UserManager userManager = new UserManager();
+        assertEquals(userManager.checkUsername("bob"), "Username already exists.");
     }
 
 
     @Test
     public void testCheckPassword() {
-        assertEquals("Password must be at least 6 characters long.", UserManager.checkPassword("123"));
-        assertEquals("Password must contain at least one digit.", UserManager.checkPassword("abcdef"));
-        assertNull(UserManager.checkPassword("abc123"));
+        UserManager userManager = new UserManager();
+        assertEquals("Password must be at least 6 characters long.", userManager.checkPassword("123"));
+        assertEquals("Password must contain at least one digit.", userManager.checkPassword("abcdef"));
+        assertNull(userManager.checkPassword("abc123"));
     }
 }
