@@ -45,7 +45,9 @@
 
    - 缩进应为四个空格或者一个tab，在提交代码之前使用ide自带的格式化即可。
 
-## 调试&编译
+## 开发指南
+
+### 调试
 
 - 首先，请确保电脑安装了[**带有JavaFX的JDK21**](https://www.azul.com/downloads/?version=java-21-lts&package=jdk-fx#zulu)
 
@@ -55,26 +57,28 @@
 
 - 资源文件夹使用相对路径，随执行时的目录而变化。在Gradle编译期间，测试用csv文件会自动在运行测试时生成，其保存在`app/resources`
 
+### 编译
+
 - 编译时只需进入项目根目录，使用
 
    ```bash
-   .\gradlew build
+   ./gradlew build
    ```
 
-   > Windows环境下使用 `.\gradlew.bat`
+   > Windows环境下使用 `./gradlew.bat`
 
-   即可将项目编译为jar，位于`build/libs`目录下。
+   即可将项目编译为jar，位于`app/build/libs`目录下。
 
    - 此外，若要单独执行测试，使用
       ```bash
-      .\gradlew test
+      ./gradlew test
       ```
 
       > 当然，也可以选择使用IDE的测试扩展进行测试。
 
    - 清理编译缓存：
       ```bash
-      .\gradlew clean
+      ./gradlew clean
       ```
 
 - 双击jar文件或者使用
@@ -84,6 +88,16 @@
    ```
 
    即可运行编译后的jar文件。
+
+### 编译JavaDoc
+
+- 这个项目使用了JavaDoc进行注释。JavaDoc不仅仅是注释，你也可以按以下方法编译JavaDoc为文档。
+
+   ```bash
+   ./gradlew javadoc
+   ```
+
+   编译完成后，文档位于`app/build/docs/javadoc`处，你可以使用浏览器打开`index.html`浏览文档。
 
 ## 用户密码
 

@@ -16,7 +16,7 @@ import cpt111.group76.userinterface.Register;
 import cpt111.group76.storage.UserManager;
 
 /**
- * Main application class for Movie Recommendation & Tracker system.
+ * Main application class for Movie Recommendation and Tracker system.
  * This is the entry point of the JavaFX application, providing the main interface
  * with login and registration options.
  */
