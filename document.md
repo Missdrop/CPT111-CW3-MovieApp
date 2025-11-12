@@ -21,6 +21,7 @@
     - [推荐引擎包](#推荐引擎包)
       - [Engine](#engine)
     - [主类](#主类)
+      - [App](#app)
     - [GUI包](#gui包)
       - [GUI逻辑示意图](#gui逻辑示意图)
     - [其他](#其他)
@@ -247,7 +248,7 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 - 类方法：与MovieManager相同的不再赘述，不一样的是：
   - `updateUser`：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
   - `save()`方法header为`"username,password,watchlist,history,premium"`，其他一样。
-- 值得重点一提的是三个public static方法：
+- 值得重点一提的是三个返回检查方法：
   - `authenticate`：输入用户名和密码，判断能否登录，返回一个布尔值
   - `checkUsername`：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
   - `checkPassword`：检查密码是否符合要求，返回值同上
@@ -272,16 +273,25 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
   - `HashMap<String, Integer> getFavouriteGenreMap()`：获取一个表，其中键是电影ID，值是一个分数，这个分数实际上就是用户喜欢的电影里出现了几次这个流派。比如说用户看过三次Action电影，那么Action的值就为3。
   - `ArrayList<String> getFavouriteYearMovies()`：获取一个ArrayList，很容易理解，使用List是因为它可以保持顺序。把私有字段（电影表）按照以下规则排序：绝对值（电影年龄-用户最喜欢年份）。这可以让越接近用户喜欢的年份的电影排在越前面。
   - `ArrayList<String> getFavouriteGenreMovies()`：同上，但是排序方法变为查询`FavouriteGenreMap`，并比较两个电影流派哪个值更高。实则就是查看哪种电影用户看的更多。
-  - ArrayList<String> getTopRatedMovies()：按照Rating排序，并不需要调用别的方法。
-    > 值得一提的是，所有排序都是用movieDatabase.entrySet().stream().sorted(<一个用于比较两个元素的Lambda函数>)的形式。首先将哈希表转化为一个包含所有entry的Set，然后把这个集合转化为流，再调用流的排序方法，按自定义排序规则排序。
+  - `ArrayList<String> getTopRatedMovies()`：按照Rating排序，并不需要调用别的方法。
+    > 值得一提的是，所有排序都是用`movieDatabase.entrySet().stream().sorted(<一个用于比较两个元素的Lambda函数>)`的形式。首先将哈希表转化为一个包含所有entry的Set，然后把这个集合转化为流，再调用流的排序方法，按自定义排序规则排序。
 
 ---
 
 ### 主类
 
-主类被命名为App实际上是因为Gradle自动生成的。
+从这里开始将进入GUI部分。请先对JavaFx有一定了解再往下看。
 
+~~主类被命名为App实际上是因为Gradle自动生成的。~~
 
+#### App
+
+App类继承自Application类（所有JavaFx的GUI都应该继承这个类）。
+
+- 私有字段：一个userManager对象，在类加载时就被初始化。设为static是为了防止打开多个userManager导致错误的修改。其他任何GUI的userManager对象都应该由App类传入。
+- 类方法：
+  - `main`方法：整个程序的入口。会调用父类的launch方法（launch方法会自动加载init，start，stop方法）创建GUI。在GUI运行结束后，会save并close掉userManager对象（将修改后的用户数据写入csv）。
+  - `start`方法：有一个标题，和两个按钮，分别可以打开Register和Login页面。页面由一个VBox（Vertical Box，元素竖直排列的Box）套着一个HBox（Horizon Box，元素水平排列的Box）组成。HBox里是两个按钮，VBox里是上面为标题，下面为HBox。
 
 ---
 

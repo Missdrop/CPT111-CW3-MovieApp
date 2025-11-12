@@ -13,7 +13,6 @@ import javafx.stage.Modality;
 
 import cpt111.group76.userinterface.Login;
 import cpt111.group76.userinterface.Register;
-import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.UserManager;
 
 public class App extends Application {
@@ -25,10 +24,6 @@ public class App extends Application {
 
         userManager.save();
         userManager.close();
-
-        MovieManager movieManager = new MovieManager();
-        movieManager.save();
-        movieManager.close();
     }
 
 
