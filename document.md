@@ -288,7 +288,7 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 
 App类继承自Application类（所有JavaFx的GUI都应该继承这个类）。
 
-- 私有字段：一个userManager对象，在类加载时就被初始化。设为static是为了防止打开多个userManager导致错误的修改。其他任何GUI的userManager对象都应该由App类传入。
+- 私有字段：一个UserManager对象，在类加载时就被初始化。设为static是为了防止打开多个userManager导致错误的修改。其他任何GUI的userManager对象都应该由App类传入。
 - 类方法：
   - `main`方法：整个程序的入口。会调用父类的launch方法（launch方法会自动加载init，start，stop方法）创建GUI。在GUI运行结束后，会save并close掉userManager对象（将修改后的用户数据写入csv）。
   - `start`方法：有一个标题，和两个按钮，分别可以打开Register和Login页面。页面由一个VBox（Vertical Box，元素竖直排列的Box）套着一个HBox（Horizon Box，元素水平排列的Box）组成。HBox里是两个按钮，VBox里是上面为标题，下面为HBox。
@@ -298,6 +298,8 @@ App类继承自Application类（所有JavaFx的GUI都应该继承这个类）。
 ### GUI包
 
 这个包的内容过于复杂，因此不对代码详细解释，只描述每个GUI的行为。
+
+类似于App类，Menu类也有一个私有字段：static的MovieManager对象，在类加载时就被初始化。其他任何GUI的menuManager对象都应该由App类传入，以避免修改错误。
 
 #### GUI逻辑示意图
 ```text
