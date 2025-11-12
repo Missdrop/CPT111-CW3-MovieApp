@@ -5,20 +5,38 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
 
+/**
+ * Represents a user's movie watch history.
+ * Tracks movies with their watch dates using a HashMap for efficient lookups.
+ */
 public class History {
     private HashMap<String, String> history; // movieId -> date
 
 
+    /**
+     * Constructs an empty History.
+     */
     public History() {
         this.history = new HashMap<>();
     }
 
 
+    /**
+     * Constructs a History with existing data.
+     *
+     * @param history the existing history data
+     */
     public History(HashMap<String, String> history) {
         this.history = history;
     }
 
 
+    /**
+     * Constructs a History from CSV entries array.
+     * Expected format: ["movieId@date", "movieId@date", ...]
+     *
+     * @param historyEntries array of history entries in CSV format
+     */
     public History(String[] historyEntries) {
         this.history = new HashMap<>();
         for (String entry : historyEntries) {
@@ -39,6 +57,12 @@ public class History {
     }
 
 
+
+    /**
+     * Gets the set of movie IDs in history.
+     *
+     * @return HashSet of movie IDs
+     */
     public HashSet<String> getMovies() {
         return new HashSet<>(history.keySet());
     }

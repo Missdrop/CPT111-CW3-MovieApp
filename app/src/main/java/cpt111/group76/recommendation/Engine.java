@@ -7,11 +7,22 @@ import java.util.HashSet;
 import cpt111.group76.movie.Movie;
 import cpt111.group76.user.User;
 
+
+/**
+ * Recommendation engine that provides movie recommendations based on user preferences.
+ * Supports multiple recommendation strategies: by rating, genre, and release year.
+ */
 public class Engine {
     private HashMap<String, Movie> movieDatabase;
     private User user;
 
 
+    /**
+     * Constructs a recommendation engine with movie database and user data.
+     *
+     * @param movieDatabase the database of all available movies
+     * @param user the user for whom recommendations are generated
+     */
     public Engine(HashMap<String, Movie> movieDatabase, User user) {
         this.movieDatabase = movieDatabase;
         this.user = user;
@@ -29,10 +40,12 @@ public class Engine {
 
 
     /**
-     * Recommend movies based on the specified type, then ordered by rating.
-     * @param type Type of recommendation: "genre" or "year" or "rating"
-     * @param numRecommendations Number of recommendations to return
-     * @return A list of ordered recommended movie IDs
+     * Generates movie recommendations based on specified type and count.
+     * Recommendations are ordered by rating within each strategy.
+     *
+     * @param type the recommendation strategy: "genre", "year", or "rating"
+     * @param numRecommendations number of recommendations to generate
+     * @return an array of recommended movie IDs, ordered by relevance
      */
     public String[] recommendation(String type, int numRecommendations) {
         String[] recommendation = new String[numRecommendations];
@@ -63,6 +76,11 @@ public class Engine {
     }
 
 
+    /**
+     * Gets top rated movies from the database, sorted by rating descending.
+     *
+     * @return list of movie IDs sorted by rating
+     */
     private ArrayList<String> getTopRatedMovies() {
         ArrayList<String> topRatedMovies = new ArrayList<>();
         movieDatabase.entrySet().stream()
@@ -73,8 +91,10 @@ public class Engine {
 
 
     /**
-     * Sorted firstly by abs(movie year - user favourite year)
-     * then order by rating
+     * Gets movies sorted by proximity to user's favorite release year.
+     * Favorite year is calculated as average year of watched movies.
+     *
+     * @return list of movie IDs sorted by year proximity then rating
      */
     private ArrayList<String> getFavouriteYearMovies() {
         ArrayList<String> favouriteYearMovies = new ArrayList<>();
@@ -95,8 +115,10 @@ public class Engine {
 
 
     /**
-     * Sorted by user's favourite genre count
-     * then order by rating
+     * Gets movies sorted by user's genre preferences.
+     * Genre preference is calculated based on the count in watchlist and history.
+     *
+     * @return list of movie IDs sorted by genre preference then rating
      */
     private ArrayList<String> getFavouriteGenreMovies() {
         ArrayList<String> favouriteGenreMovies = new ArrayList<>();
@@ -116,6 +138,11 @@ public class Engine {
     }
 
 
+    /**
+     * Calculates user's favorite release year based on watch history.
+     *
+     * @return the average release year of watched movies, or 0 if no history
+     */
     private int getFavouriteYear() {
         int sum = 0;
 
@@ -133,7 +160,9 @@ public class Engine {
 
 
     /**
-     *  Returns a HashMap containing genres as keys and their corresponding counts as values.
+     * Calculates genre preferences based on user's watch history and watchlist.
+     *
+     * @return map of genres to their frequency in user's preferences
      */
     private HashMap<String, Integer> getFavouriteGenreMap() {
         HashMap<String, Integer> scoreMap = new HashMap<>();
@@ -153,7 +182,9 @@ public class Engine {
 
 
     /**
-     * Returns a list of movie IDs that the user has liked (watched or in watchlist)
+     * Gets all movies the user has interacted with (in watchlist or history).
+     *
+     * @return set of movie IDs that user has liked, or null if no interactions
      */
     private HashSet<String> getLikedMovies() {
         if (user.getHistory().length() + user.getWatchlist().length() == 0) {
