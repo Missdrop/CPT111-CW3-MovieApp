@@ -100,9 +100,9 @@ public class Menu extends Application {
         Button getRecommendationsButton = createMenuButton("Recommendation", "#e67e22");
 
         browseMoviesButton.setOnAction(e -> new BrowseMovies(user, movieDatabase, movieManager).show());
-        viewWatchlistButton.setOnAction(e -> new ViewWatchlist(user, movieDatabase).show());
-        viewHistoryButton.setOnAction(e -> new ViewHistory(user, movieDatabase).show());
-        getRecommendationsButton.setOnAction(e -> new Recommendation(user, movieDatabase).show());
+        viewWatchlistButton.setOnAction(e -> new ViewWatchlist(user, movieDatabase, userManager).show());
+        viewHistoryButton.setOnAction(e -> new ViewHistory(user, movieDatabase, userManager).show());
+        getRecommendationsButton.setOnAction(e -> new Recommendation(user, movieDatabase, userManager).show());
 
         // Create a grid layout for buttons
         HBox firstButtonRow = new HBox(20, browseMoviesButton, viewWatchlistButton);

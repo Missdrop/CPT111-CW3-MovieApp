@@ -24,11 +24,13 @@ public class ViewWatchlist {
     private HashMap<String, Movie> movieDatabase;
     private TableView<Movie> watchlistTable;
     private ObservableList<Movie> watchlistData;
+    private UserManager userManager;
 
 
-    public ViewWatchlist(User user, HashMap<String, Movie> movieDatabase) {
+    public ViewWatchlist(User user, HashMap<String, Movie> movieDatabase, UserManager userManager) {
         this.user = user;
         this.movieDatabase = movieDatabase;
+        this.userManager = userManager;
         this.watchlistData = FXCollections.observableArrayList();
     }
 
@@ -54,7 +56,7 @@ public class ViewWatchlist {
                 boolean success = user.removeFromWatchlist(movieId);
                 if (success) {
                     statusLabel.setText("Successfully removed from watchlist!");
-                    new UserManager().updateUser(user);
+                    userManager.updateUser(user);
                     updateWatchlistData();
                 } else {
                     statusLabel.setText("Failed to remove from watchlist.");
@@ -70,7 +72,7 @@ public class ViewWatchlist {
                 String movieId = selected.getId();
                 user.addToHistory(movieId);
                 statusLabel.setText("Successfully marked as watched and removed from watchlist!");
-                new UserManager().updateUser(user);
+                userManager.updateUser(user);
                 updateWatchlistData();
             } else {
                 statusLabel.setText("Please select a movie first.");

@@ -29,11 +29,13 @@ public class Recommendation {
     private HashMap<String, Movie> movieDatabase;
     private TableView<Movie> recommendationsTable;
     private ObservableList<Movie> recommendationsData;
+    private UserManager userManager;
 
 
-    public Recommendation(User user, HashMap<String, Movie> movieDatabase) {
+    public Recommendation(User user, HashMap<String, Movie> movieDatabase, UserManager userManager) {
         this.user = user;
         this.movieDatabase = movieDatabase;
+        this.userManager = userManager;
         this.recommendationsData = FXCollections.observableArrayList();
     }
 
@@ -108,7 +110,7 @@ public class Recommendation {
                     boolean success = user.addToWatchlist(movieId);
                     if (success) {
                         statusLabel.setText("Successfully added to watchlist!");
-                        new UserManager().updateUser(user);
+                        userManager.updateUser(user);
                     } else {
                         statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
                     }

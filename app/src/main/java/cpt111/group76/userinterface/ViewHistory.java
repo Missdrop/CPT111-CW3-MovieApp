@@ -25,11 +25,13 @@ public class ViewHistory {
     private TableView<Movie> historyTable;
     private ObservableList<Movie> historyData;
     private HashMap<String, String> movieDateMap;
+    private UserManager userManager;
 
 
-    public ViewHistory(User user, HashMap<String, Movie> movieDatabase) {
+    public ViewHistory(User user, HashMap<String, Movie> movieDatabase, UserManager userManager) {
         this.user = user;
         this.movieDatabase = movieDatabase;
+        this.userManager = userManager;
         this.historyData = FXCollections.observableArrayList();
         this.movieDateMap = user.getHistory().get();
     }
@@ -55,7 +57,7 @@ public class ViewHistory {
                 boolean success = user.removeFromHistory(movieId);
                 if (success) {
                     statusLabel.setText("Successfully removed from history!");
-                    new UserManager().updateUser(user);
+                    userManager.updateUser(user);
                     updateHistoryData();
                 } else {
                     statusLabel.setText("Failed to remove from history.");
