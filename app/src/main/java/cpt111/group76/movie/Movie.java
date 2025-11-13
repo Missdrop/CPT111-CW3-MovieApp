@@ -35,7 +35,7 @@ public class Movie {
      * Expected format: [id, title, genre, year, rating]
      *
      * @param movieData the CSV data array containing movie information
-     * @throws Exception if the data cannot be parsed correctly
+     * @throws NumberFormatException if the data cannot be parsed correctly
      */
     public Movie(String[] movieData) throws NumberFormatException {
         this(movieData[0], movieData[1], movieData[2],

@@ -51,7 +51,7 @@ public class User {
      * Expected format: [username, passwordHash, watchlistCSV, historyCSV, isPremium]
      *
      * @param userData the CSV data array containing user information
-     * @throws Exception if the data cannot be parsed correctly
+     * @throws NumberFormatException if the data cannot be parsed correctly
      */
     public User(String[] userData) throws NumberFormatException {
         this(userData[0], userData[1],
