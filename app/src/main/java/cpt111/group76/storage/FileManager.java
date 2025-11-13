@@ -72,13 +72,14 @@ class FileManager {
             return false;
         // Ensure parent dirs exist
         File parent = this.file.getParentFile();
-        if (parent != null && !parent.exists()) {
-            try {
+        try {
+            if (parent != null && !parent.exists()) {
                 parent.mkdirs();
-            } catch (SecurityException e) {
-                return false;
             }
+        } catch (SecurityException e) {
+            return false;
         }
+
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
             bw.write(header);
