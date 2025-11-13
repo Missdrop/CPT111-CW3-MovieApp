@@ -53,7 +53,7 @@ public class User {
      * @param userData the CSV data array containing user information
      * @throws Exception if the data cannot be parsed correctly
      */
-    public User(String[] userData) throws Exception {
+    public User(String[] userData) throws NumberFormatException {
         this(userData[0], userData[1],
                 userData[2].length() > 0 ? new Watchlist(userData[2].split(";", -1)) : new Watchlist(),
                 userData[3].length() > 0 ? new History(userData[3].split(";", -1)) : new History(),

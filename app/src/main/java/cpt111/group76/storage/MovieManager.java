@@ -108,7 +108,7 @@ public class MovieManager extends FileManager {
     private Movie createMovie(String[] movieData) {
         try {
             return new Movie(movieData);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }

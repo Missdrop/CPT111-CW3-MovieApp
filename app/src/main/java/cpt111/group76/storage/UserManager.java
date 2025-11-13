@@ -185,7 +185,7 @@ public class UserManager extends FileManager {
     private User createUser(String[] userData) {
         try {
             return new User(userData);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
