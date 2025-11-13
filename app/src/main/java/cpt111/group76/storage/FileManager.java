@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -113,7 +114,7 @@ class FileManager {
     private Scanner getScanner() {
         try {
             return new Scanner(this.file);
-        } catch (java.io.FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             // return null to indicate the file couldn't be opened
             return null;
         }
