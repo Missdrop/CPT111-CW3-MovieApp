@@ -81,7 +81,7 @@ class FileManager {
             return false;
         }
 
-
+        // use try-with-resources to ensure the writer is closed properly
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
             bw.write(header);
             bw.newLine();
