@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 
 import cpt111.group76.movie.Movie;
-import cpt111.group76.user.User;
+import cpt111.group76.user.PremiumUser;
 import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.MovieManagerTest;
 
@@ -17,7 +17,13 @@ public class EngineTest {
         MovieManager movieManager = new MovieManager();
         HashMap<String, Movie> movieDatabase = movieManager.getMovieDatabase();
 
-        User user = new User("testuser", "pass123", false);
+        PremiumUser user;
+        try {
+            user = new PremiumUser("testuser", "pass123");
+        } catch (Exception e) {
+            fail("User creation threw an exception: " + e.getMessage());
+            return;
+        }
         user.getHistory().add("M037");
         user.getHistory().add("M038");
         user.getHistory().add("M039");

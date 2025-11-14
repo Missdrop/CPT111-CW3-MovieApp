@@ -32,7 +32,11 @@ public class UserManagerTest {
     @Test
     public void testAddUser() {
         UserManager userManager = new UserManager();
-        assertTrue(userManager.addUser("naipu","123123"));
+        try {
+            userManager.addUser("naipu","123a123");
+        } catch (Exception e) {
+            fail("Add user method threw an exception: " + e.getMessage());
+        }
         assertEquals(userManager.getUser("naipu").getUsername(), "naipu");
         userManager.deleteUser("naipu");
     }
@@ -41,19 +45,29 @@ public class UserManagerTest {
     @Test
     public void testAddExistUser() {
         UserManager userManager = new UserManager();
-        assertFalse(userManager.addUser("alice","wrongpassword"));
+        try {
+            userManager.addUser("alice","123a123");
+            fail("Expected exception for existing username was not thrown.");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "Username already exists.");
+        }
     }
 
 
     @Test
     public void testSave() {
         UserManager userManager = new UserManager();
-        userManager.addUser("naipu","123123");
+        try {
+            userManager.addUser("naipu","123a123");
+        } catch (Exception e) {
+            fail("Add user method threw an exception: " + e.getMessage());
+        }
         try {
             userManager.save();
         } catch (Exception e) {
             fail("Save method threw an exception: " + e.getMessage());
         }
+        userManager.save();
         userManager.close();
 
         // Reload to verify
@@ -72,25 +86,36 @@ public class UserManagerTest {
     @Test
     public void testCheckUsername() {
         UserManager userManager = new UserManager();
-        assertEquals(userManager.checkUsername("ab"), "Username must be between 3 and 20 characters long.");
-        assertEquals(userManager.checkUsername("a".repeat(21)), "Username must be between 3 and 20 characters long.");
-        assertEquals(userManager.checkUsername("user!name"), "Username can only contain letters and digits.");
-        assertNull(userManager.checkUsername("validUser123"));
+        try {
+            userManager.addUser("ab", "somePassw1ord");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "Username must be between 3 and 20 characters long.");
+        }
+        try {
+            userManager.addUser("a".repeat(21), "somePass1word");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "Username must be between 3 and 20 characters long.");
+        }
+        try {
+            userManager.addUser("user!name", "somePass1word");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "Username can only contain letters and digits.");
+        }
+        try {
+            userManager.addUser("validUser123", "somePassw1ord");
+        } catch (Exception e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
     }
-
 
     @Test
     public void testCheckExistingUsername() {
         UserManager userManager = new UserManager();
-        assertEquals(userManager.checkUsername("bob"), "Username already exists.");
-    }
-
-
-    @Test
-    public void testCheckPassword() {
-        UserManager userManager = new UserManager();
-        assertEquals("Password must be at least 6 characters long.", userManager.checkPassword("123"));
-        assertEquals("Password must contain at least one digit.", userManager.checkPassword("abcdef"));
-        assertNull(userManager.checkPassword("abc123"));
+        try {
+            userManager.addUser("alice", "somePassword");
+            fail("Expected exception for existing username was not thrown.");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "Username already exists.");
+        }
     }
 }

@@ -9,7 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import cpt111.group76.storage.UserManager;
-import cpt111.group76.user.User;
+import cpt111.group76.user.*;
 
 public class GetPremium {
     private User user;
@@ -53,7 +53,7 @@ public class GetPremium {
 
         upgradeButton.setOnAction(e -> {
             // Convert user to Premium
-            user.setPremium(true);
+            user = new PremiumUser(user);
 
             // Update user in UserManager
             UserManager userManager = new UserManager();

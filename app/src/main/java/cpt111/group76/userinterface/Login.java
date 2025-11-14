@@ -10,8 +10,6 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 
-import cpt111.group76.user.PremiumUser;
-import cpt111.group76.user.BasicUser;
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
 
@@ -49,11 +47,6 @@ public class Login extends Application {
 
             if (userManager.authenticate(username, password)) {
                 User user = userManager.getUser(username);
-                if (user.isPremium()) {
-                    user = new PremiumUser(user);
-                } else {
-                    user = new BasicUser(user);
-                }
 
                 openMenu(user, userManager);
                 primaryStage.close();

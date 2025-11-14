@@ -2,9 +2,9 @@ package cpt111.group76.storage;
 
 import java.util.HashMap;
 
-import cpt111.group76.user.User;
-import cpt111.group76.user.data.History;
-import cpt111.group76.user.data.Watchlist;
+import cpt111.group76.user.*;
+import cpt111.group76.user.data.*;
+import cpt111.group76.exception.*;
 
 
 /**
@@ -42,67 +42,6 @@ public class UserManager extends FileManager {
 
 
     /**
-     * Validates a username against requirements and database.
-     * Username must be unique, between 3 and 20 characters,
-     * and can only contain letters and digits.
-     *
-     * @param username the username to validate
-     * @return null if valid, otherwise an error message string
-     */
-    public String checkUsername(String username) {
-        if (users.containsKey(username)) {
-            return "Username already exists.";
-        }
-        if (username.length() < 3 || username.length() > 20) {
-            return "Username must be between 3 and 20 characters long.";
-        }
-        //username can only contain letters, digits
-        for (char c : username.toCharArray()) {
-            if (!Character.isLetterOrDigit(c)) {
-                return "Username can only contain letters and digits.";
-            }
-        }
-        return null; // valid username
-    }
-
-
-    /**
-     * Validates a password against requirements and database.
-     * Password should be at least 6 characters long, 18 characters max,
-     * contain at least one digit and one letter.
-     *
-     * @param password the password to validate
-     * @return null if valid, otherwise an error message string
-     */
-    public String checkPassword(String password) {
-        if (password.length() < 6) {
-            return "Password must be at least 6 characters long.";
-        }
-        if (password.length() > 18) {
-            return "Password must be at most 18 characters long.";
-        }
-        // password must contain at least one digit
-        boolean hasDigit = false;
-        boolean hasLetter = false;
-        for (char c : password.toCharArray()) {
-            if (Character.isDigit(c)){
-                hasDigit = true;
-            }
-            if (Character.isLetter(c)){
-                hasLetter = true;
-            }
-        }
-        if (!hasDigit) {
-            return "Password must contain at least one digit.";
-        }
-        if (!hasLetter) {
-            return "Password must contain at least one letter.";
-        }
-        return null; // valid password
-    }
-
-
-    /**
      * Retrieves a user by username.
      *
      * @param username the username to look up
@@ -118,23 +57,23 @@ public class UserManager extends FileManager {
      *
      * @param username the new user's username
      * @param password the new user's password
-     * @return true if user was added successfully, false if username already exists
+     * @throws PasswordValidationException if the password is invalid
+     * @throws UsernameValidationException if the username is invalid
      */
-    public boolean addUser(String username, String password) {
-        if (users.containsKey(username)) {
-            return false; // user already exists
+    public void addUser(String username, String password) throws PasswordValidationException, UsernameValidationException {
+        if (contains(username)) {
+            throw new IllegalArgumentException("Username already exists."); // user already exists
         }
-        users.put(username, new User(username, password, false));
-        return true;
+        User newUser = new BasicUser(username, password);
+        users.put(username, newUser);
     }
 
 
-    public boolean addUser(User user) {
-        if (users.get(user.getUsername()) == null) {
-            users.put(user.getUsername(), user);
-            return true;
+    public void addUser(User user) throws UsernameValidationException {
+        if (contains(user.getUsername())) {
+            throw new UsernameValidationException("User already exists."); // user already exists
         }
-        return false; // user already exists
+        users.put(user.getUsername(), user);
     }
 
 
@@ -144,6 +83,11 @@ public class UserManager extends FileManager {
         }
         users.remove(username);
         return true;
+    }
+
+
+    private boolean contains(String username) {
+        return users.containsKey(username);
     }
 
 
@@ -159,7 +103,11 @@ public class UserManager extends FileManager {
      */
     public void updateUser(User user) {
         deleteUser(user);
-        addUser(user);
+        try {
+            addUser(user);
+        } catch (UsernameValidationException e) {
+            // This should not happen as we are updating an existing user
+        }
     }
 
 
@@ -196,30 +144,34 @@ public class UserManager extends FileManager {
         if (userData == null || userData.length < 5) {
             throw new IllegalArgumentException("User data array must contain 5 elements");
         }
-        
+
         try {
             String username = userData[0] != null ? userData[0].trim() : "";
             String passwordHash = userData[1] != null ? userData[1].trim() : "";
-            
+
             // super key validation
             if (username.isEmpty()) {
                 throw new IllegalArgumentException("Username cannot be empty in CSV data");
             }
-            
+
             // Parse watchlist from CSV format
             Watchlist watchlist = userData[2].length() > 0 ?
                 new Watchlist(userData[2].split(";", -1)) : new Watchlist();
-            
+
             // Parse history from CSV format
             History history = userData[3].length() > 0 ?
                 new History(userData[3].split(";", -1)) : new History();
-            
+
             // Parse premium status
             boolean isPremium = userData[4].length() > 0 ?
                 Boolean.parseBoolean(userData[4]) : false;
-            
-            return new User(username, passwordHash, watchlist, history, isPremium);
-            
+
+            if (isPremium) {
+                return new PremiumUser(username, passwordHash, watchlist, history);
+            } else {
+                return new BasicUser(username, passwordHash, watchlist, history);
+            }
+
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Failed to create user from CSV data: " + e.getMessage(), e);
         }

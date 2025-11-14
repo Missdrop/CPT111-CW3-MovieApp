@@ -15,10 +15,9 @@ import javafx.scene.layout.Priority;
 import java.util.HashMap;
 
 import cpt111.group76.App;
-import cpt111.group76.storage.MovieManager;
-import cpt111.group76.storage.UserManager;
-import cpt111.group76.user.User;
-import cpt111.group76.movie.Movie;
+import cpt111.group76.storage.*;
+import cpt111.group76.movie.*;
+import cpt111.group76.user.*;
 
 public class Menu extends Application {
     private UserManager userManager;
@@ -50,7 +49,7 @@ public class Menu extends Application {
 
         // User info
         Text usernameText = new Text(
-                "Welcome, " + user.getUsername() + "! (" + (user.isPremium() ? "Premium User" : "Basic User") + ")");
+                "Welcome, " + user.getUsername() + "! (" + (user instanceof PremiumUser ? "Premium User" : "Basic User") + ")");
         usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
 
         // Top bar with title and user info
@@ -74,7 +73,7 @@ public class Menu extends Application {
 
         // Get Premium button - only show for Basic Users
         Button getPremiumButton = null;
-        if (!user.isPremium()) {
+        if (user instanceof BasicUser) {
             getPremiumButton = new Button("Get Premium");
             getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             getPremiumButton.setOnAction(e -> {
@@ -83,7 +82,7 @@ public class Menu extends Application {
         }
 
         HBox buttonBox;
-        if (!user.isPremium()) {
+        if (user instanceof BasicUser) {
             buttonBox = new HBox(10, changePasswordButton, getPremiumButton, logoutButton);
         } else {
             buttonBox = new HBox(10, changePasswordButton, logoutButton);

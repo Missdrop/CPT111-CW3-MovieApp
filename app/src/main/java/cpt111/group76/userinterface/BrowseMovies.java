@@ -90,7 +90,7 @@ public class BrowseMovies {
 
         // Add New Movie button - only for Premium Users
         Button addNewMovieButton = null;
-        if (user.isPremium()) {
+        if (user.canAddMovies()) {
             addNewMovieButton = new Button("Add New Movie");
             addNewMovieButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             addNewMovieButton.setOnAction(e -> {
@@ -164,7 +164,7 @@ public class BrowseMovies {
 
         // Create button box - include Add New Movie button if user is premium
         HBox buttonBox;
-        if (user.isPremium()) {
+        if (user.canAddMovies()) {
             buttonBox = new HBox(10, addToWatchlistButton, markWatchedButton, removeFromWatchlistButton,
                     addNewMovieButton);
         } else {

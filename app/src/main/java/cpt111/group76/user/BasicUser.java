@@ -1,7 +1,9 @@
 package cpt111.group76.user;
 
-import cpt111.group76.user.data.History;
-import cpt111.group76.user.data.Watchlist;
+import java.util.List;
+
+import cpt111.group76.user.data.*;
+import cpt111.group76.exception.*;
 
 /**
  * Represents a premium user with enhanced privileges in the movie recommendation system.
@@ -10,26 +12,40 @@ import cpt111.group76.user.data.Watchlist;
  * Extends the User class with premium capabilities.
  */
 public class BasicUser extends User {
-    private static final int maxWatchlistSize = 20;
+    private static final int MAX_WATCHLIST_SIZE = 20;
+    private static final List<String> AVAILABLE_RECOMMENDATION_TYPES = List.of("rating");
 
 
     public BasicUser(String username, String passwordHash, Watchlist watchlist, History history) {
-        super(username, passwordHash, watchlist, history, false);
+        super(username, passwordHash, watchlist, history);
     }
 
 
     public BasicUser(User user) {
-        super(user.getUsername(), user.getPasswordHash(), user.getWatchlist(), user.getHistory(), false);
+        super(user.getUsername(), user.getPasswordHash(), user.getWatchlist(), user.getHistory());
     }
 
 
-    public BasicUser(String username, String password) {
-        super(username, password, false);
+    public BasicUser(String username, String password) throws PasswordValidationException, UsernameValidationException {
+        super(username, password);
     }
 
 
+    @Override
     public int getMaxWatchlistSize() {
-        return maxWatchlistSize;
+        return MAX_WATCHLIST_SIZE;
+    }
+
+
+    @Override
+    public boolean canAddMovies() {
+        return false;
+    }
+
+
+    @Override
+    public List<String> getAvailableRecommendationTypes() {
+        return AVAILABLE_RECOMMENDATION_TYPES;
     }
 
 
@@ -39,10 +55,15 @@ public class BasicUser extends User {
      */
     @Override
     public boolean addToWatchlist(String movieId) {
-        if (this.getWatchlist().length() >= maxWatchlistSize) {
+        if (this.getWatchlist().length() >= MAX_WATCHLIST_SIZE) {
             return false; // watchlist full
         }
         return super.addToWatchlist(movieId);
     }
 
+
+    @Override
+    public String toCSV() {
+        return super.toCSV() + ",false";
+    }
 }

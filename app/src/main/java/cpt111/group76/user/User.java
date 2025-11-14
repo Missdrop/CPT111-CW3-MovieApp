@@ -1,18 +1,19 @@
 package cpt111.group76.user;
 
-import cpt111.group76.user.data.History;
-import cpt111.group76.user.data.Watchlist;
+import java.util.List;
+
+import cpt111.group76.user.data.*;
+import cpt111.group76.exception.*;
 
 /**
- * Represents a user with basic information.
- * Handles user authentication, watchlist and history management.
+ * Represents a user in the movie recommendation system.
+ * Base class for all user types with common functionality.
  */
-public class User {
+public abstract class User {
     private String username;
     private String passwordHash;
     private Watchlist watchlist;
     private History history;
-    private boolean isPremium;
 
 
     /**
@@ -23,10 +24,9 @@ public class User {
      * @param passwordHash the hashed password
      * @param watchlist the user's watchlist
      * @param history the user's viewing history
-     * @param isPremium whether the user has premium status
      * @throws IllegalArgumentException if username is null or empty
      */
-    public User(String username, String passwordHash, Watchlist watchlist, History history, boolean isPremium) throws IllegalArgumentException {
+    protected User(String username, String passwordHash, Watchlist watchlist, History history) throws IllegalArgumentException {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
@@ -35,7 +35,6 @@ public class User {
         this.passwordHash = passwordHash != null ? passwordHash : "";
         this.watchlist = watchlist != null ? watchlist : new Watchlist();
         this.history = history != null ? history : new History();
-        this.isPremium = isPremium;
     }
 
 
@@ -44,10 +43,95 @@ public class User {
      *
      * @param username the user's username
      * @param password the plain text password
-     * @param isPremium whether the user has premium status
+     * @throws PasswordValidationException if the password is invalid
+     * @throws UsernameValidationException if the username is invalid
      */
-    public User(String username, String password, boolean isPremium) {
-        this(username, toHash(password), new Watchlist(), new History(), isPremium);
+    protected User(String username, String password) throws PasswordValidationException, UsernameValidationException {
+        setUsername(username);
+        setPassword(password);
+        this.watchlist = new Watchlist();
+        this.history = new History();
+    }
+
+    /**
+     * Gets the maximum size of the watchlist for this user type.
+     * @return
+     */
+    public abstract int getMaxWatchlistSize();
+
+
+    /**
+     * Indicates if the user can add movies to their watchlist.
+     * @return true if the user can add movies, false otherwise
+     */
+    public abstract boolean canAddMovies();
+
+
+    /**
+     * Gets the available recommendation types for this user type.
+     * @return a list of recommendation type names
+     */
+    public abstract List<String> getAvailableRecommendationTypes();
+
+
+    /**
+     * Sets the username for the user.
+     * Username must be unique, between 3 and 20 characters,
+     * and can only contain letters and digits.
+     *
+     * @param username the username to validate
+     * @throws UsernameValidationException if the username is invalid
+     */
+    private void setUsername(String username) throws UsernameValidationException {
+        if (username.length() < 3 || username.length() > 20) {
+            throw new UsernameValidationException("Username must be between 3 and 20 characters long.");
+        }
+
+        // username can only contain letters and digits
+        for (char c : username.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                throw new UsernameValidationException("Username can only contain letters and digits.");
+            }
+        }
+
+        // assign validated username to the field
+        this.username = username;
+    }
+
+
+    /**
+     * Sets a new password for the user.
+     * Password should be at least 6 characters long, 18 characters max,
+     * contain at least one digit and one letter.
+     *
+     * @param newPassword the password to validate
+     * @throws PasswordValidationException if the password is invalid
+     */
+    public void setPassword(String newPassword) throws PasswordValidationException {
+        if (newPassword.length() < 6) {
+            throw new PasswordValidationException("Password must be at least 6 characters long.");
+        }
+        if (newPassword.length() > 18) {
+            throw new PasswordValidationException("Password must be at most 18 characters long.");
+        }
+        // password must contain at least one digit
+        boolean hasDigit = false;
+        boolean hasLetter = false;
+        for (char c : newPassword.toCharArray()) {
+            if (Character.isDigit(c)){
+                hasDigit = true;
+            }
+            if (Character.isLetter(c)){
+                hasLetter = true;
+            }
+        }
+        if (!hasDigit) {
+            throw new PasswordValidationException("Password must contain at least one digit.");
+        }
+        if (!hasLetter) {
+            throw new PasswordValidationException("Password must contain at least one letter.");
+        }
+        this.passwordHash = toHash(newPassword);
     }
 
 
@@ -123,7 +207,7 @@ public class User {
      */
     public String toCSV() {
         return String.join(",", new String[] { this.username, this.passwordHash, this.watchlist.toCSV(),
-                this.history.toCSV(), String.valueOf(this.isPremium) });
+                this.history.toCSV()});
     }
 
 
@@ -145,21 +229,5 @@ public class User {
 
     public History getHistory() {
         return this.history;
-    }
-
-
-    public boolean isPremium() {
-        return this.isPremium;
-    }
-
-
-    // setters
-    public void setPremium(boolean isPremium) {
-        this.isPremium = isPremium;
-    }
-
-
-    public void setPassword(String newPassword) {
-        this.passwordHash = toHash(newPassword);
     }
 }

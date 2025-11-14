@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import cpt111.group76.user.User;
 import cpt111.group76.user.BasicUser;
 import cpt111.group76.storage.UserManager;
+import cpt111.group76.exception.*;
 
 public class Register extends Application{
     private UserManager userManager;
@@ -53,37 +54,28 @@ public class Register extends Application{
                 statusLabel.setText("Please fill in all fields.");
                 return;
             }
-            
-            // Check username requirements
-            String usernameCheck = userManager.checkUsername(username);
-            if (usernameCheck != null) {
-                statusLabel.setText(usernameCheck);
-                return;
-            }
-            
-            // Check password requirements
-            String passwordCheck = userManager.checkPassword(password);
-            if (passwordCheck != null) {
-                statusLabel.setText(passwordCheck);
-                return;
-            }
-            
+
             // Check if passwords match
             if (!password.equals(repeatPassword)) {
                 statusLabel.setText("Passwords do not match.");
                 return;
             }
-            
+
             // Try to add user
-            if (userManager.addUser(username, password)) {
-                User user = new BasicUser(userManager.getUser(username));
-
-                openMenu(user, userManager);
-                primaryStage.close();
-
-            } else {
-                statusLabel.setText("Username already exists.");
+            try {
+                userManager.addUser(username, password);
+            } catch (UsernameValidationException ex) {
+                statusLabel.setText(ex.getMessage());
+                return;
+            } catch (PasswordValidationException ex) {
+                statusLabel.setText(ex.getMessage());
+                return;
             }
+
+            User user = new BasicUser(userManager.getUser(username));
+
+            openMenu(user, userManager);
+            primaryStage.close();
         });
 
         // Add Enter key support

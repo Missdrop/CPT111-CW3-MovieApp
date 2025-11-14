@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
+import cpt111.group76.exception.PasswordValidationException;
 
 public class ChangePassword extends Application{
     private UserManager userManager;
@@ -42,33 +43,33 @@ public class ChangePassword extends Application{
             String password = passwordField.getText();
             String newPassword = newPasswordField.getText();
             String repeatNewPassword = repeatNewPasswordField.getText();
-            
+
             if (!user.verifyPassword(password)) {
                 statusLabel.setText("Current password is incorrect.");
                 statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
-            
+
             if (password.equals(newPassword)) {
                 statusLabel.setText("New password must be different from current password.");
                 statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
-            
+
             if (!newPassword.equals(repeatNewPassword)) {
                 statusLabel.setText("New passwords do not match.");
                 statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
-            
-            String passwordCheck = userManager.checkPassword(newPassword);
-            if (passwordCheck != null) {
-                statusLabel.setText(passwordCheck);
+
+            try {
+                user.setPassword(newPassword);
+            } catch (PasswordValidationException ex) {
+                statusLabel.setText(ex.getMessage());
                 statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
-            
-            user.setPassword(newPassword);
+
             userManager.updateUser(user);
             statusLabel.setText("Password changed successfully!");
             statusLabel.setStyle("-fx-text-fill: green;");
