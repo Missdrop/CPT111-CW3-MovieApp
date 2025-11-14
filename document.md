@@ -214,14 +214,17 @@ V1.2更新：User是一个抽象类，且构造器方法为protected，只可被
 - 私有字段：`String username`, `String passwordHash`, `Watchlist watchlist`, `History history`。代码的可读性很高，想必不需要解释就可以理解字段的意思。唯一需要解释的就是passwordHash字段，它采用加密的哈希值存储密码。下面会详细解释。
 - 构造器方法：两个，一个构建全新用户，一个从数据构建已存在用户。
   - 比起Movie类，它多了一种构造器，只需要输入两个参数：`username, password`。少了watchlist和history，显而易见的，这是建立一个新用户用的方法。
-  - 第二种构造器被设为`throws Exception`，原因与Movie类相同，这里不再赘述。
+    - V1.2更新：构造器调用密码和用户名的Setters，所以当密码或用户名不符合要求时，构造器会抛出异常。
 - 类方法：除去一些基本的getter和setter，需要解释的还有以下几个方法：
   - `toHash`方法：会将密码字符串先调用`String.hashCode()`方法，再将其转化为十六进制数字，返回为字符串格式。
     > 此方法设为private static，是因为它仅仅被本类调用，而且与用户对象本身无关，是用户类的一个辅助方法。
   - `setPassword`方法：会调用toHash方法将明文密码字符串转化为加密密码字符串后再储存密码。
+    - V1.2更新：密码不符合要求时会抛出异常。
   - `verifyPassword`方法：检查传入的密码是否和用户密码匹配。
   - `addToHistory`方法：这个方法会在电影加入history时将其从watchlist中移除。这是课程要求。
     > 但是课程要求中并没有对已经在history里的电影被加入watchlist的行为有限制。事实上根据现实情况，我认为想看两遍电影很正常，所以允许上述操作。
+- V1.2更新：
+  - `setUsername`方法：设置用户名，当用户名不符合要求时会抛出异常，目前仅被构造器调用所以设为private。
 - V1.2更新：User类有三个抽象方法
   - `int getMaxWatchlistSize`：获取观看列表最大长度。
   - `boolean canAddMovies`:是否可以增加电影，这个方法会被`userinterface.BrowseMovies`调用。
