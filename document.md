@@ -6,8 +6,15 @@
 - [项目文档](#项目文档)
   - [目录](#目录)
   - [项目结构](#项目结构)
+  - [更新日志](#更新日志)
+    - [V1.0](#v10)
+    - [V1.1](#v11)
+    - [V1.2](#v12)
   - [具体说明](#具体说明)
     - [总览](#总览)
+    - [异常包](#异常包)
+      - [PasswordValidationException](#passwordvalidationexception)
+      - [UsernameValidationException](#usernamevalidationexception)
     - [电影包](#电影包)
       - [Movie](#movie)
     - [用户数据包](#用户数据包)
@@ -42,6 +49,10 @@
 ## 项目结构
 
 ```text
+├── exception               - ⑧ 异常类
+│   ├── PasswordValidationException
+│   └── UsernameValidationException
+│
 ├── movie                   - ① 电影类
 │   ├── <待实现>
 │   └── Movie.java
@@ -79,6 +90,24 @@
 
 ---
 
+## 更新日志
+
+### V1.0
+
+- 首个功能完全的版本，确定了整体架构和逻辑。
+
+### V1.1
+
+- 将User和Manager类会抛出异常的String[]构造器去除，改为让Manager类处理。
+- 精细化并一些异常处理，将所有Exception改为更精细的异常类。
+
+### V1.2
+
+- 去除User类的isPremium字段，改为用instanceOf判断子类。
+- 更改User类为抽象类，并且构造器改为protected，添加了三个抽象方法，进一步封装了User类。
+- 添加exception包，用于处理User类的密码和用户名异常。
+- 删去所有UserManager类的验证方法，改为在密码/用户名有问题时抛出异常。
+
 ## 具体说明
 
 这个项目大致上由七部分组成，如上图所示。每一个包我会从类字段，构造器方法和类方法三方面来讲解。
@@ -108,6 +137,18 @@
 关于数据读取，我们从csv文件中读取的通常是`String`型，要把它们转化为对应的电影或者用户对象对这两个类的构造器方法有要求。所以两个类都实现了用一个`String[]`变量的构造方法，以下我们会细讲。
 
 ---
+
+### 异常包
+
+由V1.2更新时加入，用于处理用户名或密码的异常。
+
+#### PasswordValidationException
+
+密码不合法异常，当密码不符合要求时应该抛出这个异常。
+
+#### UsernameValidationException
+
+用户名不合法异常，当用户名不符合要求或者重复时应该抛出这个异常。
 
 ### 电影包
 
@@ -168,9 +209,11 @@
 
 User类看似内容很多但其实并不复杂。实现了用户的密码加密，数据IO，验证密码。
 
-- 私有字段：`String username`, `String passwordHash`, `Watchlist watchlist`, `History history`, `boolean isPremium`。代码的可读性很高，想必不需要解释就可以理解字段的意思。唯一需要解释的就是passwordHash字段，它采用加密的哈希值存储密码。下面会详细解释。
+V1.2更新：User是一个抽象类，且构造器方法为protected，只可被本包调用。
+
+- 私有字段：`String username`, `String passwordHash`, `Watchlist watchlist`, `History history`。代码的可读性很高，想必不需要解释就可以理解字段的意思。唯一需要解释的就是passwordHash字段，它采用加密的哈希值存储密码。下面会详细解释。
 - 构造器方法：两个，一个构建全新用户，一个从数据构建已存在用户。
-  - 比起Movie类，它多了一种构造器，只需要输入三个参数：`username, password, isPremium`。少了watchlist和history，显而易见的，这是建立一个新用户用的方法。
+  - 比起Movie类，它多了一种构造器，只需要输入两个参数：`username, password`。少了watchlist和history，显而易见的，这是建立一个新用户用的方法。
   - 第二种构造器被设为`throws Exception`，原因与Movie类相同，这里不再赘述。
 - 类方法：除去一些基本的getter和setter，需要解释的还有以下几个方法：
   - `toHash`方法：会将密码字符串先调用`String.hashCode()`方法，再将其转化为十六进制数字，返回为字符串格式。
@@ -179,18 +222,24 @@ User类看似内容很多但其实并不复杂。实现了用户的密码加密�
   - `verifyPassword`方法：检查传入的密码是否和用户密码匹配。
   - `addToHistory`方法：这个方法会在电影加入history时将其从watchlist中移除。这是课程要求。
     > 但是课程要求中并没有对已经在history里的电影被加入watchlist的行为有限制。事实上根据现实情况，我认为想看两遍电影很正常，所以允许上述操作。
+- V1.2更新：User类有三个抽象方法
+  - `int getMaxWatchlistSize`：获取观看列表最大长度。
+  - `boolean canAddMovies`:是否可以增加电影，这个方法会被`userinterface.BrowseMovies`调用。
+  - `List<String> getAvailableRecommendationTypes`：一个字符串列表，包含推荐引擎可以选用的类型。
 
 #### PremiumUser
 
 User的子类，重写了addToWatchlist方法。使得用户观看列表长度得到了限制。
 
-- 私有字段：添加了`maxWatchlistSize`常量，值为100，设为`private static final int`是因为它应是个不可改变且所有用户统一的常量，作为最大观看列表长度使用。
+- 私有字段：添加了`MAX_WATCHLIST_SIZE`常量，值为100，设为`private static final int`是因为它应是个不可改变且所有用户统一的常量，作为最大观看列表长度使用。
+  - V1.2更新：添加了`AVAILABLE_RECOMMENDATION_TYPES`常量，包含有`"rating", "genre", "year"`。
 - 构造器方法：不同的是多了一个从现有用户创建高级用户的构造器，另外两个构造器和User类的区别仅仅是将isPremium设为了true。
 - 类方法：一个getter，并且重写了`addToWatchlist`方法，使观看列表达到最大长度后不再加入电影，同时返回false，否则true。
+  - V1.2更新：重写了toCSV方法，调用父类方法，并且在末尾拼接上了",true"来填充premium字段。
 
 #### BasicUser
 
-与PremiumUser的唯一区别是`maxWatchlistSize`为20，其他完全相同。
+与PremiumUser的唯一区别是`MAX_WATCHLIST_SIZE`为20，`AVAILABLE_RECOMMENDATION_TYPES`只有"rating"，其他完全相同。
 
 ---
 
@@ -248,6 +297,7 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 - 类方法：与MovieManager相同的不再赘述，不一样的是：
   - `updateUser`：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
   - `save()`方法header为`"username,password,watchlist,history,premium"`，其他一样。
+  - V1.2更新：`getUsers`方法会根据premium字段的数据判断将用户实例化为PremiumUser或BasicUser。
 - 值得重点一提的是三个返回检查方法：
   - `authenticate`：输入用户名和密码，判断能否登录，返回一个布尔值
   - `checkUsername`：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
@@ -343,7 +393,6 @@ App类继承自Application类（所有JavaFx的GUI都应该继承这个类）。
 3. 忘记测试了。
 
 总而言之，测试类可能存在一些测试不充分的问题，而且GUI是没法通过测试类测试的。需要更多同学来帮助增加测试类或者测试程序。（而且课程有要求）
-
 
 ## 功能实现（CW3要求）
 
