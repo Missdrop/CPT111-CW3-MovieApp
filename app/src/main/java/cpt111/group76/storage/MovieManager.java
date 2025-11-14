@@ -88,10 +88,9 @@ public class MovieManager extends FileManager {
 
     /**
      * Saves the current movie database to CSV file.
-     *
-     * @return true if save was successful, false otherwise
+     * @throws RuntimeException if an error occurs during saving
      */
-    public boolean save(){
+    public void save() throws RuntimeException {
         String header = "id,title,genre,year,rating";
         
         String[] rows = new String[movies.size()];
@@ -100,20 +99,64 @@ public class MovieManager extends FileManager {
             rows[i] = movie.toCSV();
         }
 
-        return super.save(header, rows);
-    }
-
-
-    // Private helper methods
-    private Movie createMovie(String[] movieData) {
         try {
-            return new Movie(movieData);
-        } catch (NumberFormatException e) {
-            return null;
+            super.save(header, rows);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving movie database: " + e.getMessage());
         }
     }
 
 
+    /**
+     * Creates a Movie object from CSV data array.
+     * Centralizes all CSV parsing logic in the manager class.
+     *
+     * @param movieData the CSV data array in format: [id, title, genre, year, rating]
+     * @return the created Movie object
+     * @throws IllegalArgumentException if the data is invalid or malformed
+     */
+    private static Movie createFromCSV(String[] movieData) throws IllegalArgumentException {
+        if (movieData == null || movieData.length < 5) {
+            throw new IllegalArgumentException("Movie data array must contain 5 elements");
+        }
+        
+        try {
+            String id = movieData[0] != null ? movieData[0].trim() : "";
+            String title = movieData[1] != null ? movieData[1].trim() : "";
+            String genre = movieData[2] != null ? movieData[2].trim() : "";
+
+            // handle missing year and rating
+            if (movieData[3] == null || movieData[3].trim().isEmpty()) {
+                movieData[3] = "0";
+            }
+            if (movieData[4] == null || movieData[4].trim().isEmpty()) {
+                movieData[4] = "0.0";
+            }
+            int year = Integer.parseInt(movieData[3].trim());
+            double rating = Double.parseDouble(movieData[4].trim());
+            
+            // super key validation
+            if (id.isEmpty()) {
+                throw new IllegalArgumentException("Movie ID cannot be empty");
+            }
+            if (title.isEmpty()) {
+                throw new IllegalArgumentException("Movie title cannot be empty");
+            }
+            
+            return new Movie(id, title, genre, year, rating);
+            
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid numeric format in movie data", e);
+        }
+    }
+
+
+    /**
+     * Loads movies from CSV file into a HashMap.
+     * Handles invalid data gracefully by skipping problematic entries.
+     *
+     * @return HashMap containing all valid movies with IDs as keys
+     */
     private HashMap<String, Movie> getMovies() {
         HashMap<String, Movie> movieMap = new HashMap<String, Movie>();
 
@@ -127,9 +170,17 @@ public class MovieManager extends FileManager {
 
             String[] movieData = this.nextLine();
 
-            Movie movie = createMovie(movieData);
-            if (movie != null) {
-                movieMap.put(movie.getId(), movie);
+            // try to create movie from CSV data
+            try {
+                Movie movie = createFromCSV(movieData);
+                if (movie != null) {
+                    movieMap.put(movie.getId(), movie);
+                }
+            } catch (IllegalArgumentException e) {
+                System.err.println("Warning: Skipping invalid movie data: " + e.getMessage());
+                if (movieData != null && movieData.length > 0) {
+                    System.err.println("Data: " + String.join(",", movieData));
+                }
             }
         }
 

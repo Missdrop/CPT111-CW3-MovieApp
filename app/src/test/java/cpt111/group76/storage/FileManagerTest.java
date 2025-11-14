@@ -26,7 +26,11 @@ public class FileManagerTest {
             "data1,data2,data3",
             "data4,data5,data6"
         };
-        assertTrue(fileManager.save(header, rows));
+        try {
+            fileManager.save(header, rows);
+        } catch (Exception e) {
+            fail("Save method threw an exception: " + e.getMessage());
+        }
         fileManager = new FileManager("resources/test_save.csv");
         assertEquals("col1", fileManager.nextLine()[0]);
         fileManager.close();

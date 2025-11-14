@@ -66,35 +66,39 @@ class FileManager {
      *
      * @param header the header line for the CSV file
      * @param rows the data rows to write to the file
-     * @return true if save was successful, false otherwise
+     * @throws IOException if an I/O error occurs during saving
+     * @throws IllegalArgumentException if rows is null
+     * @throws IllegalStateException if FileManager is not properly initialized
      */
-    public boolean save(String header, String[] rows) {
-        if (this.file == null || rows == null)
-            return false;
+    public void save(String header, String[] rows) throws IOException, IllegalArgumentException, IllegalStateException {
+        if (this.file == null) {
+            throw new IllegalStateException("FileManager is not properly initialized");
+        }
+        if (rows == null) {
+            throw new IllegalArgumentException("Rows cannot be null");
+        }
+        
         // Ensure parent dirs exist
         File parent = this.file.getParentFile();
-        try {
-            if (parent != null && !parent.exists()) {
-                parent.mkdirs();
+        if (parent != null && !parent.exists()) {
+            if (!parent.mkdirs()) {
+                throw new IOException("Failed to create directory: " + parent.getAbsolutePath());
             }
-        } catch (SecurityException e) {
-            return false;
         }
 
-        // use try-with-resources to ensure the writer is closed properly
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
             bw.write(header);
             bw.newLine();
             for (String row : rows) {
-                bw.write(row);
-                bw.newLine();
+                if (row != null) {
+                    bw.write(row);
+                    bw.newLine();
+                }
             }
             bw.flush();
-            return true;
         } catch (IOException e) {
-            return false;
+            throw new IOException("Failed to save data to file: " + this.file.getAbsolutePath(), e);
         }
-
     }
 
 
@@ -105,6 +109,7 @@ class FileManager {
         this.scanner = null;
         this.file = null;
     }
+
 
     /**
      * Gets a new Scanner instance for the file.

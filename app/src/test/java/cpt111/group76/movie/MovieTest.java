@@ -6,20 +6,22 @@ import static org.junit.Assert.*;
 public class MovieTest {
     @Test
     public void testMovieCreation() throws Exception {
-        String[] movieData = {"movie1", "Inception", "Sci-Fi", "1481", "8.8"};
-        Movie movie = new Movie(movieData);
+        Movie movie = new Movie( "M011", "Inception", "Sci-Fi", 1982, 8.8 );
         assertEquals("Inception", movie.getTitle());
-        assertEquals(1481, movie.getYear());
+        assertEquals(1982, movie.getYear());
     }
 
 
     @Test
     public void testMovieCreationEmptyElements() throws Exception {
-        String[] movieData = {"", "", "", "", ""};
-        Movie movie = new Movie(movieData);
-        assertEquals("", movie.getTitle());
-        assertEquals(0, movie.getYear());
+        Movie movie = new Movie( "M011", "Inception", "", 1982, 0.1 );
+        assertEquals("", movie.getGenre());
     }
 
-    
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMovieCreationInvalidYear() throws Exception {
+        Movie movie = new Movie( "M011", "Inception", "Sci-Fi", -1, 8.8 );
+        assertNull(movie);
+    }
 }

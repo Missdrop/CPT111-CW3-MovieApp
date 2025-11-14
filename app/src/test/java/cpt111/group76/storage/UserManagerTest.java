@@ -6,13 +6,17 @@ import org.junit.Test;
 public class UserManagerTest {
     public static void initTestCsvFile() {
         FileManager userFileManager = new FileManager("resources/users.csv");
-        userFileManager.save("username,password,watchlist,history,premium", new String[] {
+        try {
+            userFileManager.save("username,password,watchlist,history,premium", new String[] {
             "bob,-527b97a3,M044;M043;M042;M041,M040@2025-06-21;M041@2025-07-02;M042@2025-07-31,false",
             "eric,-58acc5b5,M091;M094;M093;M092,M091@2025-07-19;M096@2025-08-12;M099@2025-09-12,false",
             "alice,664197b2,M048;M015;M056;M008;M071,M001@2025-07-12;M011@2025-08-10;M015@2025-09-01,false",
             "diana,-ddb275d,M077;M076;M078,M029@2025-04-20;M076@2025-08-22;M098@2025-09-10,false",
             "charlie,5d4de980,M066;M065;M064;M063,M063@2025-05-14;M080@2025-08-08;M064@2025-09-03,false"
         });
+        } catch (Exception e) {
+            fail("Save method threw an exception: " + e.getMessage());
+        }
         userFileManager.close();
     }
 
@@ -45,7 +49,11 @@ public class UserManagerTest {
     public void testSave() {
         UserManager userManager = new UserManager();
         userManager.addUser("naipu","123123");
-        assertTrue(userManager.save());
+        try {
+            userManager.save();
+        } catch (Exception e) {
+            fail("Save method threw an exception: " + e.getMessage());
+        }
         userManager.close();
 
         // Reload to verify
@@ -53,7 +61,11 @@ public class UserManagerTest {
         assertEquals(userManager2.getUser("naipu").getUsername(), "naipu");
 
         userManager2.deleteUser("naipu");
-        userManager2.save();
+        try {
+            userManager2.save();
+        } catch (Exception e) {
+            fail("Save method threw an exception: " + e.getMessage());
+        }
     }
 
 

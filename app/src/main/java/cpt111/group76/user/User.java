@@ -26,11 +26,11 @@ public class User {
      * @param isPremium whether the user has premium status
      * @throws IllegalArgumentException if username is null or empty
      */
-    public User(String username, String passwordHash, Watchlist watchlist, History history, boolean isPremium) {
+    public User(String username, String passwordHash, Watchlist watchlist, History history, boolean isPremium) throws IllegalArgumentException {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
-        
+
         this.username = username.trim();
         this.passwordHash = passwordHash != null ? passwordHash : "";
         this.watchlist = watchlist != null ? watchlist : new Watchlist();
@@ -39,7 +39,6 @@ public class User {
     }
 
 
-    
     /**
      * Constructs a new User with plain text password (will be hashed).
      *

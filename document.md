@@ -116,14 +116,11 @@
 #### Movie
 
   - 私有字段：Movie类有这些私有字段：`String id`, `String title`, `String genre`, `int year`, `double rating`
-  - 构造器方法：Movie类比较简单，仅有两个构造方法
-    - 一个是基于五个变量的构造器
-    - 另一个接受`String[] movieData`，把它们分别变成五个变量之后调用第一个构造器。
-      > 请注意这个构造器可能会抛出异常，虽然我们已经做了空对象判断，但是`Integer.parseInt`和`Double.parseDouble`方法可能接收到不合法的字符，比如`Integer.parseInt("notNumber")`。因此将这个方法设为`throws Exception`。
+  - 构造器方法：Movie类比较简单，仅有一个构造方法。
+    - 构造方法对各种异常做了判断，并且可能抛出`IllegalArgumentException`。
   - 类方法：
     - 五个私有字段的`getter`
     - 一个`toCSV`方法，把每个私有字段转化为用逗号分开的String，用于数据存储
-      > 这里的两个.toString()方法并不需要异常处理，因为year和rating是基本类型int和double，永远不会为null。
 
 ---
 
@@ -172,9 +169,9 @@
 User类看似内容很多但其实并不复杂。实现了用户的密码加密，数据IO，验证密码。
 
 - 私有字段：`String username`, `String passwordHash`, `Watchlist watchlist`, `History history`, `boolean isPremium`。代码的可读性很高，想必不需要解释就可以理解字段的意思。唯一需要解释的就是passwordHash字段，它采用加密的哈希值存储密码。下面会详细解释。
-- 构造器方法：三个
+- 构造器方法：两个，一个构建全新用户，一个从数据构建已存在用户。
   - 比起Movie类，它多了一种构造器，只需要输入三个参数：`username, password, isPremium`。少了watchlist和history，显而易见的，这是建立一个新用户用的方法。
-  - 第三种构造器被设为`throws Exception`，原因与Movie类相同，这里不再赘述。
+  - 第二种构造器被设为`throws Exception`，原因与Movie类相同，这里不再赘述。
 - 类方法：除去一些基本的getter和setter，需要解释的还有以下几个方法：
   - `toHash`方法：会将密码字符串先调用`String.hashCode()`方法，再将其转化为十六进制数字，返回为字符串格式。
     > 此方法设为private static，是因为它仅仅被本类调用，而且与用户对象本身无关，是用户类的一个辅助方法。
@@ -230,8 +227,8 @@ MovieManager继承自FileManager，在实例化的时候从csv读取电影数据
   - `int maxIndex`：记录当前最大的电影索引，用于生成新的电影ID
 - 构造器方法：直接使用相对地址`resources/movies.csv`调用父类构造器，然后调用两个私有方法初始化私有字段。
 - 类方法；除去一些基本getters，先说一些私有方法：
-  - `createMovie`：还记得Movie的这个构造方法被打上`throw exception`了吗，所以这里要try。
-  - `getMovies()`：无需多言，调用父类的方法来读取csv文件，用获取到的String数组创建movie对象，然后把电影ID和movie对象保存在HashMap里。
+  - `createFromCSV`：从csv文件获取的String数组构建movie对象，设为static是因为它不需要本类元素参与。做了一些异常判断，会抛出`IllegalArgumentException`。
+  - `getMovies()`：无需多言，调用父类的方法来读取csv文件，用获取到的String数组调用`createFromCSV`方法创建movie对象，然后把电影ID和movie对象保存在HashMap里。
   - `idToIndex`：把电影id（形如M023，M+至少三位数字，可以被写成"M%03d"的形式）转换为int，也就是读取M后面的数字。
   - `getMaxIndex()`：遍历所有ID（Map的键），用上面的`idToIndex`方法获取数字id，然后找出最大的数。
 - 然后是一些公有方法：

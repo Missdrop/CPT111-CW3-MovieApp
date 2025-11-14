@@ -36,7 +36,11 @@ public class Menu extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e -> {
-            movieManager.save();
+            try {
+                movieManager.save();
+            } catch (Exception ex) {
+                System.err.println("Error saving movie database: " + ex.getMessage());
+            }
             userManager.updateUser(user);
         });
 
@@ -57,7 +61,7 @@ public class Menu extends Application {
         Button logoutButton = new Button("Logout");
         logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
         logoutButton.setOnAction(e -> {
-            movieManager.save();
+            userManager.updateUser(user);
             new App().start(new Stage());
             primaryStage.close();
         });

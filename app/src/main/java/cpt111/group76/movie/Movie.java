@@ -22,7 +22,7 @@ public class Movie {
      * @param rating the rating of the movie (0.0-10.0)
      * @throws IllegalArgumentException if any parameter is invalid
      */
-    public Movie(String id, String title, String genre, int year, double rating) {
+    public Movie(String id, String title, String genre, int year, double rating) throws IllegalArgumentException {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("Movie ID cannot be null or empty");
         }

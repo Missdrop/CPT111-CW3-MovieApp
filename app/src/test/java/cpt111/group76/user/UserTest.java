@@ -3,22 +3,15 @@ package cpt111.group76.user;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import cpt111.group76.user.data.History;
+import cpt111.group76.user.data.Watchlist;
+
 public class UserTest {
     @Test
     public void testUserCreation() throws Exception {
-        String[] userData = { "john_doe", "password123", "movie1;movie2;movie3", "", "false" };
-        User user = new User(userData);
+        User user = new User("john_doe", "password123", new Watchlist("movie1;movie2;movie3".split(";", -1)), new History("".split(";", -1)), false);
         user.addToWatchlist("movieAdd");
         assertTrue(user.getWatchlist().contains("movieAdd"));
-    }
-
-
-    @Test
-    public void testUserCreationEmptyWatchlist() throws Exception {
-        String[] userData = { "jane_doe", "securepass", "", "M063@2025-05-14;M064@2025-09-03", "false" };
-        User user = new User(userData);
-        assertEquals(0, user.getWatchlist().length());
-        assertEquals(2, user.getHistory().length());
     }
 
 

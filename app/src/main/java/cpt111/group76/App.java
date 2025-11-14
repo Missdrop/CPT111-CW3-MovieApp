@@ -42,7 +42,7 @@ public class App extends Application {
                 userManager.save();
                 userManager.close();
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.err.println("Error during cleanup: " + e.getMessage());
         }
     }

@@ -97,9 +97,6 @@ public class AddNewMovie {
                     genreComboBox.setValue(null);
                     yearField.clear();
                     ratingField.clear();
-
-                    // Save the movie database
-                    movieManager.save();
                 } else {
                     statusLabel.setText("Failed to add movie. Movie might already exist.");
                     statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");

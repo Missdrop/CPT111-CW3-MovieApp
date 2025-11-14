@@ -8,7 +8,8 @@ import cpt111.group76.movie.Movie;
 public class MovieManagerTest {
     public static void initTestCsvFile() {
         FileManager fileManager = new FileManager("resources/movies.csv");
-        fileManager.save("id,title,genre,year,rating", new String[] {
+        try {
+            fileManager.save("id,title,genre,year,rating", new String[] {
             "M001,The Shawshank Redemption,Drama,1994,9.3",
             "M002,The Godfather,Crime,1972,9.2",
             "M003,The Dark Knight,Action,2008,9.0",
@@ -110,6 +111,9 @@ public class MovieManagerTest {
             "M099,The Intouchables,Drama,2011,8.5",
             "M100,The Breakfast Club,Comedy,1985,7.8"
         });
+        } catch (Exception e) {
+            fail("Save method threw an exception: " + e.getMessage());
+        }
     }
 
 

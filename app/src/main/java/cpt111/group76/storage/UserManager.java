@@ -3,6 +3,8 @@ package cpt111.group76.storage;
 import java.util.HashMap;
 
 import cpt111.group76.user.User;
+import cpt111.group76.user.data.History;
+import cpt111.group76.user.data.Watchlist;
 
 
 /**
@@ -163,10 +165,9 @@ public class UserManager extends FileManager {
 
     /**
      * Saves the current user database to CSV file.
-     *
-     * @return true if save was successful, false otherwise
+     * @throws RuntimeException if an error occurs during saving
      */
-    public boolean save(){
+    public void save() throws RuntimeException {
         String header = "username,password,watchlist,history,premium";
 
         String[] rows = new String[users.size()];
@@ -175,24 +176,61 @@ public class UserManager extends FileManager {
             rows[i] = user.toCSV();
         }
 
-        return super.save(header, rows);
+        try {
+            super.save(header, rows);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving user data: " + e.getMessage());
+        }
     }
 
 
     /**
-     * Create a User object from user data array.
+     * Creates a User object from CSV data array.
+     * Centralizes all CSV parsing logic in the manager class.
+     *
+     * @param userData the CSV data array in format: [username, passwordHash, watchlistCSV, historyCSV, isPremium]
+     * @return the created User object
+     * @throws IllegalArgumentException if the data is invalid or malformed
      */
-    private User createUser(String[] userData) {
+    private static User createFromCSV(String[] userData) throws IllegalArgumentException {
+        if (userData == null || userData.length < 5) {
+            throw new IllegalArgumentException("User data array must contain 5 elements");
+        }
+        
         try {
-            return new User(userData);
+            String username = userData[0] != null ? userData[0].trim() : "";
+            String passwordHash = userData[1] != null ? userData[1].trim() : "";
+            
+            // super key validation
+            if (username.isEmpty()) {
+                throw new IllegalArgumentException("Username cannot be empty in CSV data");
+            }
+            
+            // Parse watchlist from CSV format
+            Watchlist watchlist = userData[2].length() > 0 ?
+                new Watchlist(userData[2].split(";", -1)) : new Watchlist();
+            
+            // Parse history from CSV format
+            History history = userData[3].length() > 0 ?
+                new History(userData[3].split(";", -1)) : new History();
+            
+            // Parse premium status
+            boolean isPremium = userData[4].length() > 0 ?
+                Boolean.parseBoolean(userData[4]) : false;
+            
+            return new User(username, passwordHash, watchlist, history, isPremium);
+            
         } catch (NumberFormatException e) {
-            return null;
+            throw new IllegalArgumentException("Failed to create user from CSV data: " + e.getMessage(), e);
         }
     }
 
 
     /**
      * Loads users from CSV file into a HashMap.
+     * Handles invalid data gracefully by skipping problematic entries.
+     *
+     * @return HashMap containing all valid users with usernames as keys
      */
     private HashMap<String, User> getUsers() {
         HashMap<String, User> userMap = new HashMap<String, User>();
@@ -213,11 +251,18 @@ public class UserManager extends FileManager {
                 userData[i] = i < readData.length ? readData[i] : "";
             }
 
-            User user = createUser(userData);
-            if (user != null) {
-                userMap.put(userData[0], user);
+            // try to create user from CSV data
+            try {
+                User user = createFromCSV(userData);
+                if (user != null) {
+                    userMap.put(user.getUsername(), user);
+                }
+            } catch (IllegalArgumentException e) {
+                System.err.println("Warning: Skipping invalid user data: " + e.getMessage());
+                if (userData != null && userData.length > 0) {
+                    System.err.println("Data: " + String.join(",", userData));
+                }
             }
-
         }
 
         return userMap;
