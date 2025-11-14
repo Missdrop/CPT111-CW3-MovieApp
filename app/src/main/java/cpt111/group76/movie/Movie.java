@@ -20,27 +20,26 @@ public class Movie {
      * @param genre the genre of the movie
      * @param year the release year of the movie
      * @param rating the rating of the movie (0.0-10.0)
+     * @throws IllegalArgumentException if any parameter is invalid
      */
     public Movie(String id, String title, String genre, int year, double rating) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("Movie ID cannot be null or empty");
+        }
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Movie title cannot be null or empty");
+        }
+        if (year < 1880 || year > java.time.Year.now().getValue() + 5) {
+            throw new IllegalArgumentException("Invalid release year: " + year);
+        }
+        if (rating < 0 || rating > 10) {
+            throw new IllegalArgumentException("Rating must be between 0 and 10");
+        }
         this.id = id;
         this.title = title;
-        this.genre = genre;
+        this.genre = genre != null ? genre : "";
         this.year = year;
         this.rating = rating;
-    }
-
-
-    /**
-     * Constructs a Movie from CSV data array.
-     * Expected format: [id, title, genre, year, rating]
-     *
-     * @param movieData the CSV data array containing movie information
-     * @throws NumberFormatException if the data cannot be parsed correctly
-     */
-    public Movie(String[] movieData) throws NumberFormatException {
-        this(movieData[0], movieData[1], movieData[2],
-        movieData[3] != null && !movieData[3].isEmpty() ? Integer.parseInt(movieData[3]) : 0,
-        movieData[4] != null && !movieData[4].isEmpty() ? Double.parseDouble(movieData[4]) : 0.0);
     }
 
 

@@ -17,18 +17,24 @@ public class User {
 
     /**
      * Constructs a User with all specified fields.
+     * Performs basic validation on critical fields.
      *
      * @param username the user's username
      * @param passwordHash the hashed password
      * @param watchlist the user's watchlist
      * @param history the user's viewing history
-     * @param isPremium whether the user has a premium account
+     * @param isPremium whether the user has premium status
+     * @throws IllegalArgumentException if username is null or empty
      */
     public User(String username, String passwordHash, Watchlist watchlist, History history, boolean isPremium) {
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.watchlist = watchlist;
-        this.history = history;
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+        
+        this.username = username.trim();
+        this.passwordHash = passwordHash != null ? passwordHash : "";
+        this.watchlist = watchlist != null ? watchlist : new Watchlist();
+        this.history = history != null ? history : new History();
         this.isPremium = isPremium;
     }
 
@@ -43,21 +49,6 @@ public class User {
      */
     public User(String username, String password, boolean isPremium) {
         this(username, toHash(password), new Watchlist(), new History(), isPremium);
-    }
-
-
-    /**
-     * Constructs a User from CSV data array.
-     * Expected format: [username, passwordHash, watchlistCSV, historyCSV, isPremium]
-     *
-     * @param userData the CSV data array containing user information
-     * @throws NumberFormatException if the data cannot be parsed correctly
-     */
-    public User(String[] userData) throws NumberFormatException {
-        this(userData[0], userData[1],
-                userData[2].length() > 0 ? new Watchlist(userData[2].split(";", -1)) : new Watchlist(),
-                userData[3].length() > 0 ? new History(userData[3].split(";", -1)) : new History(),
-                userData[4].length() > 0 ? Boolean.parseBoolean(userData[4]) : false);
     }
 
 
