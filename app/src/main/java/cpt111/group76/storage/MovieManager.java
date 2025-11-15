@@ -41,28 +41,28 @@ public class MovieManager extends FileManager {
     }
 
 
-    public boolean addMovie(Movie movie) {
-        if (movies.containsKey(movie.getId())) {
-            return false; // movie already exists
-        }
-        movies.put(movie.getId(), movie);
-        return true;
-    }
-
-
     /**
      * Adds a movie to the database with auto-generated ID.
      *
      * @return true if movie was added successfully, false if movie already exists
      */
-    public boolean addMovie(String title, String genre, int year, double rating) {
+    public void addMovie(String title, String genre, int year, double rating) throws IllegalArgumentException {
         String movieId = String.format("M%03d", maxIndex + 1);
         Movie movie = new Movie(movieId, title, genre, year, rating);
-        boolean added = addMovie(movie);
-        if (added) {
-            maxIndex++;
+        // check for duplicate movie ID (which should not happen with auto-generated IDs)
+        if (movies.containsKey(movie.getId())) {
+            throw new IllegalArgumentException("Movie ID already exists");
         }
-        return added;
+        // check for duplicate movie based on title, year, and genre
+        for (Movie m : movies.values()) {
+            if (m.getTitle().equalsIgnoreCase(title) && m.getYear() == year && m.getGenre().equalsIgnoreCase(genre)) {
+                throw new IllegalArgumentException("Movie already exists");
+            }
+        }
+
+        movies.put(movie.getId(), movie);
+
+        maxIndex++;
     }
 
 
@@ -134,17 +134,13 @@ public class MovieManager extends FileManager {
             }
             int year = Integer.parseInt(movieData[3].trim());
             double rating = Double.parseDouble(movieData[4].trim());
-            
-            // super key validation
-            if (id.isEmpty()) {
-                throw new IllegalArgumentException("Movie ID cannot be empty");
+
+            try {
+                return new Movie(id, title, genre, year, rating);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(e.getMessage());
             }
-            if (title.isEmpty()) {
-                throw new IllegalArgumentException("Movie title cannot be empty");
-            }
-            
-            return new Movie(id, title, genre, year, rating);
-            
+
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid numeric format in movie data", e);
         }

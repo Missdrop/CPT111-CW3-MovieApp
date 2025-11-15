@@ -19,7 +19,7 @@ public class Movie {
      * @param title the title of the movie
      * @param genre the genre of the movie
      * @param year the release year of the movie
-     * @param rating the rating of the movie (0.0-10.0)
+     * @param rating the rating of the movie (0.0-10.0), one decimal place
      * @throws IllegalArgumentException if any parameter is invalid
      */
     public Movie(String id, String title, String genre, int year, double rating) throws IllegalArgumentException {
@@ -34,6 +34,9 @@ public class Movie {
         }
         if (rating < 0 || rating > 10) {
             throw new IllegalArgumentException("Rating must be between 0 and 10");
+        }
+        if (Math.round(rating * 10) != rating * 10) {
+            throw new IllegalArgumentException("Rating must have one decimal place");
         }
         this.id = id;
         this.title = title;
@@ -54,7 +57,7 @@ public class Movie {
             this.title,
             this.genre,
             Integer.toString(this.year),
-            Double.toString(this.rating)
+            String.format("%.1f", this.rating) // ensure one decimal place
         });
     }
 

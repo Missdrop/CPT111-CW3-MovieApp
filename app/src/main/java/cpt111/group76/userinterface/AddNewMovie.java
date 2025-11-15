@@ -89,8 +89,9 @@ public class AddNewMovie {
                 }
 
                 // Add movie using MovieManager
-                boolean success = movieManager.addMovie(title, genre, year, rating);
-                if (success) {
+                try {
+                    movieManager.addMovie(title, genre, year, rating);
+
                     statusLabel.setText("Movie added successfully!");
                     statusLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
 
@@ -99,11 +100,10 @@ public class AddNewMovie {
                     genreComboBox.setValue(null);
                     yearField.clear();
                     ratingField.clear();
-                } else {
-                    statusLabel.setText("Failed to add movie. Movie might already exist.");
+                } catch (IllegalArgumentException ex) {
+                    statusLabel.setText(ex.getMessage());
                     statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
                 }
-
             } catch (NumberFormatException ex) {
                 statusLabel.setText("Please enter valid numbers for year and rating.");
                 statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
