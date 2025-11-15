@@ -313,7 +313,7 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 - 类方法：与MovieManager相同的不再赘述，不一样的是：
   - `updateUser`：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
   - `save()`方法header为`"username,password,watchlist,history,usertype"`，其他一样。
-  - V1.2&1.4更新：`getUsers`方法会根据usertype字段的数据判断将用户实例化为PremiumUser或BasicUser。
+  - V1.2&V1.3更新：`getUsers`方法会根据usertype字段的数据判断将用户实例化为PremiumUser或BasicUser。
 - 值得重点一提的是三个返回检查方法：
   - `authenticate`：输入用户名和密码，判断能否登录，返回一个布尔值
   - `checkUsername`：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
