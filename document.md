@@ -116,6 +116,8 @@
 - Movie的Rating限制了格式为一位小数。
 - MovieManager类增加添加时判断电影是否已存在（除Rating其他字段不区分大小写，内容相同）。
 - 将MovieManager一些boolean方法改为void并增加抛出异常。
+- User类增加一个getUserType方法以代替instanceof
+- 现在user.csv文件第五个字段为usertype，可以为Basic或Premium
 
 ## 具体说明
 
@@ -238,6 +240,7 @@ V1.2更新：User是一个抽象类，且构造器方法为protected，只可被
   - `int getMaxWatchlistSize`：获取观看列表最大长度。
   - `boolean canAddMovies`:是否可以增加电影，这个方法会被`userinterface.BrowseMovies`调用。
   - `List<String> getAvailableRecommendationTypes`：一个字符串列表，包含推荐引擎可以选用的类型。
+- V1.3更新：增加抽象方法`String getUserType`：获取用户类型。
 
 #### PremiumUser
 
@@ -247,7 +250,7 @@ User的子类，重写了addToWatchlist方法。使得用户观看列表长度�
   - V1.2更新：添加了`AVAILABLE_RECOMMENDATION_TYPES`常量，包含有`"rating", "genre", "year"`。
 - 构造器方法：不同的是多了一个从现有用户创建高级用户的构造器，另外两个构造器和User类的区别仅仅是将isPremium设为了true。
 - 类方法：一个getter，并且重写了`addToWatchlist`方法，使观看列表达到最大长度后不再加入电影，同时返回false，否则true。
-  - V1.2更新：重写了toCSV方法，调用父类方法，并且在末尾拼接上了",true"来填充premium字段。
+  - V1.2&V1.3更新：重写了toCSV方法，调用父类方法，并且在末尾拼接上了",Premium"来填充premium字段。
 
 #### BasicUser
 
@@ -309,8 +312,8 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 - 构造器方法：相对地址为`resources/users.csv`构造父类对象，初始化哈希表
 - 类方法：与MovieManager相同的不再赘述，不一样的是：
   - `updateUser`：用一个新的用户对象替代表中旧的用户对象。因为采取先删除再增加这个对象的方式，所以无需处理异常。它是绝对不可能报错的。
-  - `save()`方法header为`"username,password,watchlist,history,premium"`，其他一样。
-  - V1.2更新：`getUsers`方法会根据premium字段的数据判断将用户实例化为PremiumUser或BasicUser。
+  - `save()`方法header为`"username,password,watchlist,history,usertype"`，其他一样。
+  - V1.2&1.4更新：`getUsers`方法会根据usertype字段的数据判断将用户实例化为PremiumUser或BasicUser。
 - 值得重点一提的是三个返回检查方法：
   - `authenticate`：输入用户名和密码，判断能否登录，返回一个布尔值
   - `checkUsername`：检查用户名是否符合要求，是则返回null，否则返回一个提示的字符串
