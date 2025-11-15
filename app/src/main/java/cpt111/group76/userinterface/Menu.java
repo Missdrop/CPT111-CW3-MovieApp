@@ -79,7 +79,7 @@ public class Menu extends Application {
             getPremiumButton = new Button("Get Premium");
             getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             getPremiumButton.setOnAction(e -> {
-                new GetPremium(user, primaryStage).show();
+                new GetPremium(user, primaryStage, userManager).show();
             });
         }
 

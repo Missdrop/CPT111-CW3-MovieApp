@@ -14,11 +14,13 @@ import cpt111.group76.user.*;
 public class GetPremium {
     private User user;
     private Stage primaryStage;
+    private UserManager userManager;
 
 
-    public GetPremium(User user, Stage primaryStage) {
+    public GetPremium(User user, Stage primaryStage, UserManager userManager) {
         this.user = user;
         this.primaryStage = primaryStage;
+        this.userManager = userManager;
     }
 
 
@@ -56,9 +58,7 @@ public class GetPremium {
             user = new PremiumUser(user);
 
             // Update user in UserManager
-            UserManager userManager = new UserManager();
             userManager.updateUser(user);
-            userManager.close();
 
             stage.close();
             primaryStage.close();
