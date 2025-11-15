@@ -1,6 +1,5 @@
 package cpt111.group76.userinterface;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -13,18 +12,25 @@ import javafx.scene.layout.VBox;
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
 
-public class Login extends Application {
+public class Login {
     private UserManager userManager;
-    private boolean openedMenu = false;
+    private Stage appStage;
 
 
-    public Login(UserManager userManager) {
+    public Login(UserManager userManager, Stage appStage) {
         this.userManager = userManager;
+        this.appStage = appStage;
     }
 
 
-    @Override
-    public void start(Stage primaryStage) {
+    public void show() {
+        Stage primaryStage = new Stage();
+
+        // When this login stage is closed, show the main app stage again
+        primaryStage.setOnCloseRequest(e ->{
+            appStage.show();
+        });
+
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
 
@@ -49,6 +55,7 @@ public class Login extends Application {
                 User user = userManager.getUser(username);
 
                 openMenu(user, userManager);
+                appStage.close();
                 primaryStage.close();
 
             } else {
@@ -73,12 +80,6 @@ public class Login extends Application {
 
     private void openMenu(User user, UserManager userManager) {
         Menu menu = new Menu(user, userManager);
-        this.openedMenu = true;
         menu.start(new Stage());
-    }
-
-
-    public boolean openedMenu() {
-        return this.openedMenu;
     }
 }

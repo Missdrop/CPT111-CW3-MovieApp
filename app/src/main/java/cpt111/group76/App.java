@@ -9,7 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import javafx.stage.Modality;
 
 import cpt111.group76.userinterface.Login;
 import cpt111.group76.userinterface.Register;
@@ -68,35 +67,13 @@ public class App extends Application {
 
         // Set button actions (same as before)
         loginButton.setOnAction(e -> {
-            Login login = new Login(userManager);
-            Stage loginStage = new Stage();
-            loginStage.initOwner(primaryStage);
-            loginStage.initModality(Modality.WINDOW_MODAL);
-            loginStage.setOnHidden(ev -> {
-                if (login.openedMenu()) {
-                    primaryStage.close();
-                } else {
-                    primaryStage.show();
-                }
-            });
             primaryStage.hide();
-            login.start(loginStage);
+            new Login(userManager, primaryStage).show();
         });
 
         registerButton.setOnAction(e -> {
-            Register register = new Register(userManager);
-            Stage registerStage = new Stage();
-            registerStage.initOwner(primaryStage);
-            registerStage.initModality(Modality.WINDOW_MODAL);
-            registerStage.setOnHidden(ev -> {
-                if (register.openedMenu()) {
-                    primaryStage.close();
-                } else {
-                    primaryStage.show();
-                }
-            });
             primaryStage.hide();
-            register.start(registerStage);
+            new Register(userManager, primaryStage).show();
         });
 
         // Create button container

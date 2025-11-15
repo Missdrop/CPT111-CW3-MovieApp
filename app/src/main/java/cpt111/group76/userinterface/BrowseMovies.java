@@ -94,7 +94,7 @@ public class BrowseMovies {
             addNewMovieButton = new Button("Add New Movie");
             addNewMovieButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             addNewMovieButton.setOnAction(e -> {
-                new AddNewMovie(movieManager).show(this);
+                new AddNewMovie(movieManager, this).show();
                 // Refresh the movie table when the add movie window is closed
                 stage.setOnHidden(ev -> updateMovieData());
             });

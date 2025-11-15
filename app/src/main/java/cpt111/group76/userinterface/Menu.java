@@ -25,6 +25,7 @@ public class Menu extends Application {
     private static MovieManager movieManager = new MovieManager();
     private HashMap<String, Movie> movieDatabase;
 
+
     public Menu(User user, UserManager userManager) {
         this.user = user;
         this.userManager = userManager;
@@ -68,7 +69,8 @@ public class Menu extends Application {
         Button changePasswordButton = new Button("Change Password");
         changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
         changePasswordButton.setOnAction(e -> {
-            new ChangePassword(user, userManager).start(new Stage());
+            new ChangePassword(user, userManager, primaryStage).show();
+            primaryStage.hide();
         });
 
         // Get Premium button - only show for Basic Users

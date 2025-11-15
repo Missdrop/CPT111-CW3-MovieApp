@@ -1,6 +1,5 @@
 package cpt111.group76.userinterface;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -11,21 +10,29 @@ import javafx.scene.layout.VBox;
 
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
+import cpt111.group76.App;
 import cpt111.group76.exception.PasswordValidationException;
 
-public class ChangePassword extends Application{
+public class ChangePassword{
     private UserManager userManager;
     private User user;
+    private Stage menuStage;
 
 
-    public ChangePassword(User user, UserManager userManager){
+    public ChangePassword(User user, UserManager userManager, Stage menuStage){
         this.user = user;
         this.userManager = userManager;
+        this.menuStage = menuStage;
     }
 
 
-    @Override
-    public void start(Stage primaryStage){
+    public void show(){
+        Stage primaryStage = new Stage();
+        // When this change password stage is closed, show the menu stage again
+        primaryStage.setOnCloseRequest(e -> {
+            menuStage.show();
+        });
+
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Current Password");
 
@@ -71,14 +78,16 @@ public class ChangePassword extends Application{
             }
 
             userManager.updateUser(user);
-            statusLabel.setText("Password changed successfully!");
-            statusLabel.setStyle("-fx-text-fill: green;");
+            menuStage.close();
+            primaryStage.close();
+            new App().start(new Stage());
         });
 
         VBox vbox = new VBox(10, passwordField, newPasswordField, repeatNewPasswordField, changePasswordButton, statusLabel);
         vbox.setPadding(new Insets(20));
 
         Scene scene = new Scene(vbox, 300, 250);
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("Change Password");
         primaryStage.show();

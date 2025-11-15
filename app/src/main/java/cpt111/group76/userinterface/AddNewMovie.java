@@ -14,14 +14,16 @@ import cpt111.group76.storage.MovieManager;
 
 public class AddNewMovie {
     private MovieManager movieManager;
+    private BrowseMovies browseMovies;
 
 
-    public AddNewMovie(MovieManager movieManager) {
+    public AddNewMovie(MovieManager movieManager, BrowseMovies browseMovies) {
         this.movieManager = movieManager;
+        this.browseMovies = browseMovies;
     }
 
 
-    public void show(BrowseMovies browseMovies) {
+    public void show() {
         Stage stage = new Stage();
         stage.setTitle("Add New Movie");
         stage.setOnCloseRequest(e -> {
@@ -37,8 +39,8 @@ public class AddNewMovie {
 
         // Genre ComboBox instead of TextField
         ComboBox<String> genreComboBox = new ComboBox<>();
-        genreComboBox.getItems().addAll("Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary", "Drama",
-                "Family", "Fantasy", "History", "Horror", "Music", "Mystery", "Romance", "Science Fiction", "Thriller",
+        genreComboBox.getItems().addAll("Action", "Adventure", "Animation", "Biography", "Comedy", "Crime", "Documentary", "Drama",
+                "Family", "Fantasy", "History", "Horror", "Music", "Mystery", "Romance", "Sci-Fi", "Thriller",
                 "War", "Western");
         genreComboBox.setPromptText("Select Genre");
         genreComboBox.setStyle("-fx-pref-width: 200px;");
@@ -115,8 +117,7 @@ public class AddNewMovie {
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #f8f9fa;");
 
-        Scene scene = new Scene(layout, 400, 400); // Slightly taller to
-                                                   // accommodate the label
+        Scene scene = new Scene(layout, 400, 400);
         stage.setScene(scene);
         stage.show();
     }
