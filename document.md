@@ -10,6 +10,7 @@
     - [V1.0](#v10)
     - [V1.1](#v11)
     - [V1.2](#v12)
+    - [V1.3](#v13)
   - [具体说明](#具体说明)
     - [总览](#总览)
     - [异常包](#异常包)
@@ -107,6 +108,14 @@
 - 更改User类为抽象类，并且构造器改为protected，添加了三个抽象方法，进一步封装了User类。
 - 添加exception包，用于处理User类的密码和用户名异常。
 - 删去所有UserManager类的验证方法，改为在密码/用户名有问题时抛出异常。
+
+### V1.3
+
+- 更改了UI包中一些类的字段，修改了页面直接相互打开的方法`show()`。
+- 重设密码时隐藏Menu，若关闭则退回Menu，重设密码成功后退回App页面。
+- Movie的Rating限制了格式为一位小数。
+- MovieManager类增加添加时判断电影是否已存在（除Rating其他字段不区分大小写，内容相同）。
+- 将MovieManager一些boolean方法改为void并增加抛出异常。
 
 ## 具体说明
 
@@ -285,7 +294,8 @@ MovieManager继承自FileManager，在实例化的时候从csv读取电影数据
   - `getMaxIndex()`：遍历所有ID（Map的键），用上面的`idToIndex`方法获取数字id，然后找出最大的数。
 - 然后是一些公有方法：
   - `getMovie`：从ID获取对应Movie对象
-  - `addMovie`（多态）：用Movie对象或者Movie的数据增加电影同时自动生成MovieID。但要注意，在用movie对象加入时，虽然是HashMap，但是直接加入重复项依然是不可取的。虽然MovieID不会变，但是Movie对象可能会变，所有要检查是否有冲突防止修改现有的电影。
+  - `addMovie`：用Movie对象或者Movie的数据增加电影同时自动生成MovieID。
+    - V1.3更新：判断了电影是否重复（除Rating其他字段不区分大小写，内容相同），否则抛出异常。
   - `deleteMovie`（多态）：用movieID或者movie对象删除Map中的电影。
   - `save()`：调用父类save方法，设置header为`"id,title,genre,year,rating"`，遍历所有movie，使用`.toCSV()`转化为String，再储存为一个数组作为父类save方法第二个参数。
 

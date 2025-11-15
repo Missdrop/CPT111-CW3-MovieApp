@@ -44,7 +44,11 @@ public class MovieManager extends FileManager {
     /**
      * Adds a movie to the database with auto-generated ID.
      *
-     * @return true if movie was added successfully, false if movie already exists
+     * @param title the title of the movie
+     * @param genre the genre of the movie
+     * @param year the release year of the movie
+     * @param rating the rating of the movie
+     * @throws IllegalArgumentException if the movie already exists or parameters are invalid
      */
     public void addMovie(String title, String genre, int year, double rating) throws IllegalArgumentException {
         String movieId = String.format("M%03d", maxIndex + 1);
