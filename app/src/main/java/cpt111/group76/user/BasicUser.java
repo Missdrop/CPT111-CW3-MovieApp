@@ -70,6 +70,6 @@ public class BasicUser extends User {
 
     @Override
     public String toCSV() {
-        return super.toCSV() + ",false";
+        return super.toCSV() + ",Basic";
     }
 }

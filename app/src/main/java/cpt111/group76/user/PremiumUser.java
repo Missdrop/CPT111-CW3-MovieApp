@@ -69,6 +69,6 @@ public class PremiumUser extends User {
 
     @Override
     public String toCSV() {
-        return super.toCSV() + ",true";
+        return super.toCSV() + ",Premium";
     }
 }

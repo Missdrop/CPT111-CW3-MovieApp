@@ -116,7 +116,7 @@ public class UserManager extends FileManager {
      * @throws RuntimeException if an error occurs during saving
      */
     public void save() throws RuntimeException {
-        String header = "username,password,watchlist,history,premium";
+        String header = "username,password,watchlist,history,usertype";
 
         String[] rows = new String[users.size()];
         for (int i = 0; i < users.size(); i++) {
@@ -136,7 +136,7 @@ public class UserManager extends FileManager {
      * Creates a User object from CSV data array.
      * Centralizes all CSV parsing logic in the manager class.
      *
-     * @param userData the CSV data array in format: [username, passwordHash, watchlistCSV, historyCSV, isPremium]
+     * @param userData the CSV data array in format: [username, passwordHash, watchlistCSV, historyCSV, userType]
      * @return the created User object
      * @throws IllegalArgumentException if the data is invalid or malformed
      */
@@ -163,13 +163,15 @@ public class UserManager extends FileManager {
                 new History(userData[3].split(";", -1)) : new History();
 
             // Parse premium status
-            boolean isPremium = userData[4].length() > 0 ?
-                Boolean.parseBoolean(userData[4]) : false;
+            String userType = userData[4] != null ? userData[4].trim() : "";
 
-            if (isPremium) {
-                return new PremiumUser(username, passwordHash, watchlist, history);
-            } else {
-                return new BasicUser(username, passwordHash, watchlist, history);
+            switch (userType) {
+                case "Premium":
+                    return new PremiumUser(username, passwordHash, watchlist, history);
+                case "Basic":
+                    return new BasicUser(username, passwordHash, watchlist, history);
+                default:
+                    throw new IllegalArgumentException("Invalid user type in CSV data: " + userType);
             }
 
         } catch (NumberFormatException e) {
