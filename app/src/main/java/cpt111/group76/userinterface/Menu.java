@@ -50,7 +50,7 @@ public class Menu extends Application {
 
         // User info
         Text usernameText = new Text(
-                "Welcome, " + user.getUsername() + "! (" + (user instanceof PremiumUser ? "Premium User" : "Basic User") + ")");
+                "Welcome, " + user.getUsername() + "! (" + (user.getUserType().equals("Premium") ? "Premium User" : "Basic User") + ")");
         usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
 
         // Top bar with title and user info
@@ -75,7 +75,7 @@ public class Menu extends Application {
 
         // Get Premium button - only show for Basic Users
         Button getPremiumButton = null;
-        if (user instanceof BasicUser) {
+        if (user.getUserType().equals("Basic")) {
             getPremiumButton = new Button("Get Premium");
             getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
             getPremiumButton.setOnAction(e -> {
@@ -84,7 +84,7 @@ public class Menu extends Application {
         }
 
         HBox buttonBox;
-        if (user instanceof BasicUser) {
+        if (user.getUserType().equals("Basic")) {
             buttonBox = new HBox(10, changePasswordButton, getPremiumButton, logoutButton);
         } else {
             buttonBox = new HBox(10, changePasswordButton, logoutButton);

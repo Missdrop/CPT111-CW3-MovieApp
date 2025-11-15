@@ -75,6 +75,13 @@ public abstract class User {
 
 
     /**
+     * Gets the user type as a string.
+     * @return the user type
+     */
+    public abstract String getUserType();
+
+
+    /**
      * Sets the username for the user.
      * Username must be unique, between 3 and 20 characters,
      * and can only contain letters and digits.

@@ -48,6 +48,12 @@ public class PremiumUser extends User {
     }
 
 
+    @Override
+    public String getUserType() {
+        return "Premium";
+    }
+
+
     /**
      * Adds a movie to the watchlist if the watchlist is not at capacity.
      * Prevents adding movies when the watchlist has reached its maximum size.

@@ -49,6 +49,12 @@ public class BasicUser extends User {
     }
 
 
+    @Override
+    public String getUserType() {
+        return "Basic";
+    }
+
+
     /**
      * Adds a movie to the watchlist if the watchlist is not at capacity.
      * Premium users have a larger capacity (100 movies) compared to basic users.
