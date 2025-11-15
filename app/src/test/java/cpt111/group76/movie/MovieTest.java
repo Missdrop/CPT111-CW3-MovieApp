@@ -21,7 +21,14 @@ public class MovieTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testMovieCreationInvalidYear() throws Exception {
-        Movie movie = new Movie( "M011", "Inception", "Sci-Fi", -1, 8.8 );
+        Movie movie = new Movie( "M011", "Inception", "Sci-Fi", 1800, 8.8 );
+        assertNull(movie);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMovieCreationInvalidRating() throws Exception {
+        Movie movie = new Movie( "M011", "Inception", "Sci-Fi", 1982, 1.11 );
         assertNull(movie);
     }
 }
