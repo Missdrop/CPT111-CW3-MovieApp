@@ -11,9 +11,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
@@ -21,17 +22,17 @@ import cpt111.group76.movie.Movie;
 
 public class ViewWatchlist {
     private User user;
-    private HashMap<String, Movie> movieDatabase;
+    private Map<String, Movie> movieDatabase;
     private TableView<Movie> watchlistTable;
-    private ObservableList<Movie> watchlistData;
+    private List<Movie> watchlistData;
     private UserManager userManager;
 
 
-    public ViewWatchlist(User user, HashMap<String, Movie> movieDatabase, UserManager userManager) {
+    public ViewWatchlist(User user, Map<String, Movie> movieDatabase, UserManager userManager) {
         this.user = user;
         this.movieDatabase = movieDatabase;
         this.userManager = userManager;
-        this.watchlistData = FXCollections.observableArrayList();
+        this.watchlistData = new ArrayList<>();
     }
 
 
@@ -137,6 +138,6 @@ public class ViewWatchlist {
             }
         }
 
-        watchlistTable.setItems(watchlistData);
+        watchlistTable.setItems(FXCollections.observableArrayList(watchlistData));
     }
 }

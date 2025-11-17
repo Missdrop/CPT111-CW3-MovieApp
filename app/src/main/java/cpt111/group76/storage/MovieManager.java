@@ -1,5 +1,6 @@
 package cpt111.group76.storage;
 
+import java.util.Map;
 import java.util.HashMap;
 
 import cpt111.group76.movie.Movie;
@@ -9,7 +10,7 @@ import cpt111.group76.movie.Movie;
  * Extends FileManager to handle CSV file operations for movie data.
  */
 public class MovieManager extends FileManager {
-    private HashMap<String, Movie> movies;
+    private Map<String, Movie> movies;
     int maxIndex; // to track the highest movie index
 
 
@@ -25,7 +26,7 @@ public class MovieManager extends FileManager {
     }
 
 
-    public HashMap<String, Movie> getMovieDatabase() {
+    public Map<String, Movie> getMovieDatabase() {
         return movies;
     }
 
@@ -155,10 +156,10 @@ public class MovieManager extends FileManager {
      * Loads movies from CSV file into a HashMap.
      * Handles invalid data gracefully by skipping problematic entries.
      *
-     * @return HashMap containing all valid movies with IDs as keys
+     * @return Map containing all valid movies with IDs as keys
      */
-    private HashMap<String, Movie> getMovies() {
-        HashMap<String, Movie> movieMap = new HashMap<String, Movie>();
+    private Map<String, Movie> getMovies() {
+        Map<String, Movie> movieMap = new HashMap<String, Movie>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {

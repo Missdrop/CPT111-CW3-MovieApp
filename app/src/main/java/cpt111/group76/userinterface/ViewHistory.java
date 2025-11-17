@@ -10,10 +10,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
@@ -21,18 +22,18 @@ import cpt111.group76.movie.Movie;
 
 public class ViewHistory {
     private User user;
-    private HashMap<String, Movie> movieDatabase;
+    private Map<String, Movie> movieDatabase;
     private TableView<Movie> historyTable;
-    private ObservableList<Movie> historyData;
-    private HashMap<String, String> movieDateMap;
+    private List<Movie> historyData;
+    private Map<String, String> movieDateMap;
     private UserManager userManager;
 
 
-    public ViewHistory(User user, HashMap<String, Movie> movieDatabase, UserManager userManager) {
+    public ViewHistory(User user, Map<String, Movie> movieDatabase, UserManager userManager) {
         this.user = user;
         this.movieDatabase = movieDatabase;
         this.userManager = userManager;
-        this.historyData = FXCollections.observableArrayList();
+        this.historyData = new ArrayList<>();
         this.movieDateMap = user.getHistory().get();
     }
 
@@ -135,6 +136,6 @@ public class ViewHistory {
             }
         }
 
-        historyTable.setItems(historyData);
+        historyTable.setItems(FXCollections.observableArrayList(historyData));
     }
 }

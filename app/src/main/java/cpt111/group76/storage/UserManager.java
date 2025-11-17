@@ -1,6 +1,7 @@
 package cpt111.group76.storage;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import cpt111.group76.user.*;
 import cpt111.group76.user.data.*;
@@ -12,7 +13,7 @@ import cpt111.group76.exception.*;
  * Extends FileManager to handle CSV file operations for user data.
  */
 public class UserManager extends FileManager {
-    private HashMap<String, User> users;
+    private Map<String, User> users;
 
 
     /**
@@ -184,10 +185,10 @@ public class UserManager extends FileManager {
      * Loads users from CSV file into a HashMap.
      * Handles invalid data gracefully by skipping problematic entries.
      *
-     * @return HashMap containing all valid users with usernames as keys
+     * @return Map containing all valid users with usernames as keys
      */
-    private HashMap<String, User> getUsers() {
-        HashMap<String, User> userMap = new HashMap<String, User>();
+    private Map<String, User> getUsers() {
+        Map<String, User> userMap = new HashMap<String, User>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {

@@ -1,7 +1,10 @@
 package cpt111.group76.recommendation;
 
+import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.HashSet;
 
 import cpt111.group76.movie.Movie;
@@ -13,7 +16,7 @@ import cpt111.group76.user.User;
  * Supports multiple recommendation strategies: by rating, genre, and release year.
  */
 public class Engine {
-    private HashMap<String, Movie> movieDatabase;
+    private Map<String, Movie> movieDatabase;
     private User user;
 
 
@@ -23,7 +26,7 @@ public class Engine {
      * @param movieDatabase the database of all available movies
      * @param user the user for whom recommendations are generated
      */
-    public Engine(HashMap<String, Movie> movieDatabase, User user) {
+    public Engine(Map<String, Movie> movieDatabase, User user) {
         this.movieDatabase = movieDatabase;
         this.user = user;
     }
@@ -56,18 +59,18 @@ public class Engine {
 
         switch(type) {
             case "genre":
-                ArrayList<String> genreMovies = getFavouriteGenreMovies();
+                List<String> genreMovies = getFavouriteGenreMovies();
                 recommendation = genreMovies.subList(0, Math.min(numRecommendations, genreMovies.size()))
                     .toArray(new String[0]);
                 break;
             case "year":
-                ArrayList<String> yearMovies = getFavouriteYearMovies();
+                List<String> yearMovies = getFavouriteYearMovies();
                 recommendation = yearMovies.subList(0, Math.min(numRecommendations, yearMovies.size()))
                     .toArray(new String[0]);
                 break;
             case "rating":
             default:
-                ArrayList<String> ratedMovies = getTopRatedMovies();
+                List<String> ratedMovies = getTopRatedMovies();
                 recommendation = ratedMovies.subList(0, Math.min(numRecommendations, ratedMovies.size()))
                     .toArray(new String[0]);
                 break;
@@ -81,8 +84,8 @@ public class Engine {
      *
      * @return list of movie IDs sorted by rating
      */
-    private ArrayList<String> getTopRatedMovies() {
-        ArrayList<String> topRatedMovies = new ArrayList<>();
+    private List<String> getTopRatedMovies() {
+        List<String> topRatedMovies = new ArrayList<>();
         movieDatabase.entrySet().stream()
                 .sorted((e1, e2) -> Double.compare(e2.getValue().getRating(), e1.getValue().getRating()))
                 .forEachOrdered(e -> topRatedMovies.add(e.getKey()));
@@ -96,8 +99,8 @@ public class Engine {
      *
      * @return list of movie IDs sorted by year proximity then rating
      */
-    private ArrayList<String> getFavouriteYearMovies() {
-        ArrayList<String> favouriteYearMovies = new ArrayList<>();
+    private List<String> getFavouriteYearMovies() {
+        List<String> favouriteYearMovies = new ArrayList<>();
         int favouriteYear = getFavouriteYear();
         movieDatabase.entrySet().stream()
                 .sorted((e1, e2) -> {
@@ -120,9 +123,9 @@ public class Engine {
      *
      * @return list of movie IDs sorted by genre preference then rating
      */
-    private ArrayList<String> getFavouriteGenreMovies() {
-        ArrayList<String> favouriteGenreMovies = new ArrayList<>();
-        HashMap<String, Integer> favouriteGenres = getFavouriteGenreMap();
+    private List<String> getFavouriteGenreMovies() {
+        List<String> favouriteGenreMovies = new ArrayList<>();
+        Map<String, Integer> favouriteGenres = getFavouriteGenreMap();
         movieDatabase.entrySet().stream()
                 .sorted((e1, e2) -> {
                     int genreScore1 = favouriteGenres.getOrDefault(e1.getValue().getGenre(), 0);
@@ -146,7 +149,7 @@ public class Engine {
     private int getFavouriteYear() {
         int sum = 0;
 
-        HashSet<String> likedMovies = getLikedMovies();
+        Set<String> likedMovies = getLikedMovies();
         if (likedMovies == null) {
             return 0;
         }
@@ -164,10 +167,10 @@ public class Engine {
      *
      * @return map of genres to their frequency in user's preferences
      */
-    private HashMap<String, Integer> getFavouriteGenreMap() {
-        HashMap<String, Integer> scoreMap = new HashMap<>();
+    private Map<String, Integer> getFavouriteGenreMap() {
+        Map<String, Integer> scoreMap = new HashMap<>();
 
-        HashSet<String> likedMovies = getLikedMovies();
+        Set<String> likedMovies = getLikedMovies();
         if (likedMovies == null) {
             return scoreMap;
         }
@@ -186,12 +189,12 @@ public class Engine {
      *
      * @return set of movie IDs that user has liked, or null if no interactions
      */
-    private HashSet<String> getLikedMovies() {
+    private Set<String> getLikedMovies() {
         if (user.getHistory().length() + user.getWatchlist().length() == 0) {
             return null;
         }
 
-        HashSet<String> likedMovies = new HashSet<>();
+        Set<String> likedMovies = new HashSet<>();
         for (String movieID : user.getHistory().getMovies()) {
             likedMovies.add(movieID);
         }

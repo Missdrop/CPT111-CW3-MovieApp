@@ -12,7 +12,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Priority;
-import java.util.HashMap;
+
+import java.util.Map;
 
 import cpt111.group76.App;
 import cpt111.group76.storage.*;
@@ -23,7 +24,7 @@ public class Menu extends Application {
     private UserManager userManager;
     private User user;
     private static MovieManager movieManager = new MovieManager();
-    private HashMap<String, Movie> movieDatabase;
+    private Map<String, Movie> movieDatabase;
 
 
     public Menu(User user, UserManager userManager) {

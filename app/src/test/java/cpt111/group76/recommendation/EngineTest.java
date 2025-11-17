@@ -3,7 +3,7 @@ package cpt111.group76.recommendation;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import cpt111.group76.movie.Movie;
 import cpt111.group76.user.PremiumUser;
@@ -15,7 +15,7 @@ public class EngineTest {
     public void testEngineRecommendation() {
         MovieManagerTest.initTestCsvFile();
         MovieManager movieManager = new MovieManager();
-        HashMap<String, Movie> movieDatabase = movieManager.getMovieDatabase();
+        Map<String, Movie> movieDatabase = movieManager.getMovieDatabase();
 
         PremiumUser user;
         try {

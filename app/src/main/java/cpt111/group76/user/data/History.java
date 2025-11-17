@@ -2,15 +2,18 @@ package cpt111.group76.user.data;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a user's movie watch history.
  * Tracks movies with their watch dates using a HashMap for efficient lookups.
  */
 public class History {
-    private HashMap<String, String> history; // movieId -> date
+    private Map<String, String> history; // movieId -> date
 
 
     /**
@@ -26,7 +29,7 @@ public class History {
      *
      * @param history the existing history data
      */
-    public History(HashMap<String, String> history) {
+    public History(Map<String, String> history) {
         this.history = history;
     }
 
@@ -52,7 +55,7 @@ public class History {
     }
 
 
-    public HashMap<String, String> get() {
+    public Map<String, String> get() {
         return history;
     }
 
@@ -63,7 +66,7 @@ public class History {
      *
      * @return HashSet of movie IDs
      */
-    public HashSet<String> getMovies() {
+    public Set<String> getMovies() {
         return new HashSet<>(history.keySet());
     }
 
@@ -90,7 +93,7 @@ public class History {
 
 
     public String toCSV() {
-        ArrayList<String> entries = new ArrayList<>();
+        List<String> entries = new ArrayList<>();
         for (String movieID : getMovies()) {
             entries.add(movieID + "@" + history.get(movieID));
         }

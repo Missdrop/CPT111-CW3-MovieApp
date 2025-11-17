@@ -1,5 +1,6 @@
 package cpt111.group76.user.data;
 
+import java.util.Set;
 import java.util.HashSet;
 
 /**
@@ -7,7 +8,7 @@ import java.util.HashSet;
  * Uses HashSet to prevent duplicate entries and provide efficient operations.
  */
 public class Watchlist {
-    private HashSet<String> watchlist;
+    private Set<String> watchlist;
 
 
     /**
@@ -23,7 +24,7 @@ public class Watchlist {
      *
      * @param watchlist the existing watchlist data
      */
-    public Watchlist(HashSet<String> watchlist) {
+    public Watchlist(Set<String> watchlist) {
         this.watchlist = watchlist;
     }
 
@@ -41,7 +42,7 @@ public class Watchlist {
     }
 
 
-    public HashSet<String> get() {
+    public Set<String> get() {
         return watchlist;
     }
 
