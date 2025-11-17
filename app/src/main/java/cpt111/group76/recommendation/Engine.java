@@ -32,12 +32,12 @@ public class Engine {
     }
 
 
-    public String[] recommendation(String type) {
+    public List<String> recommendation(String type) {
         return recommendation(type, 5);
     }
 
 
-    public String[] recommendation(int numRecommendations) {
+    public List<String> recommendation(int numRecommendations) {
         return recommendation("rating", numRecommendations);
     }
 
@@ -48,10 +48,10 @@ public class Engine {
      *
      * @param type the recommendation strategy: "genre", "year", or "rating"
      * @param numRecommendations number of recommendations to generate
-     * @return an array of recommended movie IDs, ordered by relevance
+     * @return a list of recommended movie IDs, ordered by relevance
      */
-    public String[] recommendation(String type, int numRecommendations) {
-        String[] recommendation = new String[numRecommendations];
+    public List<String> recommendation(String type, int numRecommendations) {
+        List<String> recommendation = new ArrayList<>();
 
         if (getLikedMovies() == null) {
             type = "rating";
@@ -60,19 +60,16 @@ public class Engine {
         switch(type) {
             case "genre":
                 List<String> genreMovies = getFavouriteGenreMovies();
-                recommendation = genreMovies.subList(0, Math.min(numRecommendations, genreMovies.size()))
-                    .toArray(new String[0]);
+                recommendation = genreMovies.subList(0, Math.min(numRecommendations, genreMovies.size()));
                 break;
             case "year":
                 List<String> yearMovies = getFavouriteYearMovies();
-                recommendation = yearMovies.subList(0, Math.min(numRecommendations, yearMovies.size()))
-                    .toArray(new String[0]);
+                recommendation = yearMovies.subList(0, Math.min(numRecommendations, yearMovies.size()));
                 break;
             case "rating":
             default:
                 List<String> ratedMovies = getTopRatedMovies();
-                recommendation = ratedMovies.subList(0, Math.min(numRecommendations, ratedMovies.size()))
-                    .toArray(new String[0]);
+                recommendation = ratedMovies.subList(0, Math.min(numRecommendations, ratedMovies.size()));
                 break;
         }
         return recommendation;

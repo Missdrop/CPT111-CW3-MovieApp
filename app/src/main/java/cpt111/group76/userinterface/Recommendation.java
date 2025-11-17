@@ -76,7 +76,7 @@ public class Recommendation {
                 int count = Integer.parseInt(countField.getText());
 
                 Engine engine = new Engine(movieDatabase, user);
-                String[] recommendations = engine.recommendation(type, count);
+                List<String> recommendations = engine.recommendation(type, count);
 
                 recommendationsData.clear();
                 for (String movieId : recommendations) {

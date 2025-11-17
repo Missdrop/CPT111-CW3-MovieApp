@@ -31,8 +31,8 @@ public class EngineTest {
 
         Engine engine = new Engine(movieDatabase, user);
 
-        assertEquals(engine.recommendation("genre",3).length, 3);
-        assertEquals(engine.recommendation("year",2).length, 2);
-        assertEquals(engine.recommendation(4).length, 4);
+        assertEquals(engine.recommendation("genre",3).size(), 3);
+        assertEquals(engine.recommendation("year",2).size(), 2);
+        assertEquals(engine.recommendation(4).size(), 4);
     }
 }
