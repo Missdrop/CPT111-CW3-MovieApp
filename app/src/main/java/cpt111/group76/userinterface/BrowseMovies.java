@@ -13,29 +13,20 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.storage.MovieManager;
 import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
 
-import java.util.Map;
-
 public class BrowseMovies {
     private User user;
-    private Map<String, Movie> movieDatabase;
     private MovieManager movieManager;
     private TableView<Movie> movieTable;
-    private List<Movie> movieData;
 
 
-    public BrowseMovies(User user, Map<String, Movie> movieDatabase, MovieManager movieManager) {
+    public BrowseMovies(User user, MovieManager movieManager) {
         this.user = user;
-        this.movieDatabase = movieDatabase;
         this.movieManager = movieManager;
-        this.movieData = new ArrayList<Movie>();
     }
 
 
@@ -222,9 +213,7 @@ public class BrowseMovies {
 
 
     private void updateMovieData() {
-        movieData.clear();
-        movieData.addAll(movieDatabase.values());
-        movieTable.setItems(FXCollections.observableArrayList(movieData));
+        movieTable.setItems(FXCollections.observableArrayList(movieManager.getMovieList()));
     }
 
 

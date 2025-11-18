@@ -14,24 +14,24 @@ import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
+import cpt111.group76.storage.MovieManager;
 
 public class ViewWatchlist {
     private User user;
-    private Map<String, Movie> movieDatabase;
     private TableView<Movie> watchlistTable;
+    private MovieManager movieManager;
     private List<Movie> watchlistData;
     private UserManager userManager;
 
 
-    public ViewWatchlist(User user, Map<String, Movie> movieDatabase, UserManager userManager) {
+    public ViewWatchlist(User user, MovieManager movieManager, UserManager userManager) {
         this.user = user;
-        this.movieDatabase = movieDatabase;
         this.userManager = userManager;
+        this.movieManager = movieManager;
         this.watchlistData = new ArrayList<>();
     }
 
@@ -132,7 +132,7 @@ public class ViewWatchlist {
         watchlistData.clear();
 
         for (String movieId : user.getWatchlist().get()) {
-            Movie movie = movieDatabase.get(movieId);
+            Movie movie = movieManager.getMovie(movieId);
             if (movie != null) {
                 watchlistData.add(movie);
             }

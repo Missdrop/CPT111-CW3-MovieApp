@@ -13,24 +13,19 @@ import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Priority;
 
-import java.util.Map;
-
 import cpt111.group76.App;
 import cpt111.group76.storage.*;
-import cpt111.group76.movie.*;
 import cpt111.group76.user.*;
 
 public class Menu extends Application {
     private UserManager userManager;
     private User user;
     private static MovieManager movieManager = new MovieManager();
-    private Map<String, Movie> movieDatabase;
 
 
     public Menu(User user, UserManager userManager) {
         this.user = user;
         this.userManager = userManager;
-        this.movieDatabase = movieManager.getMovieDatabase();
     }
 
 
@@ -105,10 +100,10 @@ public class Menu extends Application {
         Button viewHistoryButton = createMenuButton("View History", "#9b59b6");
         Button getRecommendationsButton = createMenuButton("Recommendation", "#e67e22");
 
-        browseMoviesButton.setOnAction(e -> new BrowseMovies(user, movieDatabase, movieManager).show());
-        viewWatchlistButton.setOnAction(e -> new ViewWatchlist(user, movieDatabase, userManager).show());
-        viewHistoryButton.setOnAction(e -> new ViewHistory(user, movieDatabase, userManager).show());
-        getRecommendationsButton.setOnAction(e -> new Recommendation(user, movieDatabase, userManager).show());
+        browseMoviesButton.setOnAction(e -> new BrowseMovies(user, movieManager).show());
+        viewWatchlistButton.setOnAction(e -> new ViewWatchlist(user, movieManager, userManager).show());
+        viewHistoryButton.setOnAction(e -> new ViewHistory(user, movieManager, userManager).show());
+        getRecommendationsButton.setOnAction(e -> new Recommendation(user, movieManager, userManager).show());
 
         // Create a grid layout for buttons
         HBox firstButtonRow = new HBox(20, browseMoviesButton, viewWatchlistButton);

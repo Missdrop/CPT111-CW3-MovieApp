@@ -11,6 +11,7 @@
     - [V1.1](#v11)
     - [V1.2](#v12)
     - [V1.3](#v13)
+    - [V1.4](#v14)
   - [具体说明](#具体说明)
     - [总览](#总览)
     - [异常包](#异常包)
@@ -118,6 +119,13 @@
 - 将MovieManager一些boolean方法改为void并增加抛出异常。
 - User类增加一个getUserType方法以代替instanceof
 - 现在user.csv文件第五个字段为usertype，可以为Basic或Premium
+
+### V1.4
+
+- 主要为性能优化：
+- UI类删除多余的私有字段。
+- MovieManager类增加getMovieList方法。
+- Engine类使用ArrayList的sort方法排序。
 
 ## 具体说明
 
@@ -301,6 +309,8 @@ MovieManager继承自FileManager，在实例化的时候从csv读取电影数据
     - V1.3更新：判断了电影是否重复（除Rating其他字段不区分大小写，内容相同），否则抛出异常。
   - `deleteMovie`（多态）：用movieID或者movie对象删除Map中的电影。
   - `save()`：调用父类save方法，设置header为`"id,title,genre,year,rating"`，遍历所有movie，使用`.toCSV()`转化为String，再储存为一个数组作为父类save方法第二个参数。
+- V1.4更新：
+  - `getMovieList()`：获取一个包含所有电影的ArrayList。
 
 
 
@@ -329,7 +339,7 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 
 引擎类应该可以通过现有的电影库和用户数据，然后传入两个参数：推荐类型和推荐数量，返回一个排序后的推荐列表。
 
-- 私有字段：一个电影表HashMap（同MovieManager），一个用户对象。
+- 私有字段：一个电影表HashMap（同MovieManager），一个用户喜欢的电影HashSet，一个暂存的排序ArrayList。
 - 构造器方法：没什么好说的，传入两个参数构建对象。
 - 类方法：可以看到这个类只有一个公有方法也就是`recommendation`，其他的都是作为辅助的私有方法。
   - `recommendation`：一个多态方法，在缺少参数时，默认推荐类型为rating或者推荐数量为5。
@@ -337,9 +347,9 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
   - `HashSet<String> getLikedMovies()`：获取用户喜欢的电影（观看列表+历史记录），使用HashSet可以自动排除两个列表都有的情况。
   - `int getFavouriteYear()`：获取用户最喜欢的年份，算法为将用户喜欢的电影年份取平均数。
   - `HashMap<String, Integer> getFavouriteGenreMap()`：获取一个表，其中键是电影ID，值是一个分数，这个分数实际上就是用户喜欢的电影里出现了几次这个流派。比如说用户看过三次Action电影，那么Action的值就为3。
-  - `ArrayList<String> getFavouriteYearMovies()`：获取一个ArrayList，很容易理解，使用List是因为它可以保持顺序。把私有字段（电影表）按照以下规则排序：绝对值（电影年龄-用户最喜欢年份）。这可以让越接近用户喜欢的年份的电影排在越前面。
-  - `ArrayList<String> getFavouriteGenreMovies()`：同上，但是排序方法变为查询`FavouriteGenreMap`，并比较两个电影流派哪个值更高。实则就是查看哪种电影用户看的更多。
-  - `ArrayList<String> getTopRatedMovies()`：按照Rating排序，并不需要调用别的方法。
+  - `void<String> getFavouriteYearMovies()`：将tempMovieList按照以下规则排序：绝对值（电影年龄-用户最喜欢年份）。这可以让越接近用户喜欢的年份的电影排在越前面。
+  - `void<String> getFavouriteGenreMovies()`：同上，但是排序方法变为查询`FavouriteGenreMap`，并比较两个电影流派哪个值更高。实则就是查看哪种电影用户看的更多。
+  - `void<String> getTopRatedMovies()`：按照Rating排序，并不需要调用别的方法。
     > 值得一提的是，所有排序都是用`movieDatabase.entrySet().stream().sorted(<一个用于比较两个元素的Lambda函数>)`的形式。首先将哈希表转化为一个包含所有entry的Set，然后把这个集合转化为流，再调用流的排序方法，按自定义排序规则排序。
 
 ---

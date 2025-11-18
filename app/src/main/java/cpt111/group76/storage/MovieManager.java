@@ -1,7 +1,9 @@
 package cpt111.group76.storage;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cpt111.group76.movie.Movie;
 
@@ -28,6 +30,11 @@ public class MovieManager extends FileManager {
 
     public Map<String, Movie> getMovieDatabase() {
         return movies;
+    }
+
+
+    public List<Movie> getMovieList() {
+        return new ArrayList<>(movies.values());
     }
 
 

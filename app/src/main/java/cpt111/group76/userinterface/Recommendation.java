@@ -18,8 +18,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.User;
 import cpt111.group76.movie.Movie;
@@ -27,15 +27,15 @@ import cpt111.group76.recommendation.Engine;
 
 public class Recommendation {
     private User user;
-    private Map<String, Movie> movieDatabase;
+    private MovieManager movieManager;
     private TableView<Movie> recommendationsTable;
     private List<Movie> recommendationsData;
     private UserManager userManager;
 
 
-    public Recommendation(User user, Map<String, Movie> movieDatabase, UserManager userManager) {
+    public Recommendation(User user, MovieManager movieManager, UserManager userManager) {
         this.user = user;
-        this.movieDatabase = movieDatabase;
+        this.movieManager = movieManager;
         this.userManager = userManager;
         this.recommendationsData = new ArrayList<>();
     }
@@ -75,7 +75,7 @@ public class Recommendation {
                 String type = typeComboBox.getValue();
                 int count = Integer.parseInt(countField.getText());
 
-                Engine engine = new Engine(movieDatabase, user);
+                Engine engine = new Engine(movieManager, user);
                 List<Movie> recommendations = engine.recommendation(type, count);
 
                 recommendationsData.clear();

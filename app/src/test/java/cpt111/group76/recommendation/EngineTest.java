@@ -3,9 +3,6 @@ package cpt111.group76.recommendation;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.Map;
-
-import cpt111.group76.movie.Movie;
 import cpt111.group76.user.PremiumUser;
 import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.MovieManagerTest;
@@ -15,8 +12,6 @@ public class EngineTest {
     public void testEngineRecommendation() {
         MovieManagerTest.initTestCsvFile();
         MovieManager movieManager = new MovieManager();
-        Map<String, Movie> movieDatabase = movieManager.getMovieDatabase();
-
         PremiumUser user;
         try {
             user = new PremiumUser("testuser", "pass123");
@@ -29,7 +24,7 @@ public class EngineTest {
         user.getHistory().add("M039");
         user.getHistory().add("M040");
 
-        Engine engine = new Engine(movieDatabase, user);
+        Engine engine = new Engine(movieManager, user);
 
         assertEquals(engine.recommendation("genre",3).size(), 3);
         assertEquals(engine.recommendation("year",2).size(), 2);
