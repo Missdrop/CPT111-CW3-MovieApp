@@ -24,7 +24,6 @@ public class ViewWatchlist {
     private User user;
     private TableView<Movie> watchlistTable;
     private MovieManager movieManager;
-    private List<Movie> watchlistData;
     private UserManager userManager;
 
 
@@ -32,7 +31,6 @@ public class ViewWatchlist {
         this.user = user;
         this.userManager = userManager;
         this.movieManager = movieManager;
-        this.watchlistData = new ArrayList<>();
     }
 
 
@@ -129,9 +127,8 @@ public class ViewWatchlist {
 
 
     private void updateWatchlistData() {
-        watchlistData.clear();
-
-        for (String movieId : user.getWatchlist().get()) {
+        List<Movie> watchlistData = new ArrayList<>();
+        for (String movieId : user.getWatchlist().getMovieIdSet()) {
             Movie movie = movieManager.getMovie(movieId);
             if (movie != null) {
                 watchlistData.add(movie);

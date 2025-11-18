@@ -55,10 +55,20 @@ public class History {
     }
 
 
-    public Map<String, String> get() {
+    public Map<String, String> getMovieDateMap() {
         return history;
     }
 
+
+    /**
+     * Gets the watch date for a specific movie.
+     *
+     * @param movieId the ID of the movie
+     * @return the watch date as a String, or null if not found
+     */
+    public String getDate(String movieId) {
+        return history.get(movieId);
+    }
 
 
     /**

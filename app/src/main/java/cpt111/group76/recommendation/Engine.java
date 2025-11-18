@@ -186,7 +186,7 @@ public class Engine {
         for (String movieID : user.getHistory().getMovies()) {
             likedMovies.add(movieID);
         }
-        for (String movieID : user.getWatchlist().get()) {
+        for (String movieID : user.getWatchlist().getMovieIdSet()) {
             likedMovies.add(movieID);
         }
 

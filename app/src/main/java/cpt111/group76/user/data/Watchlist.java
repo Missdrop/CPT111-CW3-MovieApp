@@ -42,7 +42,7 @@ public class Watchlist {
     }
 
 
-    public Set<String> get() {
+    public Set<String> getMovieIdSet() {
         return watchlist;
     }
 

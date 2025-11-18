@@ -14,7 +14,6 @@ import javafx.beans.property.SimpleStringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.UserManager;
@@ -25,8 +24,6 @@ public class ViewHistory {
     private User user;
     private MovieManager movieManager;
     private TableView<Movie> historyTable;
-    private List<Movie> historyData;
-    private Map<String, String> movieDateMap;
     private UserManager userManager;
 
 
@@ -34,8 +31,6 @@ public class ViewHistory {
         this.user = user;
         this.movieManager = movieManager;
         this.userManager = userManager;
-        this.historyData = new ArrayList<>();
-        this.movieDateMap = user.getHistory().get();
     }
 
 
@@ -104,12 +99,12 @@ public class ViewHistory {
         ratingColumn.setMinWidth(60);
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
 
-        // Date column - custom cell value factory to get date from movieDateMap
+        // Date column - custom cell value factory to get date from history
         TableColumn<Movie, String> dateColumn = new TableColumn<>("Watched Date");
         dateColumn.setMinWidth(100);
         dateColumn.setCellValueFactory(cellData -> {
             String movieId = cellData.getValue().getId();
-            String date = movieDateMap.get(movieId);
+            String date = user.getHistory().getDate(movieId);
             return new SimpleStringProperty(date != null ? date : "Unknown date");
         });
 
@@ -127,10 +122,8 @@ public class ViewHistory {
 
 
     private void updateHistoryData() {
-        historyData.clear();
-        movieDateMap = user.getHistory().get();
-
-        for (String movieId : movieDateMap.keySet()) {
+        List<Movie> historyData = new ArrayList<>();
+        for (String movieId : user.getHistory().getMovies()) {
             Movie movie = movieManager.getMovie(movieId);
             if (movie != null) {
                 historyData.add(movie);

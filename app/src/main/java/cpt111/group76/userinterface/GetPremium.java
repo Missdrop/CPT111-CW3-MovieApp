@@ -13,13 +13,13 @@ import cpt111.group76.user.*;
 
 public class GetPremium {
     private User user;
-    private Stage primaryStage;
+    private Stage menuStage;
     private UserManager userManager;
 
 
-    public GetPremium(User user, Stage primaryStage, UserManager userManager) {
+    public GetPremium(User user, Stage menuStage, UserManager userManager) {
         this.user = user;
-        this.primaryStage = primaryStage;
+        this.menuStage = menuStage;
         this.userManager = userManager;
     }
 
@@ -61,7 +61,7 @@ public class GetPremium {
             userManager.updateUser(user);
 
             stage.close();
-            primaryStage.close();
+            menuStage.close();
 
             // Create new menu with updated user
             Menu newMenu = new Menu(user, userManager);

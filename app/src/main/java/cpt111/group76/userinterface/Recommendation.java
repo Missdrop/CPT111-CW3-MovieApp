@@ -16,7 +16,6 @@ import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cpt111.group76.storage.MovieManager;
@@ -29,7 +28,6 @@ public class Recommendation {
     private User user;
     private MovieManager movieManager;
     private TableView<Movie> recommendationsTable;
-    private List<Movie> recommendationsData;
     private UserManager userManager;
 
 
@@ -37,7 +35,6 @@ public class Recommendation {
         this.user = user;
         this.movieManager = movieManager;
         this.userManager = userManager;
-        this.recommendationsData = new ArrayList<>();
     }
 
 
@@ -78,15 +75,8 @@ public class Recommendation {
                 Engine engine = new Engine(movieManager, user);
                 List<Movie> recommendations = engine.recommendation(type, count);
 
-                recommendationsData.clear();
-                for (Movie movie : recommendations) {
-                    if (movie != null) {
-                        recommendationsData.add(movie);
-                    }
-                }
-
-                recommendationsTable.setItems(FXCollections.observableArrayList(recommendationsData));
-                statusLabel.setText("Found " + recommendationsData.size() + " recommendations.");
+                recommendationsTable.setItems(FXCollections.observableArrayList(recommendations));
+                statusLabel.setText("Found " + recommendations.size() + " recommendations.");
 
             } catch (NumberFormatException ex) {
                 Alert alert = new Alert(AlertType.ERROR);
