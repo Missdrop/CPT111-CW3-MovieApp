@@ -17,27 +17,30 @@ import cpt111.group76.user.User;
  */
 public class Engine {
     private Map<String, Movie> movieDatabase;
+    private List<Movie> tempMovieList;
     private User user;
 
 
     /**
      * Constructs a recommendation engine with movie database and user data.
      *
-     * @param movieDatabase the database of all available movies
+     * @param movieDatabase a map of all available movies
      * @param user the user for whom recommendations are generated
      */
     public Engine(Map<String, Movie> movieDatabase, User user) {
         this.movieDatabase = movieDatabase;
+        // array list is more convenient for sorting
+        this.tempMovieList = new ArrayList<>(movieDatabase.values());
         this.user = user;
     }
 
 
-    public List<String> recommendation(String type) {
+    public List<Movie> recommendation(String type) {
         return recommendation(type, 5);
     }
 
 
-    public List<String> recommendation(int numRecommendations) {
+    public List<Movie> recommendation(int numRecommendations) {
         return recommendation("rating", numRecommendations);
     }
 
@@ -50,8 +53,8 @@ public class Engine {
      * @param numRecommendations number of recommendations to generate
      * @return a list of recommended movie IDs, ordered by relevance
      */
-    public List<String> recommendation(String type, int numRecommendations) {
-        List<String> recommendation = new ArrayList<>();
+    public List<Movie> recommendation(String type, int numRecommendations) {
+        List<Movie> recommendation = new ArrayList<>();
 
         if (getLikedMovies() == null) {
             type = "rating";
@@ -59,17 +62,17 @@ public class Engine {
 
         switch(type) {
             case "genre":
-                List<String> genreMovies = getFavouriteGenreMovies();
-                recommendation = genreMovies.subList(0, Math.min(numRecommendations, genreMovies.size()));
+                getFavouriteGenreMovies();
+                recommendation = tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
                 break;
             case "year":
-                List<String> yearMovies = getFavouriteYearMovies();
-                recommendation = yearMovies.subList(0, Math.min(numRecommendations, yearMovies.size()));
+                getFavouriteYearMovies();
+                recommendation = tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
                 break;
             case "rating":
             default:
-                List<String> ratedMovies = getTopRatedMovies();
-                recommendation = ratedMovies.subList(0, Math.min(numRecommendations, ratedMovies.size()));
+                getTopRatedMovies();
+                recommendation = tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
                 break;
         }
         return recommendation;
@@ -81,12 +84,8 @@ public class Engine {
      *
      * @return list of movie IDs sorted by rating
      */
-    private List<String> getTopRatedMovies() {
-        List<String> topRatedMovies = new ArrayList<>();
-        movieDatabase.entrySet().stream()
-                .sorted((e1, e2) -> Double.compare(e2.getValue().getRating(), e1.getValue().getRating()))
-                .forEachOrdered(e -> topRatedMovies.add(e.getKey()));
-        return topRatedMovies;
+    private void getTopRatedMovies() {
+        tempMovieList.sort((e1, e2) -> Double.compare(e2.getRating(), e1.getRating()));
     }
 
 
@@ -96,21 +95,17 @@ public class Engine {
      *
      * @return list of movie IDs sorted by year proximity then rating
      */
-    private List<String> getFavouriteYearMovies() {
-        List<String> favouriteYearMovies = new ArrayList<>();
+    private void getFavouriteYearMovies() {
         int favouriteYear = getFavouriteYear();
-        movieDatabase.entrySet().stream()
-                .sorted((e1, e2) -> {
-                    int yearDiff1 = Math.abs(e1.getValue().getYear() - favouriteYear);
-                    int yearDiff2 = Math.abs(e2.getValue().getYear() - favouriteYear);
+        tempMovieList.sort((e1, e2) -> {
+                    int yearDiff1 = Math.abs(e1.getYear() - favouriteYear);
+                    int yearDiff2 = Math.abs(e2.getYear() - favouriteYear);
                     if (yearDiff1 != yearDiff2) {
                         return Integer.compare(yearDiff1, yearDiff2);
                     } else {
-                        return Double.compare(e2.getValue().getRating(), e1.getValue().getRating());
+                        return Double.compare(e2.getRating(), e1.getRating());
                     }
-                })
-                .forEachOrdered(e -> favouriteYearMovies.add(e.getKey()));
-        return favouriteYearMovies;
+                });
     }
 
 
@@ -120,21 +115,17 @@ public class Engine {
      *
      * @return list of movie IDs sorted by genre preference then rating
      */
-    private List<String> getFavouriteGenreMovies() {
-        List<String> favouriteGenreMovies = new ArrayList<>();
+    private void getFavouriteGenreMovies() {
         Map<String, Integer> favouriteGenres = getFavouriteGenreMap();
-        movieDatabase.entrySet().stream()
-                .sorted((e1, e2) -> {
-                    int genreScore1 = favouriteGenres.getOrDefault(e1.getValue().getGenre(), 0);
-                    int genreScore2 = favouriteGenres.getOrDefault(e2.getValue().getGenre(), 0);
+        tempMovieList.sort((e1, e2) -> {
+                    int genreScore1 = favouriteGenres.getOrDefault(e1.getGenre(), 0);
+                    int genreScore2 = favouriteGenres.getOrDefault(e2.getGenre(), 0);
                     if (genreScore1 != genreScore2) {
                         return Integer.compare(genreScore2, genreScore1);
                     } else {
-                        return Double.compare(e2.getValue().getRating(), e1.getValue().getRating());
+                        return Double.compare(e2.getRating(), e1.getRating());
                     }
-                })
-                .forEachOrdered(e -> favouriteGenreMovies.add(e.getKey()));
-        return favouriteGenreMovies;
+                });
     }
 
 
@@ -175,6 +166,7 @@ public class Engine {
         for (String movieID : likedMovies) {
             String genre = movieDatabase.get(movieID).getGenre();
             scoreMap.put(genre, scoreMap.getOrDefault(genre, 0) + 1);
+
         }
 
         return scoreMap;

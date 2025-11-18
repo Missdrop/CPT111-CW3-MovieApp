@@ -76,11 +76,10 @@ public class Recommendation {
                 int count = Integer.parseInt(countField.getText());
 
                 Engine engine = new Engine(movieDatabase, user);
-                List<String> recommendations = engine.recommendation(type, count);
+                List<Movie> recommendations = engine.recommendation(type, count);
 
                 recommendationsData.clear();
-                for (String movieId : recommendations) {
-                    Movie movie = movieDatabase.get(movieId);
+                for (Movie movie : recommendations) {
                     if (movie != null) {
                         recommendationsData.add(movie);
                     }
