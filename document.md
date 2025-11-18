@@ -126,6 +126,7 @@
 - UI类删除多余的私有字段。
 - MovieManager类增加getMovieList方法。
 - Engine类使用ArrayList的sort方法排序。
+- 将List，Set，Map声明为接口类。
 
 ## 具体说明
 
