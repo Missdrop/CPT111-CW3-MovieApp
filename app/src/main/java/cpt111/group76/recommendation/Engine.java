@@ -2,6 +2,7 @@ package cpt111.group76.recommendation;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -149,7 +150,12 @@ public class Engine {
             int year = movieManager.getMovie(movieID).getYear();
             sum += year;
         }
-        return sum / likedMovies.size();
+
+        try {
+            return sum / likedMovies.size();
+        } catch (ArithmeticException e) {
+            return 0;
+        }
     }
 
 
@@ -181,8 +187,9 @@ public class Engine {
      * @return set of movie IDs that user has liked, or null if no interactions
      */
     private static Set<String> getLikedMovies(User user) {
-        Set<String> likedMovies = user.getWatchlist().getMovieIdSet();
-        likedMovies.retainAll(user.getHistory().getMovies());
+        Set<String> likedMovies = new HashSet<>();
+        likedMovies.addAll(user.getWatchlist().getMovieIdSet());
+        likedMovies.addAll(user.getHistory().getMovies());
 
         return likedMovies;
     }
