@@ -7,6 +7,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.user.*;
@@ -53,19 +55,26 @@ public class GetPremium {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-weight: bold;");
 
-        upgradeButton.setOnAction(e -> {
-            // Convert user to Premium
-            user = new PremiumUser(user);
+        upgradeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                // Convert user to Premium
+                user = new PremiumUser(user);
 
-            // Update user in UserManager
-            userManager.updateUser(user);
+                // Update user in UserManager
+                userManager.updateUser(user);
 
-            stage.close();
-            menuStage.close();
+                stage.close();
+                menuStage.close();
 
-            // Create new menu with updated user
-            Menu newMenu = new Menu(user, userManager);
-            newMenu.start(new Stage());
+                // Create new menu with updated user
+                Menu newMenu = new Menu(user, userManager);
+                try {
+                    newMenu.start(new Stage());
+                } catch (Exception ex) {
+                    System.out.println("Error starting menu: " + ex.getMessage());
+                }
+            }
         });
 
         VBox layout = new VBox(20, titleLabel, descriptionLabel, benefitsLabel, benefitsList, upgradeButton,

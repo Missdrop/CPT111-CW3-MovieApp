@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 
 import java.util.List;
 
@@ -67,43 +69,49 @@ public class Recommendation {
         Button addToWatchlistButton = new Button("Add Selected to Watchlist");
         Label statusLabel = new Label();
 
-        recommendButton.setOnAction(e -> {
-            try {
-                String type = typeComboBox.getValue();
-                int count = Integer.parseInt(countField.getText());
+        recommendButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    String type = typeComboBox.getValue();
+                    int count = Integer.parseInt(countField.getText());
 
-                Engine engine = new Engine(movieManager, user);
-                List<Movie> recommendations = engine.recommendation(type, count);
+                    Engine engine = new Engine(movieManager, user);
+                    List<Movie> recommendations = engine.recommendation(type, count);
 
-                recommendationsTable.setItems(FXCollections.observableArrayList(recommendations));
-                statusLabel.setText("Found " + recommendations.size() + " recommendations.");
+                    recommendationsTable.setItems(FXCollections.observableArrayList(recommendations));
+                    statusLabel.setText("Found " + recommendations.size() + " recommendations.");
 
-            } catch (NumberFormatException ex) {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid Input");
-                alert.setContentText("Please enter a valid number for recommendations count.");
-                alert.showAndWait();
+                } catch (NumberFormatException ex) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Invalid Input");
+                    alert.setContentText("Please enter a valid number for recommendations count.");
+                    alert.showAndWait();
+                }
             }
         });
 
-        addToWatchlistButton.setOnAction(e -> {
-            Movie selected = recommendationsTable.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                String movieId = selected.getId();
-                if (user.getWatchlist().contains(movieId)) {
-                    statusLabel.setText("Movie is already in your watchlist.");
-                } else {
-                    boolean success = user.addToWatchlist(movieId);
-                    if (success) {
-                        statusLabel.setText("Successfully added to watchlist!");
-                        userManager.updateUser(user);
+        addToWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Movie selected = recommendationsTable.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String movieId = selected.getId();
+                    if (user.getWatchlist().contains(movieId)) {
+                        statusLabel.setText("Movie is already in your watchlist.");
                     } else {
-                        statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                        boolean success = user.addToWatchlist(movieId);
+                        if (success) {
+                            statusLabel.setText("Successfully added to watchlist!");
+                            userManager.updateUser(user);
+                        } else {
+                            statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                        }
                     }
+                } else {
+                    statusLabel.setText("Please select a recommendation first.");
                 }
-            } else {
-                statusLabel.setText("Please select a recommendation first.");
             }
         });
 

@@ -9,6 +9,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.stage.WindowEvent;
 
 import cpt111.group76.storage.MovieManager;
 
@@ -26,8 +29,11 @@ public class AddNewMovie {
     public void show() {
         Stage stage = new Stage();
         stage.setTitle("Add New Movie");
-        stage.setOnCloseRequest(e -> {
-            browseMovies.refresh();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+                browseMovies.refresh();
+            }
         });
 
         // Create form elements
@@ -57,56 +63,59 @@ public class AddNewMovie {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-weight: bold;");
 
-        addButton.setOnAction(e -> {
-            // Validate and add movie
-            String title = titleField.getText().trim();
-            String genre = genreComboBox.getValue();
-            String yearText = yearField.getText().trim();
-            String ratingText = ratingField.getText().trim();
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                // Validate and add movie
+                String title = titleField.getText().trim();
+                String genre = genreComboBox.getValue();
+                String yearText = yearField.getText().trim();
+                String ratingText = ratingField.getText().trim();
 
-            // Validate inputs
-            if (title.isEmpty() || genre == null || genre.isEmpty() || yearText.isEmpty() || ratingText.isEmpty()) {
-                statusLabel.setText("Please fill in all fields.");
-                statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
-                return;
-            }
-
-            try {
-                int year = Integer.parseInt(yearText);
-                double rating = Double.parseDouble(ratingText);
-
-                // Validate year and rating ranges
-                if (year < 1880 || year > 2030) {
-                    statusLabel.setText("Please enter a valid year (1880-2030).");
+                // Validate inputs
+                if (title.isEmpty() || genre == null || genre.isEmpty() || yearText.isEmpty() || ratingText.isEmpty()) {
+                    statusLabel.setText("Please fill in all fields.");
                     statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
                     return;
                 }
 
-                if (rating < 0.0 || rating > 10.0) {
-                    statusLabel.setText("Please enter a valid rating (0.0-10.0).");
-                    statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
-                    return;
-                }
-
-                // Add movie using MovieManager
                 try {
-                    movieManager.addMovie(title, genre, year, rating);
+                    int year = Integer.parseInt(yearText);
+                    double rating = Double.parseDouble(ratingText);
 
-                    statusLabel.setText("Movie added successfully!");
-                    statusLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+                    // Validate year and rating ranges
+                    if (year < 1880 || year > 2030) {
+                        statusLabel.setText("Please enter a valid year (1880-2030).");
+                        statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                        return;
+                    }
 
-                    // Clear fields after successful addition
-                    titleField.clear();
-                    genreComboBox.setValue(null);
-                    yearField.clear();
-                    ratingField.clear();
-                } catch (IllegalArgumentException ex) {
-                    statusLabel.setText(ex.getMessage());
+                    if (rating < 0.0 || rating > 10.0) {
+                        statusLabel.setText("Please enter a valid rating (0.0-10.0).");
+                        statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                        return;
+                    }
+
+                    // Add movie using MovieManager
+                    try {
+                        movieManager.addMovie(title, genre, year, rating);
+
+                        statusLabel.setText("Movie added successfully!");
+                        statusLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+
+                        // Clear fields after successful addition
+                        titleField.clear();
+                        genreComboBox.setValue(null);
+                        yearField.clear();
+                        ratingField.clear();
+                    } catch (IllegalArgumentException ex) {
+                        statusLabel.setText(ex.getMessage());
+                        statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                    }
+                } catch (NumberFormatException ex) {
+                    statusLabel.setText("Please enter valid numbers for year and rating.");
                     statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
                 }
-            } catch (NumberFormatException ex) {
-                statusLabel.setText("Please enter valid numbers for year and rating.");
-                statusLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
             }
         });
 
