@@ -35,7 +35,7 @@ public class Menu extends Application {
             try {
                 movieManager.save();
             } catch (Exception ex) {
-                System.err.println("Error saving movie database: " + ex.getMessage());
+                System.out.println("Error saving movie database: " + ex.getMessage());
             }
             userManager.updateUser(user);
         });

@@ -213,9 +213,9 @@ public class UserManager extends FileManager {
                     userMap.put(user.getUsername(), user);
                 }
             } catch (IllegalArgumentException e) {
-                System.err.println("Warning: Skipping invalid user data: " + e.getMessage());
+                System.out.println("Warning: Skipping invalid user data: " + e.getMessage());
                 if (userData != null && userData.length > 0) {
-                    System.err.println("Data: " + String.join(",", userData));
+                    System.out.println("Data: " + String.join(",", userData));
                 }
             }
         }

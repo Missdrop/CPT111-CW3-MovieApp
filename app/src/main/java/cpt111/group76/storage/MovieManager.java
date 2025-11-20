@@ -185,9 +185,9 @@ public class MovieManager extends FileManager {
                     movieMap.put(movie.getId(), movie);
                 }
             } catch (IllegalArgumentException e) {
-                System.err.println("Warning: Skipping invalid movie data: " + e.getMessage());
+                System.out.println("Warning: Skipping invalid movie data: " + e.getMessage());
                 if (movieData != null && movieData.length > 0) {
-                    System.err.println("Data: " + String.join(",", movieData));
+                    System.out.println("Data: " + String.join(",", movieData));
                 }
             }
         }
