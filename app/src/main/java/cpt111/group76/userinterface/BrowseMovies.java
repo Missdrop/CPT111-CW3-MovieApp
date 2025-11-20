@@ -14,7 +14,6 @@ import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import cpt111.group76.storage.UserManager;
@@ -93,19 +92,12 @@ public class BrowseMovies {
             if (user.canAddMovies()) {
             addNewMovieButton = new Button("Add New Movie");
             addNewMovieButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-                addNewMovieButton.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
+            addNewMovieButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
                     public void handle(ActionEvent e) {
                         new AddNewMovie(movieManager, BrowseMovies.this).show();
-                        // Refresh the movie table when the add movie window is closed
-                        stage.setOnHidden(new EventHandler<WindowEvent>() {
-                            @Override
-                            public void handle(WindowEvent ev) {
-                                updateMovieData();
-                            }
-                        });
                     }
-                });
+            });
         }
 
         Label statusLabel = new Label();
