@@ -3,9 +3,7 @@ package cpt111.group76.recommendation;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
-import java.util.HashSet;
 
 import cpt111.group76.movie.Movie;
 import cpt111.group76.storage.MovieManager;
@@ -55,8 +53,6 @@ public class Engine {
      * @return a list of recommended movie IDs, ordered by relevance
      */
     public List<Movie> recommendation(String type, int numRecommendations) {
-        List<Movie> recommendation = new ArrayList<>();
-
         if (likedMovies == null) {
             type = "rating";
         }
@@ -64,19 +60,15 @@ public class Engine {
         switch(type) {
             case "genre":
                 getFavouriteGenreMovies();
-                recommendation = tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
-                break;
+                return tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
             case "year":
                 getFavouriteYearMovies();
-                recommendation = tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
-                break;
+                return tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
             case "rating":
             default:
                 getTopRatedMovies();
-                recommendation = tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
-                break;
+                return tempMovieList.subList(0, Math.min(numRecommendations, tempMovieList.size()));
         }
-        return recommendation;
     }
 
 
@@ -189,17 +181,8 @@ public class Engine {
      * @return set of movie IDs that user has liked, or null if no interactions
      */
     private static Set<String> getLikedMovies(User user) {
-        if (user.getHistory().length() + user.getWatchlist().length() == 0) {
-            return null;
-        }
-
-        Set<String> likedMovies = new HashSet<>();
-        for (String movieID : user.getHistory().getMovies()) {
-            likedMovies.add(movieID);
-        }
-        for (String movieID : user.getWatchlist().getMovieIdSet()) {
-            likedMovies.add(movieID);
-        }
+        Set<String> likedMovies = user.getWatchlist().getMovieIdSet();
+        likedMovies.retainAll(user.getHistory().getMovies());
 
         return likedMovies;
     }
