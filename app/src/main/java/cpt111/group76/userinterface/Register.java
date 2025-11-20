@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.stage.WindowEvent;
 
 import cpt111.group76.user.User;
 import cpt111.group76.user.BasicUser;
@@ -30,8 +33,11 @@ public class Register {
         Stage primaryStage = new Stage();
 
         // When this login stage is closed, show the main app stage again
-        primaryStage.setOnCloseRequest(e ->{
-            appStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+                appStage.show();
+            }
         });
 
         TextField usernameField = new TextField();
@@ -48,48 +54,66 @@ public class Register {
         statusLabel.setStyle("-fx-text-fill: red;");
         statusLabel.setWrapText(true);
 
-        registerButton.setOnAction(e -> {
-            String username = usernameField.getText().trim();
-            String password = passwordField.getText();
-            String repeatPassword = repeatPasswordField.getText();
-            
-            // Clear previous status
-            statusLabel.setText("");
-            
-            // Validate inputs
-            if (username.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
-                statusLabel.setText("Please fill in all fields.");
-                return;
+        registerButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String username = usernameField.getText().trim();
+                String password = passwordField.getText();
+                String repeatPassword = repeatPasswordField.getText();
+
+                // Clear previous status
+                statusLabel.setText("");
+
+                // Validate inputs
+                if (username.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
+                    statusLabel.setText("Please fill in all fields.");
+                    return;
+                }
+
+                // Check if passwords match
+                if (!password.equals(repeatPassword)) {
+                    statusLabel.setText("Passwords do not match.");
+                    return;
+                }
+
+                // Try to add user
+                try {
+                    userManager.addUser(username, password);
+                } catch (UsernameValidationException ex) {
+                    statusLabel.setText(ex.getMessage());
+                    return;
+                } catch (PasswordValidationException ex) {
+                    statusLabel.setText(ex.getMessage());
+                    return;
+                }
+
+                User user = new BasicUser(userManager.getUser(username));
+
+                openMenu(user, userManager);
+                appStage.close();
+                primaryStage.close();
             }
-
-            // Check if passwords match
-            if (!password.equals(repeatPassword)) {
-                statusLabel.setText("Passwords do not match.");
-                return;
-            }
-
-            // Try to add user
-            try {
-                userManager.addUser(username, password);
-            } catch (UsernameValidationException ex) {
-                statusLabel.setText(ex.getMessage());
-                return;
-            } catch (PasswordValidationException ex) {
-                statusLabel.setText(ex.getMessage());
-                return;
-            }
-
-            User user = new BasicUser(userManager.getUser(username));
-
-            openMenu(user, userManager);
-            appStage.close();
-            primaryStage.close();
         });
 
         // Add Enter key support
-        usernameField.setOnAction(e -> registerButton.fire());
-        passwordField.setOnAction(e -> registerButton.fire());
-        repeatPasswordField.setOnAction(e -> registerButton.fire());
+        usernameField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                registerButton.fire();
+            }
+        });
+        passwordField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                registerButton.fire();
+            }
+        });
+        repeatPasswordField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                registerButton.fire();
+            }
+        });
 
         VBox vbox = new VBox(10, usernameField, passwordField, repeatPasswordField, registerButton, statusLabel);
         vbox.setPadding(new Insets(20));
