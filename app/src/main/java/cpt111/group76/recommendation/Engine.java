@@ -82,51 +82,62 @@ public class Engine {
 
     /**
      * Gets top rated movies from the database, sorted by rating descending.
-     *
-     * @return list of movie IDs sorted by rating
      */
     private void getTopRatedMovies() {
-        tempMovieList.sort((e1, e2) -> Double.compare(e2.getRating(), e1.getRating()));
+        Sort.sort(tempMovieList, new Sort.Comparator() {
+            @Override
+            public int compare(Movie a, Movie b) {
+                // higher rating should come first
+                return Double.compare(b.getRating(), a.getRating());
+            }
+        });
     }
 
 
     /**
      * Gets movies sorted by proximity to user's favorite release year.
      * Favorite year is calculated as average year of watched movies.
-     *
-     * @return list of movie IDs sorted by year proximity then rating
      */
     private void getFavouriteYearMovies() {
         int favouriteYear = getFavouriteYear();
-        tempMovieList.sort((e1, e2) -> {
-                    int yearDiff1 = Math.abs(e1.getYear() - favouriteYear);
-                    int yearDiff2 = Math.abs(e2.getYear() - favouriteYear);
-                    if (yearDiff1 != yearDiff2) {
-                        return Integer.compare(yearDiff1, yearDiff2);
-                    } else {
-                        return Double.compare(e2.getRating(), e1.getRating());
-                    }
-                });
+        final int fav = favouriteYear;
+        Sort.sort(tempMovieList, new Sort.Comparator() {
+            @Override
+            public int compare(Movie a, Movie b) {
+                int diffA = Math.abs(a.getYear() - fav);
+                int diffB = Math.abs(b.getYear() - fav);
+                if (diffA != diffB) {
+                    return Integer.compare(diffA, diffB);
+                } else {
+                    // higher rating first
+                    return Double.compare(b.getRating(), a.getRating());
+                }
+            }
+        });
     }
 
 
     /**
      * Gets movies sorted by user's genre preferences.
      * Genre preference is calculated based on the count in watchlist and history.
-     *
-     * @return list of movie IDs sorted by genre preference then rating
      */
     private void getFavouriteGenreMovies() {
         Map<String, Integer> favouriteGenres = getFavouriteGenreMap();
-        tempMovieList.sort((e1, e2) -> {
-                    int genreScore1 = favouriteGenres.getOrDefault(e1.getGenre(), 0);
-                    int genreScore2 = favouriteGenres.getOrDefault(e2.getGenre(), 0);
-                    if (genreScore1 != genreScore2) {
-                        return Integer.compare(genreScore2, genreScore1);
-                    } else {
-                        return Double.compare(e2.getRating(), e1.getRating());
-                    }
-                });
+        final Map<String, Integer> favMap = favouriteGenres;
+        Sort.sort(tempMovieList, new Sort.Comparator() {
+            @Override
+            public int compare(Movie a, Movie b) {
+                int scoreA = favMap.getOrDefault(a.getGenre(), 0);
+                int scoreB = favMap.getOrDefault(b.getGenre(), 0);
+                if (scoreA != scoreB) {
+                    // higher genre score first
+                    return Integer.compare(scoreB, scoreA);
+                } else {
+                    // higher rating first
+                    return Double.compare(b.getRating(), a.getRating());
+                }
+            }
+        });
     }
 
 
