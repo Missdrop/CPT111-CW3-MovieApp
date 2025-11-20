@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.stage.WindowEvent;
 
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
@@ -27,8 +30,11 @@ public class Login {
         Stage primaryStage = new Stage();
 
         // When this login stage is closed, show the main app stage again
-        primaryStage.setOnCloseRequest(e ->{
-            appStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+                appStage.show();
+            }
         });
 
         TextField usernameField = new TextField();
@@ -42,31 +48,44 @@ public class Login {
         statusLabel.setStyle("-fx-text-fill: red;");
         statusLabel.setWrapText(true);
 
-        loginButton.setOnAction(e -> {
-            String username = usernameField.getText().trim();
-            String password = passwordField.getText();
+        loginButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String username = usernameField.getText().trim();
+                String password = passwordField.getText();
 
-            if (username.isEmpty() || password.isEmpty()) {
-                statusLabel.setText("Please enter both username and password.");
-                return;
-            }
+                if (username.isEmpty() || password.isEmpty()) {
+                    statusLabel.setText("Please enter both username and password.");
+                    return;
+                }
 
-            if (userManager.authenticate(username, password)) {
-                User user = userManager.getUser(username);
+                if (userManager.authenticate(username, password)) {
+                    User user = userManager.getUser(username);
 
-                openMenu(user, userManager);
-                appStage.close();
-                primaryStage.close();
+                    openMenu(user, userManager);
+                    appStage.close();
+                    primaryStage.close();
 
-            } else {
-                statusLabel.setText("Invalid username or password.");
-                statusLabel.setStyle("-fx-text-fill: red;");
+                } else {
+                    statusLabel.setText("Invalid username or password.");
+                    statusLabel.setStyle("-fx-text-fill: red;");
+                }
             }
         });
 
         // Add Enter key support
-        usernameField.setOnAction(e -> loginButton.fire());
-        passwordField.setOnAction(e -> loginButton.fire());
+        usernameField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                loginButton.fire();
+            }
+        });
+        passwordField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                loginButton.fire();
+            }
+        });
 
         VBox vbox = new VBox(10, usernameField, passwordField, loginButton, statusLabel);
         vbox.setPadding(new Insets(20));

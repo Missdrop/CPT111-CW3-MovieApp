@@ -7,6 +7,9 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.stage.WindowEvent;
 
 import cpt111.group76.user.User;
 import cpt111.group76.storage.UserManager;
@@ -29,8 +32,11 @@ public class ChangePassword{
     public void show(){
         Stage primaryStage = new Stage();
         // When this change password stage is closed, show the menu stage again
-        primaryStage.setOnCloseRequest(e -> {
-            menuStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+                menuStage.show();
+            }
         });
 
         PasswordField passwordField = new PasswordField();
@@ -46,41 +52,48 @@ public class ChangePassword{
         Label statusLabel = new Label();
         statusLabel.setWrapText(true);
 
-        changePasswordButton.setOnAction(e -> {
-            String password = passwordField.getText();
-            String newPassword = newPasswordField.getText();
-            String repeatNewPassword = repeatNewPasswordField.getText();
+        changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String password = passwordField.getText();
+                String newPassword = newPasswordField.getText();
+                String repeatNewPassword = repeatNewPasswordField.getText();
 
-            if (!user.verifyPassword(password)) {
-                statusLabel.setText("Current password is incorrect.");
-                statusLabel.setStyle("-fx-text-fill: red;");
-                return;
+                if (!user.verifyPassword(password)) {
+                    statusLabel.setText("Current password is incorrect.");
+                    statusLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+
+                if (password.equals(newPassword)) {
+                    statusLabel.setText("New password must be different from current password.");
+                    statusLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+
+                if (!newPassword.equals(repeatNewPassword)) {
+                    statusLabel.setText("New passwords do not match.");
+                    statusLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+
+                try {
+                    user.setPassword(newPassword);
+                } catch (PasswordValidationException ex) {
+                    statusLabel.setText(ex.getMessage());
+                    statusLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+
+                userManager.updateUser(user);
+                menuStage.close();
+                primaryStage.close();
+                try {
+                    new App().start(new Stage());
+                } catch (Exception ex) {
+                    System.out.println("Error starting app: " + ex.getMessage());
+                }
             }
-
-            if (password.equals(newPassword)) {
-                statusLabel.setText("New password must be different from current password.");
-                statusLabel.setStyle("-fx-text-fill: red;");
-                return;
-            }
-
-            if (!newPassword.equals(repeatNewPassword)) {
-                statusLabel.setText("New passwords do not match.");
-                statusLabel.setStyle("-fx-text-fill: red;");
-                return;
-            }
-
-            try {
-                user.setPassword(newPassword);
-            } catch (PasswordValidationException ex) {
-                statusLabel.setText(ex.getMessage());
-                statusLabel.setStyle("-fx-text-fill: red;");
-                return;
-            }
-
-            userManager.updateUser(user);
-            menuStage.close();
-            primaryStage.close();
-            new App().start(new Stage());
         });
 
         VBox vbox = new VBox(10, passwordField, newPasswordField, repeatNewPasswordField, changePasswordButton, statusLabel);
