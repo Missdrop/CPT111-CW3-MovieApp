@@ -12,6 +12,7 @@
     - [V1.2](#v12)
     - [V1.3](#v13)
     - [V1.4](#v14)
+    - [V1.5](#v15)
   - [具体说明](#具体说明)
     - [总览](#总览)
     - [异常包](#异常包)
@@ -30,8 +31,9 @@
       - [FileManager](#filemanager)
       - [MovieManager](#moviemanager)
       - [UserManager](#usermanager)
-    - [推荐引擎包](#推荐引擎包)
+    - [推荐包](#推荐包)
       - [Engine](#engine)
+      - [Sort](#sort)
     - [主类](#主类)
       - [App](#app)
     - [GUI包](#gui包)
@@ -60,6 +62,7 @@
 │   └── Movie.java
 │
 ├── recommendation          - ⑤ 推荐引擎
+│   ├── Sort.java
 │   └── Engine.java
 │
 ├── storage                 - ④ 数据存储
@@ -129,6 +132,11 @@
 - Engine类存储tempMovieList，不重复新建列表。
 - History类新增getDate方法。
 - 将List，Set，Map声明为接口类。
+
+### V1.5
+- 按课程要求删除GUI中所有Lambda表达式，改为用匿名类实现。
+- 删除推荐引擎中List的sort方法，调用新增类Sort类，再传入内部匿名类排序。
+- 推荐包新增Sort类。
 
 ## 具体说明
 
@@ -335,9 +343,10 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
 
 ---
 
-### 推荐引擎包
+### 推荐包
 
-仅有一个类Engine，实现了一个根据用户数据，按多种方式的推荐器。推荐引擎的算法非常简单，下面会说明。
+包含一个Engine，实现了一个根据用户数据，按多种方式的推荐器。推荐引擎的算法非常简单，下面会说明。
+V1.5更新：增加一个Sort类，实现了Quicksort算法，供Engine调用。
 
 #### Engine
 
@@ -355,6 +364,10 @@ UserManager基本上和MovieManager差不多，所以很多东西不再讲了。
   - `void<String> getFavouriteGenreMovies()`：同上，但是排序方法变为查询`FavouriteGenreMap`，并比较两个电影流派哪个值更高。实则就是查看哪种电影用户看的更多。
   - `void<String> getTopRatedMovies()`：按照Rating排序，并不需要调用别的方法。
     > 值得一提的是，所有排序都是用`movieDatabase.entrySet().stream().sorted(<一个用于比较两个元素的Lambda函数>)`的形式。首先将哈希表转化为一个包含所有entry的Set，然后把这个集合转化为流，再调用流的排序方法，按自定义排序规则排序。
+
+#### Sort
+
+本类实现了快速排序算法，并且有一个内部抽象类Comparator，用于按不同的方式排序。
 
 ---
 

@@ -5,8 +5,8 @@ import java.util.List;
 import cpt111.group76.movie.Movie;
 
 /**
- * General-purpose quicksort utility that accepts a custom comparator interface
- * defined inside this class to avoid using java.util.Comparator.
+ * A Quick sort realization to sort a movie list,
+ * accepts a custom comparator abstract class
  */
 public class Sort {
     public static abstract class Comparator {
