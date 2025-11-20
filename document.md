@@ -363,11 +363,10 @@ V1.5更新：增加一个Sort类，实现了Quicksort算法，供Engine调用。
   - `void<String> getFavouriteYearMovies()`：将tempMovieList按照以下规则排序：绝对值（电影年龄-用户最喜欢年份）。这可以让越接近用户喜欢的年份的电影排在越前面。
   - `void<String> getFavouriteGenreMovies()`：同上，但是排序方法变为查询`FavouriteGenreMap`，并比较两个电影流派哪个值更高。实则就是查看哪种电影用户看的更多。
   - `void<String> getTopRatedMovies()`：按照Rating排序，并不需要调用别的方法。
-    > 值得一提的是，所有排序都是用`movieDatabase.entrySet().stream().sorted(<一个用于比较两个元素的Lambda函数>)`的形式。首先将哈希表转化为一个包含所有entry的Set，然后把这个集合转化为流，再调用流的排序方法，按自定义排序规则排序。
 
 #### Sort
 
-本类实现了快速排序算法，并且有一个内部抽象类Comparator，用于按不同的方式排序。
+本类实现了快速排序算法，供Engine的get方法调用。并且有一个内部抽象类Comparator，用于按不同的方式排序。
 
 ---
 
