@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,33 +50,39 @@ public class ViewWatchlist {
         Button markWatchedButton = new Button("Mark Selected as Watched");
         Label statusLabel = new Label();
 
-        removeButton.setOnAction(e -> {
-            Movie selected = watchlistTable.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                String movieId = selected.getId();
-                boolean success = user.removeFromWatchlist(movieId);
-                if (success) {
-                    statusLabel.setText("Successfully removed from watchlist!");
-                    userManager.updateUser(user);
-                    updateWatchlistData();
+        removeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Movie selected = watchlistTable.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String movieId = selected.getId();
+                    boolean success = user.removeFromWatchlist(movieId);
+                    if (success) {
+                        statusLabel.setText("Successfully removed from watchlist!");
+                        userManager.updateUser(user);
+                        updateWatchlistData();
+                    } else {
+                        statusLabel.setText("Failed to remove from watchlist.");
+                    }
                 } else {
-                    statusLabel.setText("Failed to remove from watchlist.");
+                    statusLabel.setText("Please select a movie first.");
                 }
-            } else {
-                statusLabel.setText("Please select a movie first.");
             }
         });
 
-        markWatchedButton.setOnAction(e -> {
-            Movie selected = watchlistTable.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                String movieId = selected.getId();
-                user.addToHistory(movieId);
-                statusLabel.setText("Successfully marked as watched and removed from watchlist!");
-                userManager.updateUser(user);
-                updateWatchlistData();
-            } else {
-                statusLabel.setText("Please select a movie first.");
+        markWatchedButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Movie selected = watchlistTable.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String movieId = selected.getId();
+                    user.addToHistory(movieId);
+                    statusLabel.setText("Successfully marked as watched and removed from watchlist!");
+                    userManager.updateUser(user);
+                    updateWatchlistData();
+                } else {
+                    statusLabel.setText("Please select a movie first.");
+                }
             }
         });
 

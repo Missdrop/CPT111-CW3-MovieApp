@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.util.Callback;
+import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,20 +51,23 @@ public class ViewHistory {
         Button removeButton = new Button("Remove Selected from History");
         Label statusLabel = new Label();
 
-        removeButton.setOnAction(e -> {
-            Movie selected = historyTable.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                String movieId = selected.getId();
-                boolean success = user.removeFromHistory(movieId);
-                if (success) {
-                    statusLabel.setText("Successfully removed from history!");
-                    userManager.updateUser(user);
-                    updateHistoryData();
+        removeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Movie selected = historyTable.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String movieId = selected.getId();
+                    boolean success = user.removeFromHistory(movieId);
+                    if (success) {
+                        statusLabel.setText("Successfully removed from history!");
+                        userManager.updateUser(user);
+                        updateHistoryData();
+                    } else {
+                        statusLabel.setText("Failed to remove from history.");
+                    }
                 } else {
-                    statusLabel.setText("Failed to remove from history.");
+                    statusLabel.setText("Please select a movie first.");
                 }
-            } else {
-                statusLabel.setText("Please select a movie first.");
             }
         });
 
@@ -102,10 +109,13 @@ public class ViewHistory {
         // Date column - custom cell value factory to get date from history
         TableColumn<Movie, String> dateColumn = new TableColumn<>("Watched Date");
         dateColumn.setMinWidth(100);
-        dateColumn.setCellValueFactory(cellData -> {
-            String movieId = cellData.getValue().getId();
-            String date = user.getHistory().getDate(movieId);
-            return new SimpleStringProperty(date != null ? date : "Unknown date");
+        dateColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Movie, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Movie, String> cellData) {
+                String movieId = cellData.getValue().getId();
+                String date = user.getHistory().getDate(movieId);
+                return new SimpleStringProperty(date != null ? date : "Unknown date");
+            }
         });
 
         // Add columns individually to avoid type safety warning
