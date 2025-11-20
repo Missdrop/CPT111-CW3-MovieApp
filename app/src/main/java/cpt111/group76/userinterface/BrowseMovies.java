@@ -12,6 +12,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 import cpt111.group76.storage.UserManager;
 import cpt111.group76.storage.MovieManager;
@@ -44,30 +48,33 @@ public class BrowseMovies {
         updateMovieData();
 
         // Set row factory for color highlighting
-        movieTable.setRowFactory(tv -> new TableRow<Movie>() {
+        movieTable.setRowFactory(new Callback<TableView<Movie>, TableRow<Movie>>() {
             @Override
-            protected void updateItem(Movie movie, boolean empty) {
-                super.updateItem(movie, empty);
+            public TableRow<Movie> call(TableView<Movie> tv) {
+                return new TableRow<Movie>() {
+                    @Override
+                    protected void updateItem(Movie movie, boolean empty) {
+                        super.updateItem(movie, empty);
 
-                if (empty || movie == null) {
-                    setStyle("");
-                } else {
-                    String movieId = movie.getId();
-                    boolean inWatchlist = user.getWatchlist().contains(movieId);
-                    boolean inHistory = user.getHistory().contains(movieId);
+                        if (empty || movie == null) {
+                            setStyle("");
+                        } else {
+                            String movieId = movie.getId();
+                            boolean inWatchlist = user.getWatchlist().contains(movieId);
+                            boolean inHistory = user.getHistory().contains(movieId);
 
-                    if (inHistory) {
-                        // Blue color for movies in history (same as markWatched
-                        // button)
-                        setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-                    } else if (inWatchlist) {
-                        // Green color for movies in watchlist (same as
-                        // addToWatchlist button)
-                        setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white;");
-                    } else {
-                        setStyle("");
+                            if (inHistory) {
+                                // Blue color for movies in history (same as markWatched button)
+                                setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+                            } else if (inWatchlist) {
+                                // Green color for movies in watchlist (same as addToWatchlist button)
+                                setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white;");
+                            } else {
+                                setStyle("");
+                            }
+                        }
                     }
-                }
+                };
             }
         });
 
@@ -83,75 +90,92 @@ public class BrowseMovies {
 
         // Add New Movie button - only for Premium Users
         Button addNewMovieButton = null;
-        if (user.canAddMovies()) {
+            if (user.canAddMovies()) {
             addNewMovieButton = new Button("Add New Movie");
             addNewMovieButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            addNewMovieButton.setOnAction(e -> {
-                new AddNewMovie(movieManager, this).show();
-                // Refresh the movie table when the add movie window is closed
-                stage.setOnHidden(ev -> updateMovieData());
-            });
+                addNewMovieButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        new AddNewMovie(movieManager, BrowseMovies.this).show();
+                        // Refresh the movie table when the add movie window is closed
+                        stage.setOnHidden(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent ev) {
+                                updateMovieData();
+                            }
+                        });
+                    }
+                });
         }
 
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-weight: bold;");
 
-        addToWatchlistButton.setOnAction(e -> {
-            Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
-            if (selectedMovie != null) {
-                String movieId = selectedMovie.getId();
-                if (user.getWatchlist().contains(movieId)) {
-                    statusLabel.setText("Movie is already in your watchlist.");
-                } else {
-                    boolean success = user.addToWatchlist(movieId);
-                    if (success) {
-                        statusLabel.setText("Successfully added to watchlist!");
-                        new UserManager().updateUser(user);
-                        movieTable.refresh(); // Refresh to update row colors
+        addToWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
+                if (selectedMovie != null) {
+                    String movieId = selectedMovie.getId();
+                    if (user.getWatchlist().contains(movieId)) {
+                        statusLabel.setText("Movie is already in your watchlist.");
                     } else {
-                        statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                        boolean success = user.addToWatchlist(movieId);
+                        if (success) {
+                            statusLabel.setText("Successfully added to watchlist!");
+                            new UserManager().updateUser(user);
+                            movieTable.refresh(); // Refresh to update row colors
+                        } else {
+                            statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                        }
                     }
+                } else {
+                    statusLabel.setText("Please select a movie first.");
                 }
-            } else {
-                statusLabel.setText("Please select a movie first.");
             }
         });
 
-        markWatchedButton.setOnAction(e -> {
-            Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
-            if (selectedMovie != null) {
-                String movieId = selectedMovie.getId();
-                if (user.getHistory().contains(movieId)) {
-                    statusLabel.setText("Movie is already in your watch history.");
+        markWatchedButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
+                if (selectedMovie != null) {
+                    String movieId = selectedMovie.getId();
+                    if (user.getHistory().contains(movieId)) {
+                        statusLabel.setText("Movie is already in your watch history.");
+                    } else {
+                        user.addToHistory(movieId);
+                        statusLabel.setText("Successfully marked as watched!");
+                        new UserManager().updateUser(user);
+                        movieTable.refresh(); // Refresh to update row colors
+                    }
                 } else {
-                    user.addToHistory(movieId);
-                    statusLabel.setText("Successfully marked as watched!");
-                    new UserManager().updateUser(user);
-                    movieTable.refresh(); // Refresh to update row colors
+                    statusLabel.setText("Please select a movie first.");
                 }
-            } else {
-                statusLabel.setText("Please select a movie first.");
             }
         });
 
-        removeFromWatchlistButton.setOnAction(e -> {
-            Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
-            if (selectedMovie != null) {
-                String movieId = selectedMovie.getId();
-                if (!user.getWatchlist().contains(movieId)) {
-                    statusLabel.setText("Movie is not in your watchlist.");
-                } else {
-                    boolean success = user.removeFromWatchlist(movieId);
-                    if (success) {
-                        statusLabel.setText("Successfully removed from watchlist!");
-                        new UserManager().updateUser(user);
-                        movieTable.refresh(); // Refresh to update row colors
+        removeFromWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
+                if (selectedMovie != null) {
+                    String movieId = selectedMovie.getId();
+                    if (!user.getWatchlist().contains(movieId)) {
+                        statusLabel.setText("Movie is not in your watchlist.");
                     } else {
-                        statusLabel.setText("Failed to remove from watchlist.");
+                        boolean success = user.removeFromWatchlist(movieId);
+                        if (success) {
+                            statusLabel.setText("Successfully removed from watchlist!");
+                            new UserManager().updateUser(user);
+                            movieTable.refresh(); // Refresh to update row colors
+                        } else {
+                            statusLabel.setText("Failed to remove from watchlist.");
+                        }
                     }
+                } else {
+                    statusLabel.setText("Please select a movie first.");
                 }
-            } else {
-                statusLabel.setText("Please select a movie first.");
             }
         });
 
