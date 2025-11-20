@@ -12,6 +12,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Priority;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.WindowEvent;
 
 import cpt111.group76.App;
 import cpt111.group76.storage.*;
@@ -31,13 +35,16 @@ public class Menu extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setOnCloseRequest(e -> {
-            try {
-                movieManager.save();
-            } catch (Exception ex) {
-                System.out.println("Error saving movie database: " + ex.getMessage());
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+                try {
+                    movieManager.save();
+                } catch (Exception ex) {
+                    System.out.println("Error saving movie database: " + ex.getMessage());
+                }
+                userManager.updateUser(user);
             }
-            userManager.updateUser(user);
         });
 
         // Create main title
@@ -56,17 +63,27 @@ public class Menu extends Application {
         // Action buttons
         Button logoutButton = new Button("Logout");
         logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-        logoutButton.setOnAction(e -> {
-            userManager.updateUser(user);
-            new App().start(new Stage());
-            primaryStage.close();
+        logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                userManager.updateUser(user);
+                try {
+                    new App().start(new Stage());
+                } catch (Exception ex) {
+                    System.out.println("Error starting app: " + ex.getMessage());
+                }
+                primaryStage.close();
+            }
         });
 
         Button changePasswordButton = new Button("Change Password");
         changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-        changePasswordButton.setOnAction(e -> {
-            new ChangePassword(user, userManager, primaryStage).show();
-            primaryStage.hide();
+        changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                new ChangePassword(user, userManager, primaryStage).show();
+                primaryStage.hide();
+            }
         });
 
         // Get Premium button - only show for Basic Users
@@ -74,8 +91,11 @@ public class Menu extends Application {
         if (user.getUserType().equals("Basic")) {
             getPremiumButton = new Button("Get Premium");
             getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            getPremiumButton.setOnAction(e -> {
-                new GetPremium(user, primaryStage, userManager).show();
+            getPremiumButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    new GetPremium(user, primaryStage, userManager).show();
+                }
             });
         }
 
@@ -100,10 +120,30 @@ public class Menu extends Application {
         Button viewHistoryButton = createMenuButton("View History", "#9b59b6");
         Button getRecommendationsButton = createMenuButton("Recommendation", "#e67e22");
 
-        browseMoviesButton.setOnAction(e -> new BrowseMovies(user, movieManager).show());
-        viewWatchlistButton.setOnAction(e -> new ViewWatchlist(user, movieManager, userManager).show());
-        viewHistoryButton.setOnAction(e -> new ViewHistory(user, movieManager, userManager).show());
-        getRecommendationsButton.setOnAction(e -> new Recommendation(user, movieManager, userManager).show());
+        browseMoviesButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                new BrowseMovies(user, movieManager).show();
+            }
+        });
+        viewWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                new ViewWatchlist(user, movieManager, userManager).show();
+            }
+        });
+        viewHistoryButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                new ViewHistory(user, movieManager, userManager).show();
+            }
+        });
+        getRecommendationsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                new Recommendation(user, movieManager, userManager).show();
+            }
+        });
 
         // Create a grid layout for buttons
         HBox firstButtonRow = new HBox(20, browseMoviesButton, viewWatchlistButton);
@@ -142,11 +182,21 @@ public class Menu extends Application {
         button.setStyle("-fx-background-color: " + color
                 + "; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; "
                 + "-fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(" + color
-                + ", 20%); -fx-text-fill: white; "
-                + "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; "
-                + "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;"));
+        button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                button.setStyle("-fx-background-color: derive(" + color
+                        + ", 20%); -fx-text-fill: white; "
+                        + "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
+            }
+        });
+        button.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; "
+                        + "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
+            }
+        });
         return button;
     }
 }
