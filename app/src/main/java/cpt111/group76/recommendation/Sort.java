@@ -14,12 +14,12 @@ public class Sort {
         /**
          * Compare two movies. Return negative if a should come before b,
          * zero if equal, positive if a should come after b.
+         * This method must be overridden by subclasses.
          *
-         * Default implementation returns 0 — callers should override this
-         * method when creating a Comparator instance.
+         * @throws UnsupportedOperationException if not implemented
          */
-        public int compare(Movie a, Movie b) {
-            return 0;
+        public int compare(Movie a, Movie b) throws UnsupportedOperationException {
+            throw new UnsupportedOperationException("Comparator.compare() not implemented");
         }
     }
 

@@ -9,7 +9,7 @@ import cpt111.group76.exception.*;
  * Represents a user in the movie recommendation system.
  * Base class for all user types with common functionality.
  */
-public abstract class User {
+public class User {
     private String username;
     private String passwordHash;
     private Watchlist watchlist;
@@ -57,28 +57,36 @@ public abstract class User {
      * Gets the maximum size of the watchlist for this user type.
      * @return
      */
-    public abstract int getMaxWatchlistSize();
+    public int getMaxWatchlistSize() {
+        throw new UnsupportedOperationException("Subclass must override getMaxWatchlistSize()");
+    }
 
 
     /**
      * Indicates if the user can add movies to their watchlist.
      * @return true if the user can add movies, false otherwise
      */
-    public abstract boolean canAddMovies();
+    public boolean canAddMovies() {
+        throw new UnsupportedOperationException("Subclass must override canAddMovies()");
+    }
 
 
     /**
      * Gets the available recommendation types for this user type.
      * @return a list of recommendation type names
      */
-    public abstract List<String> getAvailableRecommendationTypes();
+    public List<String> getAvailableRecommendationTypes() {
+        throw new UnsupportedOperationException("Subclass must override getAvailableRecommendationTypes()");
+    }
 
 
     /**
      * Gets the user type as a string.
      * @return the user type
      */
-    public abstract String getUserType();
+    public String getUserType() {
+        throw new UnsupportedOperationException("Subclass must override getUserType()");
+    }
 
 
     /**
