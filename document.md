@@ -135,11 +135,13 @@
 - 将List，Set，Map声明为接口类。
 
 ### V1.5
+
 - 按课程要求删除GUI中所有Lambda表达式，改为用匿名类实现。
 - 删除推荐引擎中List的sort方法，调用新增类Sort类，再传入内部匿名类排序。
 - 推荐包新增Sort类。
 
 ### V1.6
+
 - 按课程要求移除所有abstract类和方法，改为一个只抛出UnsupportedOperationException的方法。
 
 ## 具体说明
