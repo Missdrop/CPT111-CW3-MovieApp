@@ -13,6 +13,7 @@
     - [V1.3](#v13)
     - [V1.4](#v14)
     - [V1.5](#v15)
+    - [V1.6](#v16)
   - [具体说明](#具体说明)
     - [总览](#总览)
     - [异常包](#异常包)
@@ -138,6 +139,9 @@
 - 删除推荐引擎中List的sort方法，调用新增类Sort类，再传入内部匿名类排序。
 - 推荐包新增Sort类。
 
+### V1.6
+- 按课程要求移除所有abstract类和方法，改为一个只抛出UnsupportedOperationException的方法。
+
 ## 具体说明
 
 这个项目大致上由七部分组成，如上图所示。每一个包我会从类字段，构造器方法和类方法三方面来讲解。
@@ -240,7 +244,7 @@
 
 User类看似内容很多但其实并不复杂。实现了用户的密码加密，数据IO，验证密码。
 
-V1.2更新：User是一个抽象类，且构造器方法为protected，只可被本包调用。
+V1.2&1.6更新：User是一个基类，且构造器方法为protected，只可被本包调用。
 
 - 私有字段：`String username`, `String passwordHash`, `Watchlist watchlist`, `History history`。代码的可读性很高，想必不需要解释就可以理解字段的意思。唯一需要解释的就是passwordHash字段，它采用加密的哈希值存储密码。下面会详细解释。
 - 构造器方法：两个，一个构建全新用户，一个从数据构建已存在用户。
@@ -256,11 +260,11 @@ V1.2更新：User是一个抽象类，且构造器方法为protected，只可被
     > 但是课程要求中并没有对已经在history里的电影被加入watchlist的行为有限制。事实上根据现实情况，我认为想看两遍电影很正常，所以允许上述操作。
 - V1.2更新：
   - `setUsername`方法：设置用户名，当用户名不符合要求时会抛出异常，目前仅被构造器调用所以设为private。
-- V1.2更新：User类有三个抽象方法
+- V1.2&1.6更新：User类有四个抽象方法，但按课程要求，并未使用abstract关键字，而是只会抛出`UnsupportedOperationException`，因此必须被子类重写。
   - `int getMaxWatchlistSize`：获取观看列表最大长度。
   - `boolean canAddMovies`:是否可以增加电影，这个方法会被`userinterface.BrowseMovies`调用。
   - `List<String> getAvailableRecommendationTypes`：一个字符串列表，包含推荐引擎可以选用的类型。
-- V1.3更新：增加抽象方法`String getUserType`：获取用户类型。
+  - V1.3更新：增加抽象方法`String getUserType`：获取用户类型。
 
 #### PremiumUser
 
@@ -366,7 +370,7 @@ V1.5更新：增加一个Sort类，实现了Quicksort算法，供Engine调用。
 
 #### Sort
 
-本类实现了快速排序算法，供Engine的get方法调用。并且有一个内部抽象类Comparator，用于按不同的方式排序。
+本类实现了快速排序算法，供Engine的get方法调用。并且有一个内部类Comparator，用于按不同的方式排序。
 
 ---
 
