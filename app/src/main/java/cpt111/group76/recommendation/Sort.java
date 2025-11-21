@@ -6,15 +6,21 @@ import cpt111.group76.movie.Movie;
 
 /**
  * A Quick sort realization to sort a movie list,
- * accepts a custom comparator abstract class
+ * accepts a custom comparator abstract class,
+ * which needs to be extended to implement the compare method.
  */
 public class Sort {
-    public static abstract class Comparator {
+    public static class Comparator {
         /**
          * Compare two movies. Return negative if a should come before b,
          * zero if equal, positive if a should come after b.
+         *
+         * Default implementation returns 0 — callers should override this
+         * method when creating a Comparator instance.
          */
-        public abstract int compare(Movie a, Movie b);
+        public int compare(Movie a, Movie b) {
+            return 0;
+        }
     }
 
 
