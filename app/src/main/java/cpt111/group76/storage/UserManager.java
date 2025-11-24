@@ -1,5 +1,6 @@
 package cpt111.group76.storage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +136,7 @@ public class UserManager extends FileManager {
 
 
     private List<User> getUserList() {
-        return List.copyOf(users.values());
+        return new ArrayList<>(users.values());
     }
 
 
