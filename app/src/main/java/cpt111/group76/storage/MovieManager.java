@@ -1,7 +1,6 @@
 package cpt111.group76.storage;
 
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class MovieManager extends FileManager {
 
 
     public List<Movie> getMovieList() {
-        return new ArrayList<>(movies.values());
+        return List.copyOf(movies.values());
     }
 
 
@@ -66,7 +65,7 @@ public class MovieManager extends FileManager {
             throw new IllegalArgumentException("Movie ID already exists");
         }
         // check for duplicate movie based on title, year, and genre
-        for (Movie m : movies.values()) {
+        for (Movie m : getMovieList()) {
             if (m.getTitle().equalsIgnoreCase(title) && m.getYear() == year && m.getGenre().equalsIgnoreCase(genre)) {
                 throw new IllegalArgumentException("Movie already exists");
             }
@@ -105,10 +104,10 @@ public class MovieManager extends FileManager {
     public void save() throws RuntimeException {
         String header = "id,title,genre,year,rating";
         
-        String[] rows = new String[movies.size()];
-        for (int i = 0; i < movies.size(); i++) {
-            Movie movie = (Movie) movies.values().toArray()[i];
-            rows[i] = movie.toCSV();
+        List<Movie> movieList = getMovieList();
+        String[] rows = new String[movieList.size()];
+        for (int i = 0; i < movieList.size(); i++) {
+            rows[i] = movieList.get(i).toCSV();
         }
 
         try {

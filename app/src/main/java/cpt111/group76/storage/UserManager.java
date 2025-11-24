@@ -1,6 +1,7 @@
 package cpt111.group76.storage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cpt111.group76.user.*;
@@ -119,10 +120,10 @@ public class UserManager extends FileManager {
     public void save() throws RuntimeException {
         String header = "username,password,watchlist,history,usertype";
 
-        String[] rows = new String[users.size()];
-        for (int i = 0; i < users.size(); i++) {
-            User user = (User) users.values().toArray()[i];
-            rows[i] = user.toCSV();
+        List<User> userList = getUserList();
+        String[] rows = new String[userList.size()];
+        for (int i = 0; i < userList.size(); i++) {
+            rows[i] = userList.get(i).toCSV();
         }
 
         try {
@@ -130,6 +131,11 @@ public class UserManager extends FileManager {
         } catch (Exception e) {
             throw new RuntimeException("Error saving user data: " + e.getMessage());
         }
+    }
+
+
+    private List<User> getUserList() {
+        return List.copyOf(users.values());
     }
 
 
