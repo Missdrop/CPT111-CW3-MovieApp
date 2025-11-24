@@ -27,11 +27,6 @@ public class MovieManager extends FileManager {
     }
 
 
-    public Map<String, Movie> getMovieDatabase() {
-        return movies;
-    }
-
-
     public List<Movie> getMovieList() {
         return List.copyOf(movies.values());
     }
