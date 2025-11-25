@@ -183,8 +183,7 @@ public class BrowseMovies {
         VBox layout = new VBox(10, titleLabel, movieTable, buttonBox, statusLabel);
         layout.setPadding(new Insets(20));
 
-        Scene scene = new Scene(layout, 800, 600); // Larger to accommodate
-                                                   // table
+        Scene scene = new Scene(layout, 800, 600); // Larger to accommodate table
         stage.setScene(scene);
         stage.show();
     }
