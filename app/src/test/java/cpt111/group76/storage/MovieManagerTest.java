@@ -1,11 +1,14 @@
 package cpt111.group76.storage;
 
 import static org.junit.Assert.*;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import cpt111.group76.movie.Movie;
 
 public class MovieManagerTest {
+    @BeforeClass
     public static void initTestCsvFile() {
         FileManager fileManager = new FileManager("resources/movies.csv");
         try {
@@ -119,7 +122,6 @@ public class MovieManagerTest {
 
     @Test
     public void testGetMovies() {
-        initTestCsvFile();
         MovieManager movieManager = new MovieManager();
         assertEquals(movieManager.getMovie("M001").getTitle(), "The Shawshank Redemption");
     }

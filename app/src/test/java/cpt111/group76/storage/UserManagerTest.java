@@ -1,9 +1,12 @@
 package cpt111.group76.storage;
 
 import static org.junit.Assert.*;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class UserManagerTest {
+    @BeforeClass
     public static void initTestCsvFile() {
         FileManager userFileManager = new FileManager("resources/users.csv");
         try {
@@ -23,7 +26,6 @@ public class UserManagerTest {
 
     @Test
     public void testGetUsers() {
-        initTestCsvFile();
         UserManager userManager = new UserManager();
         assertEquals(userManager.getUser("alice").getUsername(), "alice");
     }

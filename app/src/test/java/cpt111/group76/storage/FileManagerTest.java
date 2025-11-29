@@ -1,9 +1,12 @@
 package cpt111.group76.storage;
 
 import static org.junit.Assert.*;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class FileManagerTest {
+    @BeforeClass
     public static void initTestCsvFile() {
         MovieManagerTest.initTestCsvFile();
         UserManagerTest.initTestCsvFile();
@@ -12,7 +15,6 @@ public class FileManagerTest {
 
     @Test
     public void testFileReaderInitialization() {
-        initTestCsvFile();
         FileManager fileReader = new FileManager("resources/movies.csv");
         assertNotNull(fileReader.nextLine());
     }

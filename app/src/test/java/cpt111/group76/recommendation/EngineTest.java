@@ -3,14 +3,21 @@ package cpt111.group76.recommendation;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import org.junit.BeforeClass;
+
 import cpt111.group76.user.PremiumUser;
 import cpt111.group76.storage.MovieManager;
 import cpt111.group76.storage.MovieManagerTest;
 
 public class EngineTest {
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        MovieManagerTest.initTestCsvFile();
+    }
+
+
     @Test
     public void testEngineRecommendation() {
-        MovieManagerTest.initTestCsvFile();
         MovieManager movieManager = new MovieManager();
         PremiumUser user;
         try {
