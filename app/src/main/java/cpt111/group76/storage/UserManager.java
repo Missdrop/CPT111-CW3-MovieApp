@@ -65,7 +65,7 @@ public class UserManager extends FileManager {
      */
     public void addUser(String username, String password) throws PasswordValidationException, UsernameValidationException {
         if (contains(username)) {
-            throw new IllegalArgumentException("Username already exists."); // user already exists
+            throw new UsernameValidationException("Username already exists."); // user already exists
         }
         User newUser = new BasicUser(username, password);
         users.put(username, newUser);
