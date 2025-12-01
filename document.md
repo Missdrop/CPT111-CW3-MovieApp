@@ -400,30 +400,14 @@ App类继承自Application类（所有JavaFx的GUI都应该继承这个类）。
 类似于App类，Menu类也有一个私有字段：static的MovieManager对象，在类加载时就被初始化。其他任何GUI的menuManager对象都应该由App类传入，以避免修改错误。
 
 #### GUI逻辑示意图
-```text
-┌─────────────────┐
-│    主页 (App)    │
-└─────────┬───────┘
-    ┌─────┴─────┐
-┌───▼───┐   ┌───▼───┐
-│ 登录   │   │ 注册   │
-│Login  │   │Register│
-└───┬───┘   └───┬───┘
-    └─────┬─────┘
-    ┌─────▼─────┐
-    │  主菜单    │
-    │   Menu    │
-    └─────┬─────┘
-    ┌─────┼───────┬──────┬──────┬──────┐
-┌───▼─┐ ┌─▼───┐ ┌─▼──┐ ┌─▼──┐ ┌─▼──┐ ┌─▼───────┐
-│浏览 │ │ 观看 │ │历史 │ │推荐│ │更改 │ │ 升级账户  │
-│电影 │ │ 列表 │ │记录 │ │系统│ │密码 │ │（高级用户）│
-└─────┘ └───┬─┘ └────┘ └────┘ └────┘ └──────────┘
-      ┌─────▼─────┐
-      │ 添加新电影  │
-      │（高级用户） │
-      └───────────┘
-
+```mermaid
+flowchart TB
+    A["App"] --> B["Login"] & C["Register"]
+    B --> D["Menu"]
+    C --> D["Menu"]
+    D --> E["BrowseMovies"] & F["ViewWatchlist"] & G["ViewHistory"] & H["Recommendation"] & I["ChangePassword"]
+    D --> |"BasicUser"| J["GetPremium"]
+    F --> |"PremiumUser"| L["AddNewMovie"]
 ```
 
 ---
