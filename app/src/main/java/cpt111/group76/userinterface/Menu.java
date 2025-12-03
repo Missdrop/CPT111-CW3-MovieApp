@@ -123,7 +123,7 @@ public class Menu extends Application {
         browseMoviesButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                new BrowseMovies(user, movieManager).show();
+                new BrowseMovies(user, movieManager, userManager).show();
             }
         });
         viewWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {

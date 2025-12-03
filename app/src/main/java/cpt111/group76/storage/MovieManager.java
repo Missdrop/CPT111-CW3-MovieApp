@@ -215,6 +215,6 @@ public class MovieManager extends FileManager {
     @Override
     public void close() {
         super.close();
-        movies.clear();
+        movies = null;
     }
 }

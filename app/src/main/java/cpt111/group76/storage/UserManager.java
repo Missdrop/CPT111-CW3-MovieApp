@@ -234,6 +234,6 @@ public class UserManager extends FileManager {
     @Override
     public void close() {
         super.close();
-        users.clear();
+        users = null;
     }
 }

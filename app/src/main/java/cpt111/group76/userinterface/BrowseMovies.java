@@ -24,12 +24,14 @@ import cpt111.group76.movie.Movie;
 public class BrowseMovies {
     private User user;
     private MovieManager movieManager;
+    private UserManager userManager;
     private TableView<Movie> movieTable;
 
 
-    public BrowseMovies(User user, MovieManager movieManager) {
+    public BrowseMovies(User user, MovieManager movieManager, UserManager userManager) {
         this.user = user;
         this.movieManager = movieManager;
+        this.userManager = userManager;
     }
 
 
@@ -115,7 +117,7 @@ public class BrowseMovies {
                         boolean success = user.addToWatchlist(movieId);
                         if (success) {
                             statusLabel.setText("Successfully added to watchlist!");
-                            new UserManager().updateUser(user);
+                            userManager.updateUser(user);
                             movieTable.refresh(); // Refresh to update row colors
                         } else {
                             statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
@@ -138,7 +140,7 @@ public class BrowseMovies {
                     } else {
                         user.addToHistory(movieId);
                         statusLabel.setText("Successfully marked as watched!");
-                        new UserManager().updateUser(user);
+                        userManager.updateUser(user);
                         movieTable.refresh(); // Refresh to update row colors
                     }
                 } else {
@@ -159,7 +161,7 @@ public class BrowseMovies {
                         boolean success = user.removeFromWatchlist(movieId);
                         if (success) {
                             statusLabel.setText("Successfully removed from watchlist!");
-                            new UserManager().updateUser(user);
+                            userManager.updateUser(user);
                             movieTable.refresh(); // Refresh to update row colors
                         } else {
                             statusLabel.setText("Failed to remove from watchlist.");
