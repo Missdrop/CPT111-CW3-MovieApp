@@ -176,9 +176,7 @@ public class MovieManager extends FileManager {
             // try to create movie from CSV data
             try {
                 Movie movie = createFromCSV(movieData);
-                if (movie != null) {
-                    movieMap.put(movie.getId(), movie);
-                }
+                movieMap.put(movie.getId(), movie);
             } catch (IllegalArgumentException e) {
                 System.out.println("Warning: Skipping invalid movie data: " + e.getMessage());
                 if (movieData != null && movieData.length > 0) {

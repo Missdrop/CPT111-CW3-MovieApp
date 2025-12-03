@@ -37,10 +37,7 @@ public class UserManager extends FileManager {
      */
     public boolean authenticate(String username, String password) {
         User user = users.get(username);
-        if (user != null && user.verifyPassword(password)) {
-            return true;
-        }
-        return false;
+        return user != null && user.verifyPassword(password);
     }
 
 
@@ -163,11 +160,11 @@ public class UserManager extends FileManager {
             }
 
             // Parse watchlist from CSV format
-            Watchlist watchlist = userData[2].length() > 0 ?
+            Watchlist watchlist = !userData[2].isEmpty() ?
                 new Watchlist(userData[2].split(";", -1)) : new Watchlist();
 
             // Parse history from CSV format
-            History history = userData[3].length() > 0 ?
+            History history = !userData[3].isEmpty() ?
                 new History(userData[3].split(";", -1)) : new History();
 
             // Parse premium status
@@ -216,14 +213,10 @@ public class UserManager extends FileManager {
             // try to create user from CSV data
             try {
                 User user = createFromCSV(userData);
-                if (user != null) {
-                    userMap.put(user.getUsername(), user);
-                }
+                userMap.put(user.getUsername(), user);
             } catch (IllegalArgumentException e) {
                 System.out.println("Warning: Skipping invalid user data: " + e.getMessage());
-                if (userData != null && userData.length > 0) {
-                    System.out.println("Data: " + String.join(",", userData));
-                }
+                System.out.println("Data: " + String.join(",", userData));
             }
         }
 

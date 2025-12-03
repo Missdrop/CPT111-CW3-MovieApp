@@ -1,5 +1,6 @@
 package cpt111.group76.user.data;
 
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -35,10 +36,7 @@ public class Watchlist {
      * @param watchlistEntries array of movie IDs
      */
     public Watchlist(String[] watchlistEntries) {
-        this.watchlist = new HashSet<>();
-        for (String entry : watchlistEntries) {
-            this.watchlist.add(entry);
-        }
+        this.watchlist = new HashSet<>(List.of(watchlistEntries));
     }
 
 

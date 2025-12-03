@@ -24,7 +24,7 @@ public class Engine {
     /**
      * Constructs a recommendation engine with movie database and user data.
      *
-     * @param movieManager
+     * @param movieManager a MovieManager object
      * @param user the user for whom recommendations are generated
      */
     public Engine(MovieManager movieManager, User user) {
@@ -74,7 +74,7 @@ public class Engine {
 
 
     /**
-     * Gets top rated movies from the database, sorted by rating descending.
+     * Get top rate movies from the database, sorted by rating descending.
      */
     private void getTopRatedMovies() {
         Sort.sort(tempMovieList, new Sort.Comparator() {

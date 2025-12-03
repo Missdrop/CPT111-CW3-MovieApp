@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 public class MovieTest {
     @Test
-    public void testMovieCreation() throws Exception {
+    public void testMovieCreation() {
         Movie movie = new Movie( "M011", "Inception", "Sci-Fi", 1982, 8.8 );
         assertEquals("Inception", movie.getTitle());
         assertEquals(1982, movie.getYear());
@@ -13,21 +13,21 @@ public class MovieTest {
 
 
     @Test
-    public void testMovieCreationEmptyElements() throws Exception {
+    public void testMovieCreationEmptyElements() {
         Movie movie = new Movie( "M011", "Inception", "", 1982, 0.1 );
         assertEquals("", movie.getGenre());
     }
 
 
     @Test(expected = IllegalArgumentException.class)
-    public void testMovieCreationInvalidYear() throws Exception {
+    public void testMovieCreationInvalidYear() {
         Movie movie = new Movie( "M011", "Inception", "Sci-Fi", 1800, 8.8 );
         assertNull(movie);
     }
 
 
     @Test(expected = IllegalArgumentException.class)
-    public void testMovieCreationInvalidRating() throws Exception {
+    public void testMovieCreationInvalidRating() {
         Movie movie = new Movie( "M011", "Inception", "Sci-Fi", 1982, 1.11 );
         assertNull(movie);
     }

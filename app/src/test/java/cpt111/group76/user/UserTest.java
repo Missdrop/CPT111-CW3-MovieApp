@@ -8,7 +8,7 @@ import cpt111.group76.user.data.Watchlist;
 
 public class UserTest {
     @Test
-    public void testUserCreation() throws Exception {
+    public void testUserCreation() {
         PremiumUser user = new PremiumUser("john_doe", "password123", new Watchlist("movie1;movie2;movie3".split(";", -1)), new History("".split(";", -1)));
         user.addToWatchlist("movieAdd");
         assertTrue(user.getWatchlist().contains("movieAdd"));
@@ -93,17 +93,17 @@ public class UserTest {
         try {
             new PremiumUser("bob", "123");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), "Password must be at least 6 characters long.");
+            assertEquals("Password must be at least 6 characters long.", e.getMessage());
         }
         try {
             new PremiumUser("bob", "a".repeat(19));
         } catch (Exception e) {
-            assertEquals(e.getMessage(), "Password must be at most 18 characters long.");
+            assertEquals("Password must be at most 18 characters long.", e.getMessage());
         }
         try {
             new PremiumUser("bob", "abcdef");
         } catch (Exception e) {
-            assertEquals(e.getMessage(), "Password must contain at least one digit.");
+            assertEquals("Password must contain at least one digit.", e.getMessage());
         }
         try {
             new PremiumUser("bob", "abc123");

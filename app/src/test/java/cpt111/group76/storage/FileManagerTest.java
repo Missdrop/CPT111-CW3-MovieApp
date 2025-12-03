@@ -57,6 +57,6 @@ public class FileManagerTest {
 
         // Clean up
         File file = new File("resources/test_save.csv");
-        file.delete();
+        assertTrue(file.delete());
     }
 }

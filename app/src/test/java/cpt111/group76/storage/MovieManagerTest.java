@@ -123,7 +123,7 @@ public class MovieManagerTest {
     @Test
     public void testGetMovies() {
         MovieManager movieManager = new MovieManager();
-        assertEquals(movieManager.getMovie("M001").getTitle(), "The Shawshank Redemption");
+        assertEquals("The Shawshank Redemption", movieManager.getMovie("M001").getTitle());
     }
 
 
@@ -135,7 +135,7 @@ public class MovieManagerTest {
         } catch (IllegalArgumentException e) {
             fail("Adding movie threw an exception: " + e.getMessage());
         }
-        assertEquals(movieManager.getMovie("M101").getTitle(), "naipu");
+        assertEquals("naipu", movieManager.getMovie("M101").getTitle());
         movieManager.deleteMovie("M101");
     }
 
@@ -147,7 +147,7 @@ public class MovieManagerTest {
             movieManager.addMovie("The Shawshank Redemption", "Drama", 1994, 9.3);
             fail("Expected IllegalArgumentException for adding existing movie");
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Movie already exists");
+            assertEquals("Movie already exists", e.getMessage());
         }
     }
 
@@ -162,6 +162,6 @@ public class MovieManagerTest {
         }
         Movie addedMovie = movieManager.getMovie("M101");
         assertNotNull(addedMovie);
-        assertEquals(addedMovie.getTitle(), "Inglourious Basterds");
+        assertEquals("Inglourious Basterds", addedMovie.getTitle());
     }
 }

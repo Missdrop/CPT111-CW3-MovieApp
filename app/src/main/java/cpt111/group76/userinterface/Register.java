@@ -79,10 +79,7 @@ public class Register {
                 // Try to add user
                 try {
                     userManager.addUser(username, password);
-                } catch (UsernameValidationException ex) {
-                    statusLabel.setText(ex.getMessage());
-                    return;
-                } catch (PasswordValidationException ex) {
+                } catch (UsernameValidationException | PasswordValidationException ex) {
                     statusLabel.setText(ex.getMessage());
                     return;
                 }

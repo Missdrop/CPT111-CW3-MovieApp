@@ -29,22 +29,22 @@ public class App extends Application {
      * Ensures that user data is saved and resources are closed on exit.
      */
     public static void main(String[] args) {
-    try {
-        launch(args);
-    } catch (Exception e) {
-        System.out.println("Fatal application error: " + e.getMessage());
-        e.printStackTrace();
-    } finally {
-        // make sure to save user data and close resources
         try {
-            if (userManager != null) {
-                userManager.save();
-                userManager.close();
+            launch(args);
+        } catch (Exception e) {
+            System.out.println("Fatal application error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // make sure to save user data and close resources
+            try {
+                if (userManager != null) {
+                    userManager.save();
+                    userManager.close();
+                }
+            } catch (RuntimeException e) {
+                System.out.println("Error during cleanup: " + e.getMessage());
             }
-        } catch (RuntimeException e) {
-            System.out.println("Error during cleanup: " + e.getMessage());
         }
-    }
     }
 
 

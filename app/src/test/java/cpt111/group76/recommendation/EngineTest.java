@@ -11,7 +11,7 @@ import cpt111.group76.storage.MovieManagerTest;
 
 public class EngineTest {
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
         MovieManagerTest.initTestCsvFile();
     }
 
@@ -33,8 +33,8 @@ public class EngineTest {
 
         Engine engine = new Engine(movieManager, user);
 
-        assertEquals(engine.recommendation("genre",3).size(), 3);
-        assertEquals(engine.recommendation("year",2).size(), 2);
-        assertEquals(engine.recommendation(4).size(), 4);
+        assertEquals(3, engine.recommendation("genre",3).size());
+        assertEquals(2, engine.recommendation("year",2).size());
+        assertEquals(4, engine.recommendation(4).size());
     }
 }

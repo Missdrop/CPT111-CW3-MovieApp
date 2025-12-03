@@ -13,9 +13,9 @@ public class BasicUserTest {
             fail("User creation threw an exception: " + e.getMessage());
             return;
         }
-        User user = new BasicUser("test", "password123");
-        assertTrue(user instanceof BasicUser);
-        assertTrue(basicUser instanceof BasicUser);
+        User user = new PremiumUser("test", "password123");
+        assertEquals("Premium", user.getUserType());
+        assertEquals("Basic", basicUser.getUserType());
     }
 
     @Test

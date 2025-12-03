@@ -5,12 +5,12 @@ import static org.junit.Assert.*;
 
 public class PremiumUserTest {
     @Test
-    public void testPremiumUserCreation() throws Exception {
+    public void testPremiumUserCreation() {
         try {
             PremiumUser premiumUser = new PremiumUser("test", "password123");
             User user = new PremiumUser("test", "password123");
-            assertTrue(user instanceof PremiumUser);
-            assertTrue(premiumUser instanceof PremiumUser);
+            assertEquals("Premium", user.getUserType());
+            assertEquals("Premium", premiumUser.getUserType());
         } catch (Exception e) {
             fail("User creation threw an exception: " + e.getMessage());
         }
