@@ -23,7 +23,12 @@ class FileManager implements AutoCloseable {
 
 
     public FileManager(String filePath) {
-        this(new File(filePath));
+        try {
+            this.file = new File(filePath);
+        } catch (NullPointerException e) {
+            this.file = null;
+        }
+        this.scanner = getScanner();
     }
 
 
