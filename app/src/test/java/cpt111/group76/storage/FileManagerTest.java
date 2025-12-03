@@ -27,6 +27,17 @@ public class FileManagerTest {
 
 
     @Test
+    public void emptyStringConstructorTest() {
+        try (FileManager fileManager = new FileManager("")) {
+            assertNotNull(fileManager);
+            assertNull(fileManager.nextLine());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+
+    @Test
     public void testSaveFunction() {
         try (FileManager fileManager = new FileManager("resources/test_save.csv")) {
             assertNotNull(fileManager);
