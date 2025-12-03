@@ -33,7 +33,7 @@ public class Register {
         Stage primaryStage = new Stage();
 
         // When this login stage is closed, show the main app stage again
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        primaryStage.setOnCloseRequest(new EventHandler<>() {
             @Override
             public void handle(WindowEvent e) {
                 appStage.show();
@@ -54,7 +54,7 @@ public class Register {
         statusLabel.setStyle("-fx-text-fill: red;");
         statusLabel.setWrapText(true);
 
-        registerButton.setOnAction(new EventHandler<ActionEvent>() {
+        registerButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 String username = usernameField.getText().trim();
@@ -93,19 +93,19 @@ public class Register {
         });
 
         // Add Enter key support
-        usernameField.setOnAction(new EventHandler<ActionEvent>() {
+        usernameField.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 registerButton.fire();
             }
         });
-        passwordField.setOnAction(new EventHandler<ActionEvent>() {
+        passwordField.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 registerButton.fire();
             }
         });
-        repeatPasswordField.setOnAction(new EventHandler<ActionEvent>() {
+        repeatPasswordField.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 registerButton.fire();

@@ -51,7 +51,7 @@ public class ViewHistory {
         Button removeButton = new Button("Remove Selected from History");
         Label statusLabel = new Label();
 
-        removeButton.setOnAction(new EventHandler<ActionEvent>() {
+        removeButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 Movie selected = historyTable.getSelectionModel().getSelectedItem();
@@ -107,16 +107,7 @@ public class ViewHistory {
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
 
         // Date column - custom cell value factory to get date from history
-        TableColumn<Movie, String> dateColumn = new TableColumn<>("Watched Date");
-        dateColumn.setMinWidth(100);
-        dateColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Movie, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Movie, String> cellData) {
-                String movieId = cellData.getValue().getId();
-                String date = user.getHistory().getDate(movieId);
-                return new SimpleStringProperty(date != null ? date : "Unknown date");
-            }
-        });
+        TableColumn<Movie, String> dateColumn = getDateColumn();
 
         // Add columns individually to avoid type safety warning
         historyTable.getColumns().add(idColumn);
@@ -128,6 +119,20 @@ public class ViewHistory {
 
         // Make the table take up available space
         historyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+    }
+
+    private TableColumn<Movie, String> getDateColumn() {
+        TableColumn<Movie, String> dateColumn = new TableColumn<>("Watched Date");
+        dateColumn.setMinWidth(100);
+        dateColumn.setCellValueFactory(new Callback<>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Movie, String> cellData) {
+                String movieId = cellData.getValue().getId();
+                String date = user.getHistory().getDate(movieId);
+                return new SimpleStringProperty(date != null ? date : "Unknown date");
+            }
+        });
+        return dateColumn;
     }
 
 

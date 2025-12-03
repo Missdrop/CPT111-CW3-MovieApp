@@ -35,7 +35,7 @@ public class Menu extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        primaryStage.setOnCloseRequest(new EventHandler<>() {
             @Override
             public void handle(WindowEvent e) {
                 try {
@@ -48,64 +48,10 @@ public class Menu extends Application {
         });
 
         // Create main title
-        Label titleLabel = new Label("Movie Recommendation & Tracker");
-        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-
-        // User info
-        Text usernameText = new Text(
-                "Welcome, " + user.getUsername() + "! (" + (user.getUserType().equals("Premium") ? "Premium User" : "Basic User") + ")");
-        usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
-
-        // Top bar with title and user info
-        VBox titleBox = new VBox(5, titleLabel, usernameText);
-        titleBox.setAlignment(Pos.CENTER_LEFT);
+        VBox titleBox = getTitleBox();
 
         // Action buttons
-        Button logoutButton = new Button("Logout");
-        logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-        logoutButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                userManager.updateUser(user);
-                try {
-                    new App().start(new Stage());
-                } catch (Exception ex) {
-                    System.out.println("Error starting app: " + ex.getMessage());
-                }
-                primaryStage.close();
-            }
-        });
-
-        Button changePasswordButton = new Button("Change Password");
-        changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-        changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                new ChangePassword(user, userManager, primaryStage).show();
-                primaryStage.hide();
-            }
-        });
-
-        // Get Premium button - only show for Basic Users
-        Button getPremiumButton = null;
-        if (user.getUserType().equals("Basic")) {
-            getPremiumButton = new Button("Get Premium");
-            getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            getPremiumButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    new GetPremium(user, primaryStage, userManager).show();
-                }
-            });
-        }
-
-        HBox buttonBox;
-        if (user.getUserType().equals("Basic")) {
-            buttonBox = new HBox(10, changePasswordButton, getPremiumButton, logoutButton);
-        } else {
-            buttonBox = new HBox(10, changePasswordButton, logoutButton);
-        }
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        HBox buttonBox = getButtonBox(primaryStage);
 
         // Top bar container
         HBox topBar = new HBox();
@@ -120,25 +66,25 @@ public class Menu extends Application {
         Button viewHistoryButton = createMenuButton("View History", "#9b59b6");
         Button getRecommendationsButton = createMenuButton("Recommendation", "#e67e22");
 
-        browseMoviesButton.setOnAction(new EventHandler<ActionEvent>() {
+        browseMoviesButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 new BrowseMovies(user, movieManager, userManager).show();
             }
         });
-        viewWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+        viewWatchlistButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 new ViewWatchlist(user, movieManager, userManager).show();
             }
         });
-        viewHistoryButton.setOnAction(new EventHandler<ActionEvent>() {
+        viewHistoryButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 new ViewHistory(user, movieManager, userManager).show();
             }
         });
-        getRecommendationsButton.setOnAction(new EventHandler<ActionEvent>() {
+        getRecommendationsButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 new Recommendation(user, movieManager, userManager).show();
@@ -175,6 +121,74 @@ public class Menu extends Application {
         primaryStage.show();
     }
 
+    private VBox getTitleBox() {
+        Label titleLabel = new Label("Movie Recommendation & Tracker");
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        // User info
+        Text usernameText = new Text(
+                "Welcome, " + user.getUsername() + "! (" + (user.getUserType().equals("Premium") ? "Premium User" : "Basic User") + ")");
+        usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
+
+        // Top bar with title and user info
+        VBox titleBox = new VBox(5, titleLabel, usernameText);
+        titleBox.setAlignment(Pos.CENTER_LEFT);
+        return titleBox;
+    }
+
+    private HBox getButtonBox(Stage primaryStage) {
+        Button logoutButton = new Button("Logout");
+        logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        logoutButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent e) {
+                userManager.updateUser(user);
+                try {
+                    new App().start(new Stage());
+                } catch (Exception ex) {
+                    System.out.println("Error starting app: " + ex.getMessage());
+                }
+                primaryStage.close();
+            }
+        });
+
+        Button changePasswordButton = new Button("Change Password");
+        changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+        changePasswordButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent e) {
+                new ChangePassword(user, userManager, primaryStage).show();
+                primaryStage.hide();
+            }
+        });
+
+        return getButtonBox(primaryStage, changePasswordButton, logoutButton);
+    }
+
+    private HBox getButtonBox(Stage primaryStage, Button changePasswordButton, Button logoutButton) {
+        Button getPremiumButton = null;
+        if (user.getUserType().equals("Basic")) {
+            getPremiumButton = new Button("Get Premium");
+            getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            getPremiumButton.setOnAction(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    new GetPremium(user, primaryStage, userManager).show();
+                }
+            });
+        }
+
+        HBox buttonBox;
+        // Get Premium button - only show for Basic Users
+        if (user.getUserType().equals("Basic")) {
+            buttonBox = new HBox(10, changePasswordButton, getPremiumButton, logoutButton);
+        } else {
+            buttonBox = new HBox(10, changePasswordButton, logoutButton);
+        }
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        return buttonBox;
+    }
+
 
     // Helper method to create styled menu buttons
     private Button createMenuButton(String text, String color) {
@@ -182,7 +196,7 @@ public class Menu extends Application {
         button.setStyle("-fx-background-color: " + color
                 + "; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; "
                 + "-fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
-        button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        button.setOnMouseEntered(new EventHandler<>() {
             @Override
             public void handle(MouseEvent e) {
                 button.setStyle("-fx-background-color: derive(" + color
@@ -190,7 +204,7 @@ public class Menu extends Application {
                         + "-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 200px; -fx-pref-height: 80px; -fx-background-radius: 10;");
             }
         });
-        button.setOnMouseExited(new EventHandler<MouseEvent>() {
+        button.setOnMouseExited(new EventHandler<>() {
             @Override
             public void handle(MouseEvent e) {
                 button.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; "

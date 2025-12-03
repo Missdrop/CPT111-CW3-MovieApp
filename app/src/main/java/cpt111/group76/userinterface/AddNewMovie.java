@@ -29,7 +29,7 @@ public class AddNewMovie {
     public void show() {
         Stage stage = new Stage();
         stage.setTitle("Add New Movie");
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        stage.setOnCloseRequest(new EventHandler<>() {
             @Override
             public void handle(WindowEvent e) {
                 browseMovies.refresh();
@@ -63,7 +63,7 @@ public class AddNewMovie {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-weight: bold;");
 
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
+        addButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 // Validate and add movie

@@ -91,8 +91,8 @@ public class UserManager extends FileManager {
     }
 
 
-    public boolean deleteUser(User user) {
-        return deleteUser(user.getUsername());
+    public void deleteUser(User user) {
+        deleteUser(user.getUsername());
     }
 
 
@@ -192,7 +192,7 @@ public class UserManager extends FileManager {
      * @return Map containing all valid users with usernames as keys
      */
     private Map<String, User> getUsers() {
-        Map<String, User> userMap = new HashMap<String, User>();
+        Map<String, User> userMap = new HashMap<>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {

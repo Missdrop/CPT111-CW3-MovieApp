@@ -49,10 +49,10 @@ public class BrowseMovies {
         updateMovieData();
 
         // Set row factory for color highlighting
-        movieTable.setRowFactory(new Callback<TableView<Movie>, TableRow<Movie>>() {
+        movieTable.setRowFactory(new Callback<>() {
             @Override
             public TableRow<Movie> call(TableView<Movie> tv) {
-                return new TableRow<Movie>() {
+                return new TableRow<>() {
                     @Override
                     protected void updateItem(Movie movie, boolean empty) {
                         super.updateItem(movie, empty);
@@ -94,18 +94,18 @@ public class BrowseMovies {
             if (user.canAddMovies()) {
             addNewMovieButton = new Button("Add New Movie");
             addNewMovieButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            addNewMovieButton.setOnAction(new EventHandler<ActionEvent>() {
+            addNewMovieButton.setOnAction(new EventHandler<>() {
                 @Override
-                    public void handle(ActionEvent e) {
-                        new AddNewMovie(movieManager, BrowseMovies.this).show();
-                    }
+                public void handle(ActionEvent e) {
+                    new AddNewMovie(movieManager, BrowseMovies.this).show();
+                }
             });
         }
 
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-weight: bold;");
 
-        addToWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+        addToWatchlistButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
@@ -130,7 +130,7 @@ public class BrowseMovies {
             }
         });
 
-        markWatchedButton.setOnAction(new EventHandler<ActionEvent>() {
+        markWatchedButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
@@ -150,7 +150,7 @@ public class BrowseMovies {
             }
         });
 
-        removeFromWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+        removeFromWatchlistButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();

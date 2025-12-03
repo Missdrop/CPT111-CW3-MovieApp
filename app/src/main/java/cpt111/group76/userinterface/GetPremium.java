@@ -55,7 +55,7 @@ public class GetPremium {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-weight: bold;");
 
-        upgradeButton.setOnAction(new EventHandler<ActionEvent>() {
+        upgradeButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 // Convert user to Premium

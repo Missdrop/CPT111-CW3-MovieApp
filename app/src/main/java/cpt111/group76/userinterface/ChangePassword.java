@@ -32,7 +32,7 @@ public class ChangePassword{
     public void show(){
         Stage primaryStage = new Stage();
         // When this change password stage is closed, show the menu stage again
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        primaryStage.setOnCloseRequest(new EventHandler<>() {
             @Override
             public void handle(WindowEvent e) {
                 menuStage.show();
@@ -52,7 +52,7 @@ public class ChangePassword{
         Label statusLabel = new Label();
         statusLabel.setWrapText(true);
 
-        changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+        changePasswordButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 String password = passwordField.getText();

@@ -9,6 +9,8 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 
 import cpt111.group76.userinterface.Login;
 import cpt111.group76.userinterface.Register;
@@ -59,26 +61,7 @@ public class App extends Application {
         subtitleLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;");
 
         // Create login and register buttons
-        Button loginButton = new Button("Login");
-        loginButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
-
-        Button registerButton = new Button("Register");
-        registerButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
-
-        // Set button actions (same as before)
-        loginButton.setOnAction(e -> {
-            primaryStage.hide();
-            new Login(userManager, primaryStage).show();
-        });
-
-        registerButton.setOnAction(e -> {
-            primaryStage.hide();
-            new Register(userManager, primaryStage).show();
-        });
-
-        // Create button container
-        HBox buttonBox = new HBox(20, loginButton, registerButton);
-        buttonBox.setAlignment(Pos.CENTER);
+        HBox buttonBox = getButtonBox(primaryStage);
 
         // Create main container with title, subtitle and buttons
         VBox mainContainer = new VBox(20);
@@ -95,5 +78,35 @@ public class App extends Application {
         primaryStage.setMinWidth(700);
         primaryStage.setMinHeight(450);
         primaryStage.show();
+    }
+
+    private static HBox getButtonBox(Stage primaryStage) {
+        Button loginButton = new Button("Login");
+        loginButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
+
+        Button registerButton = new Button("Register");
+        registerButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");
+
+        // Set button actions (same as before)
+        loginButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent e) {
+                primaryStage.hide();
+                new Login(userManager, primaryStage).show();
+            }
+        });
+
+        registerButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent e) {
+                primaryStage.hide();
+                new Register(userManager, primaryStage).show();
+            }
+        });
+
+        // Create button container
+        HBox buttonBox = new HBox(20, loginButton, registerButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        return buttonBox;
     }
 }

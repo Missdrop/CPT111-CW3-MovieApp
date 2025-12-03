@@ -50,7 +50,7 @@ public class ViewWatchlist {
         Button markWatchedButton = new Button("Mark Selected as Watched");
         Label statusLabel = new Label();
 
-        removeButton.setOnAction(new EventHandler<ActionEvent>() {
+        removeButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 Movie selected = watchlistTable.getSelectionModel().getSelectedItem();
@@ -70,7 +70,7 @@ public class ViewWatchlist {
             }
         });
 
-        markWatchedButton.setOnAction(new EventHandler<ActionEvent>() {
+        markWatchedButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 Movie selected = watchlistTable.getSelectionModel().getSelectedItem();

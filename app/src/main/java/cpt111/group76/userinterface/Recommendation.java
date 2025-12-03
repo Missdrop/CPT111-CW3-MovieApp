@@ -69,7 +69,7 @@ public class Recommendation {
         Button addToWatchlistButton = new Button("Add Selected to Watchlist");
         Label statusLabel = new Label();
 
-        recommendButton.setOnAction(new EventHandler<ActionEvent>() {
+        recommendButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 try {
@@ -92,7 +92,7 @@ public class Recommendation {
             }
         });
 
-        addToWatchlistButton.setOnAction(new EventHandler<ActionEvent>() {
+        addToWatchlistButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent e) {
                 Movie selected = recommendationsTable.getSelectionModel().getSelectedItem();

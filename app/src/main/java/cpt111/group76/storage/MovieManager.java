@@ -161,7 +161,7 @@ public class MovieManager extends FileManager {
      * @return Map containing all valid movies with IDs as keys
      */
     private Map<String, Movie> getMovies() {
-        Map<String, Movie> movieMap = new HashMap<String, Movie>();
+        Map<String, Movie> movieMap = new HashMap<>();
 
         boolean firstLine = true;
         while (this.hasNextLine()) {
