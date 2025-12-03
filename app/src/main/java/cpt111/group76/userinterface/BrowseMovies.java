@@ -120,7 +120,8 @@ public class BrowseMovies {
                             userManager.updateUser(user);
                             movieTable.refresh(); // Refresh to update row colors
                         } else {
-                            statusLabel.setText("Failed to add to watchlist. Watchlist may be full.");
+                            statusLabel.setText(user.getWatchlist().contains(movieId) ?
+                                    "Movie is already in your watchlist." : "Watchlist is full.");
                         }
                     }
                 } else {
