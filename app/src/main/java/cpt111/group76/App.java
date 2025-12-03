@@ -80,6 +80,7 @@ public class App extends Application {
         primaryStage.show();
     }
 
+
     private static HBox getButtonBox(Stage primaryStage) {
         Button loginButton = new Button("Login");
         loginButton.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-pref-height: 35px;");

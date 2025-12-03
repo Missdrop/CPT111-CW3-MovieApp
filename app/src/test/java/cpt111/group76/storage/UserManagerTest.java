@@ -45,6 +45,24 @@ public class UserManagerTest {
 
 
     @Test
+    public void testRemoveUser() {
+        UserManager userManager = new UserManager();
+        try {
+            userManager.addUser("naipu","123a123");
+        } catch (Exception e) {
+            fail("Add user method threw an exception: " + e.getMessage());
+        }
+        userManager.deleteUser("naipu");
+        assertNull(userManager.getUser("naipu"));
+        try {
+            userManager.deleteUser("");
+        } catch (Exception e) {
+            fail("Delete user method threw an exception: " + e.getMessage());
+        }
+    }
+
+
+    @Test
     public void testAddExistUser() {
         UserManager userManager = new UserManager();
         try {
@@ -109,6 +127,7 @@ public class UserManagerTest {
             fail("Unexpected exception: " + e.getMessage());
         }
     }
+
 
     @Test
     public void testCheckExistingUsername() {

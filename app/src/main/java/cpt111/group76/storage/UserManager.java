@@ -77,12 +77,8 @@ public class UserManager extends FileManager {
     }
 
 
-    public boolean deleteUser(String username) {
-        if (users.get(username) == null) {
-            return false; // user does not exist
-        }
+    public void deleteUser(String username) {
         users.remove(username);
-        return true;
     }
 
 

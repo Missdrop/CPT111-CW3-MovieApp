@@ -48,10 +48,10 @@ public class Menu extends Application {
         });
 
         // Create main title
-        VBox titleBox = getTitleBox();
+        VBox titleBox = getTopBarTitleBox();
 
         // Action buttons
-        HBox buttonBox = getButtonBox(primaryStage);
+        HBox buttonBox = getTopBarButtonBox(primaryStage);
 
         // Top bar container
         HBox topBar = new HBox();
@@ -60,6 +60,98 @@ public class Menu extends Application {
         topBar.setPadding(new Insets(15));
         topBar.setStyle("-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 0 0 1 0;");
 
+        VBox menuButtons = getMenuButtonBox();
+        menuButtons.setPadding(new Insets(40));
+        menuButtons.setAlignment(Pos.CENTER);
+
+        // Stats panel
+        Label statsLabel = new Label("Your Stats: " + user.getWatchlist().length() + " movies in watchlist • "
+                + user.getHistory().length() + " movies watched");
+        statsLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d;");
+
+        VBox statsBox = new VBox(statsLabel);
+        statsBox.setPadding(new Insets(10));
+        statsBox.setAlignment(Pos.CENTER);
+
+        BorderPane root = new BorderPane();
+        root.setTop(topBar);
+        root.setCenter(menuButtons);
+        root.setBottom(statsBox);
+
+        Scene scene = new Scene(root, 700, 500);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Movie Recommendation & Tracker - Main Menu");
+        primaryStage.show();
+    }
+
+
+    private VBox getTopBarTitleBox() {
+        Label titleLabel = new Label("Movie Recommendation & Tracker");
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        // User info
+        Text usernameText = new Text(
+                "Welcome, " + user.getUsername() + "! (" + (user.getUserType().equals("Premium") ? "Premium User" : "Basic User") + ")");
+        usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
+
+        // Top bar with title and user info
+        VBox titleBox = new VBox(5, titleLabel, usernameText);
+        titleBox.setAlignment(Pos.CENTER_LEFT);
+        return titleBox;
+    }
+
+
+    private HBox getTopBarButtonBox(Stage primaryStage) {
+        Button logoutButton = new Button("Logout");
+        logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        logoutButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent e) {
+                userManager.updateUser(user);
+                try {
+                    new App().start(new Stage());
+                } catch (Exception ex) {
+                    System.out.println("Error starting app: " + ex.getMessage());
+                }
+                primaryStage.close();
+            }
+        });
+
+        Button changePasswordButton = new Button("Change Password");
+        changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+        changePasswordButton.setOnAction(new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent e) {
+                new ChangePassword(user, userManager, primaryStage).show();
+                primaryStage.hide();
+            }
+        });
+
+        // Get Premium button - only show for Basic Users
+        Button getPremiumButton = null;
+        if (user.getUserType().equals("Basic")) {
+            getPremiumButton = new Button("Get Premium");
+            getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
+            getPremiumButton.setOnAction(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    new GetPremium(user, primaryStage, userManager).show();
+                }
+            });
+        }
+
+        HBox buttonBox;
+        if (user.getUserType().equals("Basic")) {
+            buttonBox = new HBox(10, changePasswordButton, getPremiumButton, logoutButton);
+        } else {
+            buttonBox = new HBox(10, changePasswordButton, logoutButton);
+        }
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        return buttonBox;
+    }
+
+
+    private VBox getMenuButtonBox() {
         // Main menu buttons with better styling
         Button browseMoviesButton = createMenuButton("Browse Movies", "#2ecc71");
         Button viewWatchlistButton = createMenuButton("View Watchlist", "#3498db");
@@ -97,96 +189,7 @@ public class Menu extends Application {
         firstButtonRow.setAlignment(Pos.CENTER);
         secondButtonRow.setAlignment(Pos.CENTER);
 
-        VBox menuButtons = new VBox(20, firstButtonRow, secondButtonRow);
-        menuButtons.setPadding(new Insets(40));
-        menuButtons.setAlignment(Pos.CENTER);
-
-        // Stats panel
-        Label statsLabel = new Label("Your Stats: " + user.getWatchlist().length() + " movies in watchlist • "
-                + user.getHistory().length() + " movies watched");
-        statsLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d;");
-
-        VBox statsBox = new VBox(statsLabel);
-        statsBox.setPadding(new Insets(10));
-        statsBox.setAlignment(Pos.CENTER);
-
-        BorderPane root = new BorderPane();
-        root.setTop(topBar);
-        root.setCenter(menuButtons);
-        root.setBottom(statsBox);
-
-        Scene scene = new Scene(root, 700, 500);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Movie Recommendation & Tracker - Main Menu");
-        primaryStage.show();
-    }
-
-    private VBox getTitleBox() {
-        Label titleLabel = new Label("Movie Recommendation & Tracker");
-        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-
-        // User info
-        Text usernameText = new Text(
-                "Welcome, " + user.getUsername() + "! (" + (user.getUserType().equals("Premium") ? "Premium User" : "Basic User") + ")");
-        usernameText.setStyle("-fx-font-size: 14px; -fx-fill: #7f8c8d;");
-
-        // Top bar with title and user info
-        VBox titleBox = new VBox(5, titleLabel, usernameText);
-        titleBox.setAlignment(Pos.CENTER_LEFT);
-        return titleBox;
-    }
-
-    private HBox getButtonBox(Stage primaryStage) {
-        Button logoutButton = new Button("Logout");
-        logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-        logoutButton.setOnAction(new EventHandler<>() {
-            @Override
-            public void handle(ActionEvent e) {
-                userManager.updateUser(user);
-                try {
-                    new App().start(new Stage());
-                } catch (Exception ex) {
-                    System.out.println("Error starting app: " + ex.getMessage());
-                }
-                primaryStage.close();
-            }
-        });
-
-        Button changePasswordButton = new Button("Change Password");
-        changePasswordButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-        changePasswordButton.setOnAction(new EventHandler<>() {
-            @Override
-            public void handle(ActionEvent e) {
-                new ChangePassword(user, userManager, primaryStage).show();
-                primaryStage.hide();
-            }
-        });
-
-        return getButtonBox(primaryStage, changePasswordButton, logoutButton);
-    }
-
-    private HBox getButtonBox(Stage primaryStage, Button changePasswordButton, Button logoutButton) {
-        Button getPremiumButton = null;
-        if (user.getUserType().equals("Basic")) {
-            getPremiumButton = new Button("Get Premium");
-            getPremiumButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
-            getPremiumButton.setOnAction(new EventHandler<>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    new GetPremium(user, primaryStage, userManager).show();
-                }
-            });
-        }
-
-        HBox buttonBox;
-        // Get Premium button - only show for Basic Users
-        if (user.getUserType().equals("Basic")) {
-            buttonBox = new HBox(10, changePasswordButton, getPremiumButton, logoutButton);
-        } else {
-            buttonBox = new HBox(10, changePasswordButton, logoutButton);
-        }
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        return buttonBox;
+        return new VBox(20, firstButtonRow, secondButtonRow);
     }
 
 
