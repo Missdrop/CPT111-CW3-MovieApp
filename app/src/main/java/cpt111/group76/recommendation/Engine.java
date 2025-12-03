@@ -93,12 +93,11 @@ public class Engine {
      */
     private void getFavouriteYearMovies() {
         int favouriteYear = getFavouriteYear();
-        final int fav = favouriteYear;
         Sort.sort(tempMovieList, new Sort.Comparator() {
             @Override
             public int compare(Movie a, Movie b) {
-                int diffA = Math.abs(a.getYear() - fav);
-                int diffB = Math.abs(b.getYear() - fav);
+                int diffA = Math.abs(a.getYear() - favouriteYear);
+                int diffB = Math.abs(b.getYear() - favouriteYear);
                 if (diffA != diffB) {
                     return Integer.compare(diffA, diffB);
                 } else {
@@ -116,12 +115,11 @@ public class Engine {
      */
     private void getFavouriteGenreMovies() {
         Map<String, Integer> favouriteGenres = getFavouriteGenreMap();
-        final Map<String, Integer> favMap = favouriteGenres;
         Sort.sort(tempMovieList, new Sort.Comparator() {
             @Override
             public int compare(Movie a, Movie b) {
-                int scoreA = favMap.getOrDefault(a.getGenre(), 0);
-                int scoreB = favMap.getOrDefault(b.getGenre(), 0);
+                int scoreA = favouriteGenres.getOrDefault(a.getGenre(), 0);
+                int scoreB = favouriteGenres.getOrDefault(b.getGenre(), 0);
                 if (scoreA != scoreB) {
                     // higher genre score first
                     return Integer.compare(scoreB, scoreA);
@@ -174,7 +172,6 @@ public class Engine {
         for (String movieID : likedMovies) {
             String genre = movieManager.getMovie(movieID).getGenre();
             scoreMap.put(genre, scoreMap.getOrDefault(genre, 0) + 1);
-
         }
 
         return scoreMap;
