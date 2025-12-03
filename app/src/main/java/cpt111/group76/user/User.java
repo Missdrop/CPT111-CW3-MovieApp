@@ -55,7 +55,7 @@ public class User {
 
     /**
      * Gets the maximum size of the watchlist for this user type.
-     * @return
+     * @return an int of maximum size
      */
     public int getMaxWatchlistSize() {
         throw new UnsupportedOperationException("Subclass must override getMaxWatchlistSize()");
