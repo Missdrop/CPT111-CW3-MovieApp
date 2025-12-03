@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Handles basic file I/O operations for CSV files.
  * Provides methods for reading and writing CSV data with proper exception handling.
  */
-class FileManager implements AutoCloseable {
+class FileManager {
     private File file;
     private Scanner scanner;
 
@@ -122,7 +122,9 @@ class FileManager implements AutoCloseable {
     }
 
 
-    @Override
+    /**
+     * Closes the Scanner and releases resources.
+     */
     public void close() {
         if (this.scanner != null) {
             this.scanner.close();

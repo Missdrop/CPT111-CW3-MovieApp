@@ -10,7 +10,8 @@ import cpt111.group76.movie.Movie;
 public class MovieManagerTest {
     @BeforeClass
     public static void initTestCsvFile() {
-        try (FileManager fileManager = new FileManager("resources/movies.csv")) {
+        FileManager fileManager = new FileManager("resources/movies.csv");
+        try {
             fileManager.save("id,title,genre,year,rating", new String[] {
             "M001,The Shawshank Redemption,Drama,1994,9.3",
             "M002,The Godfather,Crime,1972,9.2",
@@ -121,27 +122,28 @@ public class MovieManagerTest {
 
     @Test
     public void testGetMovies() {
-        try (MovieManager movieManager = new MovieManager()) {
-            assertEquals(movieManager.getMovie("M001").getTitle(), "The Shawshank Redemption");
-        }
+        MovieManager movieManager = new MovieManager();
+        assertEquals(movieManager.getMovie("M001").getTitle(), "The Shawshank Redemption");
     }
 
 
     @Test
     public void testAddMovie() {
-        try (MovieManager movieManager = new MovieManager()) {
+        MovieManager movieManager = new MovieManager();
+        try {
             movieManager.addMovie("naipu", "Comedy", 2006, 2.5);
-            assertEquals(movieManager.getMovie("M101").getTitle(), "naipu");
-            movieManager.deleteMovie("M101");
         } catch (IllegalArgumentException e) {
             fail("Adding movie threw an exception: " + e.getMessage());
         }
+        assertEquals(movieManager.getMovie("M101").getTitle(), "naipu");
+        movieManager.deleteMovie("M101");
     }
 
 
     @Test
     public void testAddExistMovie() {
-        try (MovieManager movieManager = new MovieManager()) {
+        MovieManager movieManager = new MovieManager();
+        try {
             movieManager.addMovie("The Shawshank Redemption", "Drama", 1994, 9.3);
             fail("Expected IllegalArgumentException for adding existing movie");
         } catch (IllegalArgumentException e) {
@@ -152,13 +154,14 @@ public class MovieManagerTest {
 
     @Test
     public void testAddMovieByDetails() {
-        try (MovieManager movieManager = new MovieManager()) {
+        MovieManager movieManager = new MovieManager();
+        try{
             movieManager.addMovie("Inglourious Basterds", "War", 2009, 8.3);
-            Movie addedMovie = movieManager.getMovie("M101");
-            assertNotNull(addedMovie);
-            assertEquals(addedMovie.getTitle(), "Inglourious Basterds");
         } catch (IllegalArgumentException e) {
             fail("Adding movie threw an exception: " + e.getMessage());
         }
+        Movie addedMovie = movieManager.getMovie("M101");
+        assertNotNull(addedMovie);
+        assertEquals(addedMovie.getTitle(), "Inglourious Basterds");
     }
 }

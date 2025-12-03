@@ -17,49 +17,45 @@ public class FileManagerTest {
 
     @Test
     public void testFileReaderInitialization() {
-        try (FileManager fileManager = new FileManager("resources/movies.csv")) {
-            assertNotNull(fileManager);
-            assertNotNull(fileManager.nextLine());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        FileManager fileReader = new FileManager("resources/movies.csv");
+        assertNotNull(fileReader.nextLine());
     }
 
 
     @Test
-    public void emptyStringConstructorTest() {
-        try (FileManager fileManager = new FileManager("")) {
+    public void testEmptyStringConstructor() {
+        try {
+            FileManager fileManager = new FileManager("");
             assertNotNull(fileManager);
             assertNull(fileManager.nextLine());
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail("Constructor with empty string threw an exception: " + e.getMessage());
         }
     }
 
 
     @Test
     public void testSaveFunction() {
-        try (FileManager fileManager = new FileManager("resources/test_save.csv")) {
-            assertNotNull(fileManager);
-            String header = "col1,col2,col3";
-            String[] rows = new String[] {
-                "data1,data2,data3",
-                "data4,data5,data6"
-            };
+        FileManager fileManager = new FileManager("resources/test_save.csv");
+        String header = "col1,col2,col3";
+        String[] rows = new String[] {
+            "data1,data2,data3",
+            "data4,data5,data6"
+        };
+        try {
             fileManager.save(header, rows);
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail("Save method threw an exception: " + e.getMessage());
         }
 
-        try (FileManager fileManager = new FileManager("resources/test_save.csv")) {
-            assertNotNull(fileManager);
-            assertEquals("col1", fileManager.nextLine()[0]);
-            assertEquals("data2", fileManager.nextLine()[1]);
-            assertEquals("data6", fileManager.nextLine()[2]);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        // Verify saved content
+        fileManager = new FileManager("resources/test_save.csv");
+        assertEquals("col1", fileManager.nextLine()[0]);
+        assertEquals("data2", fileManager.nextLine()[1]);
+        assertEquals("data6", fileManager.nextLine()[2]);
+        fileManager.close();
 
+        // Clean up
         File file = new File("resources/test_save.csv");
         file.delete();
     }
