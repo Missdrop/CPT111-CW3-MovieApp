@@ -1,6 +1,6 @@
 # Proprietary License - Academic Use Only
 
-Copyright (c) 2026 [Missdrop]
+Copyright (c) 2026 Missdrop
 
 All Rights Reserved.
 
